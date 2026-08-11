@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "efds-platform"
+version = "0.1.0"
+description = "EFDS institutional memory database and document ingestion foundation"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.13,<2",
+    "beautifulsoup4>=4.12,<5",
+    "openpyxl>=3.1,<4",
+    "psycopg[binary]>=3.2,<4",
+    "pypdf>=5,<7",
+    "python-docx>=1.1,<2",
+    "python-dotenv>=1.0,<2",
+    "python-pptx>=1.0,<2",
+    "SQLAlchemy>=2.0,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["integration: requires a configured database and is opt-in"]
+
