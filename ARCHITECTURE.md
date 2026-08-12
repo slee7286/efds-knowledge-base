@@ -62,3 +62,160 @@ one. No source article or previously reviewed derived record is deleted.
 The layer supports future SQL admin views and role-specific dashboards. The
 normalized fields and evidence are also ready for PostgreSQL full-text or
 semantic search later; pgvector is intentionally not part of this migration.
+
+## Application authorization boundary
+
+```text
+Microsoft / approved OTP
+          ↓
+Supabase auth.users.id
+          ↓
+profiles.auth_user_id
+          ↓
+member_type + officer_id + access_role + active
+          ↓
+Supabase RLS + Next.js server authorization
+```
+
+Migration `0004_auth_profiles_and_rls` adds `profiles` and
+`auth_access_exceptions`. `auth_user_id` is a unique UUID without a managed
+foreign key because the `auth` schema is owned by Supabase Auth. Email values
+are lowercase and unique. Application roles remain text values to match the
+existing schema style; check constraints enforce the supported role and member
+type values.
+
+### Access matrix
+
+| Dataset | Public | Member | Committee | Admin | Backend |
+| --- | --- | --- | --- | --- | --- |
+| `profiles` | — | own row | own row | read/manage | read/write |
+| `auth_access_exceptions` | boolean RPC only | — | — | manage | read/write |
+| officers | — | — | read | read | read/write |
+| ICU source/derived knowledge | — | — | read | read | read/write |
+| knowledge changes/extraction/ingestion | — | — | — | read | read/write |
+| documents/meetings/decisions/actions | — | — | read | read | read/write |
+| Slack source tables | — | — | — | read | read/write |
+
+No internal table receives an unauthenticated `SELECT` policy. The public
+website must use explicit publication views or server APIs when public content
+is eventually connected.
+
+## Knowledge Operations V1 review boundary
+
+The authoritative lifecycle is:
+
+```text
+source → sync → extract → proposed → review → approved → explicitly publish
+                         ↑                         ↓
+                    source change → stale     invalidate on source change
+```
+
+ICU `knowledge_articles` owns the external source. Every typed derived record
+retains its source article, URL, content hash, source update time, evidence,
+extraction method/time, and confidence. `knowledge_review_events` is an
+append-only audit stream for approve, edit-and-approve, reject, defer,
+supersede, publish and unpublish actions. Reviewer and publisher identities
+are EFDS `profiles`, not client-provided names.
+
+Derived review status is one field (`proposed`, `approved`, `rejected`,
+`needs_review`, or `superseded`); `is_stale` is independent and means the
+source version no longer matches. A stale approved row is retained until a
+reviewer explicitly keeps, replaces, rejects, or supersedes it. Visibility is
+also independent: `internal` is the default, followed by explicit
+`committee`, `member`, or `public` publication. Publication requires approved
+and current knowledge and never changes the authoritative source row.
+
+The website applies server-side role checks before every read/mutation and
+Supabase RLS repeats the boundary: administrators can review and publish;
+committee users can inspect internal knowledge; member users can select only
+approved, current `member`/`public` rows; anonymous public reads use the
+restricted public resources view. The source article Markdown is never exposed
+through the public publication path.
+## Transactional review mutations
+
+The canonical website write path is:
+
+```text
+Next.js Server Action → Supabase RPC → PostgreSQL transaction
+                         ├─ auth.uid() → active admin profile
+                         ├─ row lock + review_version concurrency check
+                         ├─ allowlisted interpretation/publication update
+                         └─ exactly one knowledge_review_events row
+                       → commit (or rollback everything)
+```
+
+The RPC uses a safe `search_path` and does not trust profile IDs, roles,
+statuses, or publisher IDs from the browser. An old admin tab receives a
+`concurrency_conflict` error and cannot overwrite a newer decision. Edit
+patches cannot address source identity, hashes, evidence, extraction metadata,
+or raw ICU content. Process step removal supersedes the derived step; adding a
+step copies parent provenance and records `reviewer_added` metadata.
+
+## Slack Institutional Memory V1
+
+Slack is a separate source boundary from ICU-derived operational knowledge:
+
+```text
+Slack workspace → read-only Web API → Python synchronizer → PostgreSQL source archive
+                                                        → admin-only website browsing
+```
+
+The backend owns `SLACK_BOT_TOKEN`, API access, normalization, rate-limit
+handling, checkpoints, and persistence. The website never calls Slack and has
+no Slack credential. Public and member routes do not expose the archive; the
+admin route reads it through normal authenticated Supabase queries and the
+existing RLS boundary.
+
+`slack_workspaces` and the workspace-scoped channel/user/message tables use
+Slack's stable identifiers. A message is uniquely identified by
+`workspace_id + channel_id + slack_ts`; `content_hash` identifies the current
+source version, not the message itself. Replies remain individual rows linked
+by `thread_ts` and `parent_message_id`. Reactions, links, and file metadata are
+normalized child records. File binaries are intentionally not downloaded.
+
+Channel discovery is metadata-only and creates disabled sync settings for new
+channels. A sync reads only explicitly enabled public/private committee
+channels. Full backfill uses Slack cursor pagination; incremental sync starts
+from the saved newest timestamp minus a seven-day reconciliation window and
+re-fetches thread roots with replies. Explicit `message_deleted` payloads are
+represented as tombstones and `slack_message_changes` events; absence from a
+page is never treated as deletion. Each channel is isolated in a nested
+transaction so a malformed or inaccessible channel does not commit partial
+rows for that channel, while `ingestion_runs` records the run outcome.
+
+## OneDrive Filesystem Institutional Memory V1
+
+The existing `documents` table originally used a globally unique content hash,
+which made a changed file look like a new logical document and collapsed exact
+copies. Migration `0008_filesystem_institutional_memory` preserves the legacy
+table for existing meeting references while adding filesystem source identity
+fields and `document_versions`:
+
+```text
+source_root + normalized_relative_path → documents logical source row
+                                         ↓
+                                  document_versions
+                                  (content_hash = version identity)
+                                         ↓
+                              document_source_changes
+```
+
+The synchronizer stores relative paths as the primary filesystem identity and
+never stores an absolute local path in the website model. Same-content copies
+remain separate source rows and are exposed through exact SHA-256 duplicate
+groups. Same-path edits retain the source row and add a version. Complete full
+reconciliations mark absent rows missing; reappearance creates restored history.
+One-to-one same-hash disappearance/reappearance can be recorded as a
+rename/move, while ambiguous matches remain separate missing and created rows.
+
+The repository-root `filesystem_ingestion.toml` explicitly excludes the three
+software repositories in `12_Technology`, source-control/build/cache folders,
+temporary Office files, databases, environment files, credentials and private
+keys. Unsupported files are retained as metadata with `unsupported` status;
+parser and hydration failures are recorded without aborting the batch.
+
+`python scripts/sync_filesystem.py --watch` provides low-dependency local
+polling for near-real-time updates. It is not authoritative: an hourly or
+daily `--full` reconciliation is required because a laptop can be offline and
+filesystem events can be missed. The model leaves room for future Graph
+`drive_id`/`item_id` metadata without implementing Microsoft Graph now.

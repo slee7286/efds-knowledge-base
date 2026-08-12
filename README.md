@@ -2,7 +2,7 @@
 
 This repository is the first EFDS (Economics, Finance & Data Science Society) institutional-memory layer. It stores structured records and extracted document text in PostgreSQL while OneDrive/SharePoint remains the canonical store for binary files.
 
-V1 deliberately covers only the database and filesystem document foundation. It does not include Slack ingestion, Freshdesk crawling, embeddings, a website, or Fireflies integration.
+The current platform includes the database/filesystem foundation, ICU ingestion and structured knowledge review, plus a read-only Slack institutional-memory archive. Embeddings, a website, and Fireflies integration are outside this backend's ingestion scope.
 
 ## Architecture
 
@@ -14,6 +14,8 @@ V1 deliberately covers only the database and filesystem document foundation. It 
 - SHA-256 content hashes provide idempotent document ingestion
 - `ingestion_runs` records progress, counters, and per-file errors
 - ICU Freshdesk articles are synchronised from the existing `icu-crawler/data/` archive into `knowledge_articles`
+- Slack is synchronised by `scripts/sync_slack.py` into private, allowlisted canonical source tables; the Slack token stays in the backend environment
+- The local EFDS OneDrive tree is synchronised by `scripts/sync_filesystem.py` into stable source rows and immutable document versions
 
 The direct Supabase PostgreSQL connection is suitable for local development, Alembic, and ingestion scripts. A transaction/session pooler may be preferable for a future serverless deployment.
 
@@ -126,9 +128,10 @@ The initial migration creates:
 
 - `officers`
 - `documents`
+- `document_versions` and `document_source_changes`
 - `meetings` and `meeting_attendees`
 - `decisions` and `action_items`
-- `slack_channels` and `slack_messages` (schema only)
+- `slack_workspaces`, `slack_channels`, `slack_channel_sync_settings`, `slack_users`, `slack_messages`, `slack_message_changes`, `slack_reactions`, `slack_message_links`, and `slack_files`
 - `knowledge_articles` and `knowledge_article_changes`
 - `ingestion_runs`
 - `knowledge_topics`, `knowledge_roles`, and article/topic/role mappings
@@ -147,8 +150,127 @@ All timestamps are timezone-aware. `updated_at` is refreshed by a SQLAlchemy upd
 - PostgreSQL stores extracted text, metadata, and source paths only—not raw binary files.
 - Source paths are treated as provenance metadata; future public frontends must never receive unrestricted database credentials.
 - PDF extraction has no OCR, email attachment contents are not extracted, and classification is rule-based.
-- There is no full-text index, vector search, crawler, Slack API client, transcript integration, or web/admin application yet.
+- Slack stores message/file metadata and source history only; it does not download file binaries or ingest direct messages.
+- Search is PostgreSQL-backed and there is no vector search, transcript integration, or LLM extraction.
+
+## Application profiles, external access, and RLS
+
+Migration `0004_auth_profiles_and_rls` adds the production application-access layer used by the EFDS website:
+
+- `profiles` maps a Supabase `auth.users.id` UUID to normalized email, membership type, application access role, optional officer link, active state, last login and metadata.
+- `auth_access_exceptions` is an admin-only allowlist for explicitly approved identities, including temporary alternate authentication for Imperial-domain users when required. Rows are normalized, unique, active/expiry checked and never directly readable by ordinary members.
+- RLS helper functions resolve the active profile role through `auth.uid()`. The role hierarchy is `viewer < member < committee < admin`.
+- `is_external_email_eligible(text)` is a narrow boolean-style RPC for the pre-OTP website check. It accepts only an explicitly active, unexpired exception and does not return exception rows.
+- `current_efds_external_access_role()` returns only the current authenticated identity's effective exception role for post-OTP provisioning.
+
+The migration does not modify `auth.users` or Supabase Auth internals. The backend's direct `DATABASE_URL` connection remains the trusted ingestion writer and is not replaced by browser Supabase clients.
+
+Review the migration before applying it locally:
+
+```powershell
+alembic upgrade head
+```
+
+The first admin is granted only after a profile exists from a successful login:
+
+```powershell
+python scripts/grant_access.py person@imperial.ac.uk --role admin
+```
+
+This command is idempotent, normalizes the email, validates optional officer IDs and never receives database credentials as arguments. It does not run against the remote database automatically.
+
+Approved external identities are managed through the backend CLI as well:
+
+```powershell
+python scripts/set_access_exception.py adviser@example.org --role viewer --reason "EFDS adviser" --expires-at 2027-09-01T00:00:00Z
+```
+
+The command normalizes email, supports both `ic.ac.uk` and `imperial.ac.uk` addresses as well as external addresses, supports inactive/expired rows, and is idempotent. An exception with `admin` is intentionally not self-provisioned by the website; provision the initial profile with a non-admin role, then promote it through `grant_access.py`.
+
+## Knowledge Operations V1
+
+The source-first review lifecycle is:
+
+```text
+ICU source → crawler archive → knowledge_articles → deterministic extraction
+→ proposed derived knowledge → admin review → approved internal knowledge
+→ explicit committee/member/public publication
+```
+
+`knowledge_articles` remains authoritative external guidance. Derived rows are
+reviewable interpretations, not replacements for ICU source content. Existing
+`review_status` values are extended by constraint to `proposed`, `approved`,
+`rejected`, `needs_review`, and `superseded`; `is_stale` remains the separate
+source-version signal. A changed article marks old derived rows stale and
+creates new versioned candidates without deleting the old interpretation.
+
+Migrations `0005_knowledge_review_publication` and
+`0006_transactional_knowledge_review` add `knowledge_review_events`,
+profile-based reviewer/publication references, and `visibility` values of
+`internal`, `committee`, `member`, and `public`. Review events record the
+knowledge type and record ID, action, previous/new status, reviewer, reason,
+and JSON changes. Approved/current knowledge is never automatically published.
+
+All website review/publication writes use the database-owned
+`review_knowledge_transaction` RPC. It resolves `auth.uid()` to an active
+admin profile, locks the row, compares `review_version`, applies an allowlisted
+interpretation/publication patch, and inserts exactly one audit event in the
+same PostgreSQL transaction. A conflict or failure rolls back the row and
+event together. Source identity, URL, content hash, evidence, extraction
+metadata and raw ICU content are never writable by the RPC. Reviewer-added
+process steps retain parent provenance and are marked in metadata.
+
+The website admin console is the human-operated surface for review, stale
+reconciliation, source inspection, registers, role views and publication. The
+member view reads only approved, current rows explicitly published as `member`
+or `public`; the public resources view reads the restricted
+`public_knowledge_resources` view. No Slack, meeting, vector, or full RAG
+integration is part of this milestone.
+
+Apply locally, after reviewing the generated SQL:
+
+```powershell
+alembic upgrade head
+```
+
+Do not run this command automatically against production.
+
+## Slack Institutional Memory V1
+
+The Slack sync boundary is:
+
+```text
+Slack Web API → scripts/sync_slack.py → ingestion_runs + canonical Slack tables
+                                      → admin-only website archive
+```
+
+Configure only the backend environment variable `SLACK_BOT_TOKEN`. The sync
+validates the token with Slack, discovers channels without ingesting content,
+and archives only channels explicitly enabled in `slack_channel_sync_settings`.
+New channels default to disabled. Threads remain separate message rows;
+edits and explicit deletions are append-only change events plus a current
+message projection. Links are extracted without fetching them and files are
+metadata-only. See [docs/SLACK_INTEGRATION.md](docs/SLACK_INTEGRATION.md).
 
 ## Planned extensions
 
-The next planned integrations are Slack Events API ingestion, Fireflies/meeting ingestion, a website/admin surface, PostgreSQL full-text search, and `pgvector` later if retrieval needs justify it. See [ARCHITECTURE.md](ARCHITECTURE.md) for the ICU boundary and lifecycle details.
+The next integrations may include PostgreSQL text-search refinement, Slack
+decision/action extraction, and richer committee workflows. Fireflies/meeting
+ingestion, embeddings, and full RAG remain explicitly out of scope for this
+milestone.
+
+## OneDrive Filesystem Institutional Memory V1
+
+The generic `documents` table is retained for existing meeting references and
+legacy ingestion, but OneDrive rows use `source_type = onedrive_filesystem`.
+Their stable identity is the normalized relative path under `EFDS_FILES_ROOT`;
+their byte/text version identity is `document_id + content_hash`. This keeps
+same-content copies at different paths separate while making exact duplicates
+queryable. `document_versions` and `document_source_changes` preserve edits,
+renames/moves, missing/restored state, extraction status and provenance.
+
+The synchronizer excludes the software repositories under `12_Technology`,
+development artifacts, temporary Office files, local databases, credentials and
+private-key patterns. Raw filesystem content is admin-only through RLS. See
+[docs/FILESYSTEM_SYNC.md](docs/FILESYSTEM_SYNC.md) for reconciliation, watch,
+OneDrive placeholder and future Graph compatibility behavior.

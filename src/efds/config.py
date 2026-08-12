@@ -14,6 +14,7 @@ class Settings:
     """Runtime settings required by the database-backed scripts."""
 
     database_url: str
+    slack_bot_token: str | None = None
 
     @property
     def sqlalchemy_database_url(self) -> str:
@@ -36,4 +37,19 @@ def get_settings() -> Settings:
         raise RuntimeError(
             "DATABASE_URL is missing. Copy .env.example to .env and add your PostgreSQL connection string."
         )
-    return Settings(database_url=database_url)
+    return Settings(
+        database_url=database_url,
+        slack_bot_token=os.getenv("SLACK_BOT_TOKEN", "").strip() or None,
+    )
+
+
+def get_slack_bot_token() -> str:
+    """Return the backend-only Slack token or fail without exposing it."""
+
+    load_dotenv()
+    token = os.getenv("SLACK_BOT_TOKEN", "").strip() or None
+    if not token:
+        raise RuntimeError(
+            "SLACK_BOT_TOKEN is missing. Add it to the backend .env; it is never required by the website."
+        )
+    return token

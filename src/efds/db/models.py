@@ -9,6 +9,7 @@ from typing import Any
 from sqlalchemy import (
     BigInteger,
     Boolean,
+    CheckConstraint,
     Date,
     DateTime,
     Float,
@@ -61,11 +62,110 @@ class Officer(Base, TimestampMixin):
     )
 
 
+class Profile(Base, TimestampMixin):
+    """EFDS application profile mapped to a Supabase Auth user.
+
+    ``auth_user_id`` intentionally has no managed foreign key to ``auth.users``.
+    Supabase owns that schema; this repository only stores the stable UUID.
+    """
+
+    __tablename__ = "profiles"
+    __table_args__ = (
+        CheckConstraint(
+            "email = lower(email)", name="ck_profiles_email_lowercase"
+        ),
+        CheckConstraint(
+            "member_type IN ('imperial', 'external', 'alumni', 'departmental_representative', 'other')",
+            name="ck_profiles_member_type",
+        ),
+        CheckConstraint(
+            "access_role IN ('viewer', 'member', 'committee', 'admin')",
+            name="ck_profiles_access_role",
+        ),
+        Index("ix_profiles_auth_user_id", "auth_user_id"),
+        Index("ix_profiles_access_role", "access_role"),
+        Index("ix_profiles_officer_id", "officer_id"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    auth_user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), nullable=False, unique=True
+    )
+    email: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    full_name: Mapped[str | None] = mapped_column(Text)
+    member_type: Mapped[str] = mapped_column(
+        Text, nullable=False, server_default=text("'imperial'")
+    )
+    access_role: Mapped[str] = mapped_column(
+        Text, nullable=False, server_default=text("'member'")
+    )
+    officer_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("officers.id", ondelete="SET NULL")
+    )
+    active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    metadata_: Mapped[dict[str, Any]] = mapped_column(
+        "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+
+    officer: Mapped[Officer | None] = relationship()
+    created_exceptions: Mapped[list["AuthAccessException"]] = relationship(
+        back_populates="created_by_profile", foreign_keys="AuthAccessException.created_by_profile_id"
+    )
+
+
+class AuthAccessException(Base, TimestampMixin):
+    """Explicit access allowlist for non-Imperial identities."""
+
+    __tablename__ = "auth_access_exceptions"
+    __table_args__ = (
+        CheckConstraint(
+            "email = lower(email)", name="ck_auth_access_exceptions_email_lowercase"
+        ),
+        CheckConstraint(
+            "access_role IN ('viewer', 'member', 'committee', 'admin')",
+            name="ck_auth_access_exceptions_access_role",
+        ),
+        CheckConstraint(
+            "member_type IS NULL OR member_type IN ('imperial', 'external', 'alumni', 'departmental_representative', 'other')",
+            name="ck_auth_access_exceptions_member_type",
+        ),
+        Index("ix_auth_access_exceptions_active_expiry", "active", "expires_at"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    email: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    access_role: Mapped[str] = mapped_column(Text, nullable=False)
+    member_type: Mapped[str | None] = mapped_column(Text)
+    reason: Mapped[str | None] = mapped_column(Text)
+    active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("profiles.id", ondelete="SET NULL")
+    )
+    metadata_: Mapped[dict[str, Any]] = mapped_column(
+        "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+
+    created_by_profile: Mapped[Profile | None] = relationship(
+        back_populates="created_exceptions", foreign_keys=[created_by_profile_id]
+    )
+
+
 class Document(Base, TimestampMixin):
     __tablename__ = "documents"
     __table_args__ = (
         Index("ix_documents_document_type", "document_type"),
         Index("ix_documents_source_type", "source_type"),
+        Index("ix_documents_onedrive_area", "source_type", "source_area"),
+        Index("ix_documents_onedrive_status", "source_type", "is_missing", "is_unavailable"),
+        Index("ix_documents_onedrive_hash", "source_type", "content_hash"),
+        UniqueConstraint(
+            "source_type",
+            "source_root",
+            "normalized_relative_path",
+            name="uq_documents_source_path",
+        ),
     )
 
     id: Mapped[uuid.UUID] = uuid_column()
@@ -77,10 +177,35 @@ class Document(Base, TimestampMixin):
     mime_type: Mapped[str | None] = mapped_column(Text)
     academic_year: Mapped[str | None] = mapped_column(Text)
     raw_text: Mapped[str | None] = mapped_column(Text)
-    content_hash: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    content_hash: Mapped[str | None] = mapped_column(Text)
     file_size_bytes: Mapped[int | None] = mapped_column(BigInteger)
+    source_root: Mapped[str | None] = mapped_column(Text)
+    relative_path: Mapped[str | None] = mapped_column(Text)
+    normalized_relative_path: Mapped[str | None] = mapped_column(Text)
+    source_area: Mapped[str | None] = mapped_column(Text)
+    filesystem_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    filesystem_modified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    first_missing_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    is_missing: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    is_unavailable: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    extraction_status: Mapped[str | None] = mapped_column(Text)
+    extraction_error: Mapped[str | None] = mapped_column(Text)
+    current_version_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("document_versions.id", ondelete="SET NULL")
+    )
     metadata_: Mapped[dict[str, Any]] = mapped_column(
         "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+
+    versions: Mapped[list["DocumentVersion"]] = relationship(
+        back_populates="document", foreign_keys="DocumentVersion.document_id"
+    )
+    current_version: Mapped["DocumentVersion | None"] = relationship(
+        foreign_keys=[current_version_id], post_update=True
     )
 
     transcript_meetings: Mapped[list["Meeting"]] = relationship(
@@ -88,6 +213,65 @@ class Document(Base, TimestampMixin):
     )
     minutes_meetings: Mapped[list["Meeting"]] = relationship(
         foreign_keys="Meeting.minutes_document_id", back_populates="minutes_document"
+    )
+
+
+class DocumentVersion(Base):
+    __tablename__ = "document_versions"
+    __table_args__ = (
+        UniqueConstraint("document_id", "content_hash", name="uq_document_version_hash"),
+        Index("ix_document_versions_document", "document_id", "ingested_at"),
+        Index("ix_document_versions_hash", "content_hash"),
+        Index("ix_document_versions_extraction", "extraction_status"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("documents.id", ondelete="CASCADE"), nullable=False
+    )
+    content_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    raw_text: Mapped[str | None] = mapped_column(Text)
+    extraction_status: Mapped[str] = mapped_column(Text, nullable=False)
+    extraction_error: Mapped[str | None] = mapped_column(Text)
+    mime_type: Mapped[str | None] = mapped_column(Text)
+    source_modified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    file_size_bytes: Mapped[int | None] = mapped_column(BigInteger)
+    ingested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    metadata_: Mapped[dict[str, Any]] = mapped_column(
+        "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+
+    document: Mapped[Document] = relationship(
+        back_populates="versions", foreign_keys=[document_id]
+    )
+
+
+class DocumentSourceChange(Base):
+    __tablename__ = "document_source_changes"
+    __table_args__ = (
+        Index("ix_document_source_changes_document", "document_id", "detected_at"),
+        Index("ix_document_source_changes_type", "change_type", "detected_at"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("documents.id", ondelete="CASCADE"), nullable=False
+    )
+    change_type: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_path: Mapped[str | None] = mapped_column(Text)
+    new_path: Mapped[str | None] = mapped_column(Text)
+    previous_content_hash: Mapped[str | None] = mapped_column(Text)
+    new_content_hash: Mapped[str | None] = mapped_column(Text)
+    previous_modified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    new_modified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    previous_size: Mapped[int | None] = mapped_column(BigInteger)
+    new_size: Mapped[int | None] = mapped_column(BigInteger)
+    detected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    ingestion_run_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("ingestion_runs.id", ondelete="SET NULL")
+    )
+    metadata_: Mapped[dict[str, Any]] = mapped_column(
+        "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
     )
 
 
@@ -180,39 +364,165 @@ class ActionItem(Base, TimestampMixin):
     owner: Mapped[Officer | None] = relationship(back_populates="owned_action_items")
 
 
+class SlackWorkspace(Base):
+    __tablename__ = "slack_workspaces"
+    __table_args__ = (Index("ix_slack_workspaces_last_synced", "last_synced_at"),)
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    slack_team_id: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    domain: Mapped[str | None] = mapped_column(Text)
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+
+class SlackUser(Base):
+    __tablename__ = "slack_users"
+    __table_args__ = (
+        UniqueConstraint("workspace_id", "slack_user_id", name="uq_slack_user_workspace_identity"),
+        Index("ix_slack_users_workspace", "workspace_id"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    workspace_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("slack_workspaces.id", ondelete="CASCADE"), nullable=False)
+    slack_user_id: Mapped[str] = mapped_column(Text, nullable=False)
+    display_name: Mapped[str | None] = mapped_column(Text)
+    real_name: Mapped[str | None] = mapped_column(Text)
+    is_bot: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    profile_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("profiles.id", ondelete="SET NULL"))
+    officer_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("officers.id", ondelete="SET NULL"))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+
 class SlackChannel(Base):
     __tablename__ = "slack_channels"
+    __table_args__ = (
+        Index("ix_slack_channels_workspace", "workspace_id"),
+        Index("ix_slack_channels_sync", "last_synced_at"),
+    )
 
     id: Mapped[str] = mapped_column(Text, primary_key=True)
+    workspace_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("slack_workspaces.id", ondelete="CASCADE"))
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    topic: Mapped[str | None] = mapped_column(Text)
+    purpose: Mapped[str | None] = mapped_column(Text)
+    is_private: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
     archived: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
-    metadata_: Mapped[dict[str, Any]] = mapped_column(
-        "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
-    )
+    source_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
 
 
 class SlackMessage(Base):
     __tablename__ = "slack_messages"
     __table_args__ = (
-        Index("ix_slack_messages_channel_id", "channel_id"),
+        UniqueConstraint("workspace_id", "channel_id", "slack_ts", name="uq_slack_message_identity"),
+        Index("ix_slack_messages_workspace_channel", "workspace_id", "channel_id"),
         Index("ix_slack_messages_thread_ts", "thread_ts"),
+        Index("ix_slack_messages_posted_at", "source_posted_at"),
+        Index("ix_slack_messages_content_hash", "content_hash"),
     )
 
     id: Mapped[uuid.UUID] = uuid_column()
-    slack_ts: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
-    channel_id: Mapped[str | None] = mapped_column(
-        ForeignKey("slack_channels.id", ondelete="SET NULL")
-    )
+    workspace_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("slack_workspaces.id", ondelete="CASCADE"))
+    slack_ts: Mapped[str] = mapped_column(Text, nullable=False)
+    channel_id: Mapped[str | None] = mapped_column(ForeignKey("slack_channels.id", ondelete="SET NULL"))
     user_slack_id: Mapped[str | None] = mapped_column(Text)
+    author_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("slack_users.id", ondelete="SET NULL"))
     thread_ts: Mapped[str | None] = mapped_column(Text)
+    parent_message_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("slack_messages.id", ondelete="SET NULL"))
     message_text: Mapped[str | None] = mapped_column(Text)
+    subtype: Mapped[str | None] = mapped_column(Text)
+    source_posted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_edited_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    permalink: Mapped[str | None] = mapped_column(Text)
+    content_hash: Mapped[str | None] = mapped_column(Text)
+    is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     raw_event: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
     posted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    ingested_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, server_default="now()"
-    )
+    ingested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
 
     channel: Mapped[SlackChannel | None] = relationship()
+    parent: Mapped["SlackMessage | None"] = relationship(remote_side="SlackMessage.id")
+
+
+class SlackChannelSyncSetting(Base):
+    __tablename__ = "slack_channel_sync_settings"
+
+    channel_id: Mapped[str] = mapped_column(ForeignKey("slack_channels.id", ondelete="CASCADE"), primary_key=True)
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    include_threads: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    include_file_metadata: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    last_successful_sync_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    newest_message_ts: Mapped[str | None] = mapped_column(Text)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+
+
+class SlackReaction(Base):
+    __tablename__ = "slack_reactions"
+    __table_args__ = (Index("ix_slack_reactions_message", "message_id"),)
+
+    message_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("slack_messages.id", ondelete="CASCADE"), primary_key=True)
+    name: Mapped[str] = mapped_column(Text, primary_key=True)
+    slack_user_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("slack_users.id", ondelete="SET NULL"))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+
+
+class SlackMessageLink(Base):
+    __tablename__ = "slack_message_links"
+    __table_args__ = (UniqueConstraint("message_id", "normalized_url", name="uq_slack_message_link"), Index("ix_slack_message_links_domain", "domain"))
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    message_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("slack_messages.id", ondelete="CASCADE"), nullable=False)
+    url: Mapped[str] = mapped_column(Text, nullable=False)
+    normalized_url: Mapped[str] = mapped_column(Text, nullable=False)
+    domain: Mapped[str | None] = mapped_column(Text)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+
+class SlackFile(Base):
+    __tablename__ = "slack_files"
+
+    slack_file_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    message_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("slack_messages.id", ondelete="CASCADE"), nullable=False)
+    filename: Mapped[str | None] = mapped_column(Text)
+    title: Mapped[str | None] = mapped_column(Text)
+    mime_type: Mapped[str | None] = mapped_column(Text)
+    file_type: Mapped[str | None] = mapped_column(Text)
+    size_bytes: Mapped[int | None] = mapped_column(BigInteger)
+    permalink: Mapped[str | None] = mapped_column(Text)
+    source_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+
+class SlackMessageChange(Base):
+    __tablename__ = "slack_message_changes"
+    __table_args__ = (Index("ix_slack_message_changes_message", "message_id"), Index("ix_slack_message_changes_detected", "detected_at"))
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    message_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("slack_messages.id", ondelete="CASCADE"), nullable=False)
+    change_type: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_content_hash: Mapped[str | None] = mapped_column(Text)
+    new_content_hash: Mapped[str | None] = mapped_column(Text)
+    previous_text: Mapped[str | None] = mapped_column(Text)
+    new_text: Mapped[str | None] = mapped_column(Text)
+    source_edited_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    detected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    ingestion_run_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("ingestion_runs.id", ondelete="SET NULL"))
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
 
 
 class KnowledgeArticle(Base):
@@ -431,11 +741,52 @@ class DerivedKnowledgeMixin:
     reviewed_by_officer_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("officers.id", ondelete="SET NULL")
     )
+    reviewed_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("profiles.id", ondelete="SET NULL")
+    )
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     is_stale: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
     fingerprint: Mapped[str] = mapped_column(Text, nullable=False)
+    visibility: Mapped[str] = mapped_column(
+        Text, nullable=False, server_default=text("'internal'")
+    )
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    published_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("profiles.id", ondelete="SET NULL")
+    )
+    review_version: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default=text("1")
+    )
     metadata_: Mapped[dict[str, Any]] = mapped_column(
         "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+
+
+class KnowledgeReviewEvent(Base):
+    """Append-only audit record for a review or publication transition."""
+
+    __tablename__ = "knowledge_review_events"
+    __table_args__ = (
+        Index("ix_knowledge_review_events_record", "knowledge_type", "knowledge_record_id"),
+        Index("ix_knowledge_review_events_created_at", "created_at"),
+        Index("ix_knowledge_review_events_reviewer", "reviewer_profile_id"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    knowledge_type: Mapped[str] = mapped_column(Text, nullable=False)
+    knowledge_record_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
+    action: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_status: Mapped[str | None] = mapped_column(Text)
+    new_status: Mapped[str | None] = mapped_column(Text)
+    reviewer_profile_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("profiles.id", ondelete="RESTRICT"), nullable=False
+    )
+    reason: Mapped[str | None] = mapped_column(Text)
+    changes: Mapped[dict[str, Any]] = mapped_column(
+        JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default="now()"
     )
 
 

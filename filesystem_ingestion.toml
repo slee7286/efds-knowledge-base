@@ -1,0 +1,37 @@
+# Paths are relative to EFDS_FILES_ROOT. Matching is case-insensitive on the
+# Windows filesystem. Repository directories are explicitly excluded because
+# 12_Technology also contains non-document software projects.
+excluded_directories = [
+  ".git",
+  ".github",
+  ".next",
+  "node_modules",
+  "dist",
+  "build",
+  "coverage",
+  ".venv",
+  "venv",
+  "__pycache__",
+  ".pytest_cache",
+  ".mypy_cache",
+  ".ruff_cache",
+  "12_Technology/efds-site",
+  "12_Technology/efds-knowledge-base",
+  "12_Technology/icu-crawler",
+]
+
+excluded_file_patterns = [
+  ".env",
+  ".env.*",
+  "*.pem",
+  "*.key",
+  "*.p12",
+  "*.pfx",
+  "*.sqlite",
+  "*.sqlite3",
+  "*.db",
+  "*.tmp",
+  "*.part",
+  "*.crdownload",
+  "~$*",
+]
