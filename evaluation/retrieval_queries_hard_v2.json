@@ -1,0 +1,308 @@
+[
+  {
+    "query": "What do we need to do before accepting money from a company?",
+    "expected_retrieval_unit_ids": [
+      "1c33de14-fa30-5b70-9462-d78ef14bc492"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "sponsorship"
+  },
+  {
+    "query": "Can we invite someone from outside Imperial to speak at our event?",
+    "expected_retrieval_unit_ids": [
+      "e2a8eef0-956e-5e56-a3da-a4d3e35d13cd"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "speaker"
+  },
+  {
+    "query": "How do I get money back for something I paid for personally?",
+    "expected_retrieval_unit_ids": [
+      "ad91277c-0a34-5577-b0c4-00559b8f9fc2"
+    ],
+    "source_family": "knowledge_requirement",
+    "category": "hard_paraphrase",
+    "label_term": "reimburse"
+  },
+  {
+    "query": "How can the society apply for funding?",
+    "expected_retrieval_unit_ids": [
+      "a9d31ce1-042a-5f1b-bc13-1359dd8a3099"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "funding"
+  },
+  {
+    "query": "What is the process for reserving Union rooms?",
+    "expected_retrieval_unit_ids": [
+      "833dbb40-40b0-531f-832b-5f46efec5fd9"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "room booking"
+  },
+  {
+    "query": "When can alcohol be served at a student event?",
+    "expected_retrieval_unit_ids": [
+      "222c2e0d-16e2-5ced-a0f5-4c6536536abd"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "alcohol"
+  },
+  {
+    "query": "What safety paperwork is needed for an event?",
+    "expected_retrieval_unit_ids": [
+      "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "risk assessment"
+  },
+  {
+    "query": "How do we hire a minibus?",
+    "expected_retrieval_unit_ids": [
+      "2eb46279-3a7a-548d-9a26-2673540b2745"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "minibus"
+  },
+  {
+    "query": "Where do officers manage society submissions?",
+    "expected_retrieval_unit_ids": [
+      "1330725d-91d3-51df-bffc-cbac850102a4"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "SUMS"
+  },
+  {
+    "query": "How is the committee constitution changed?",
+    "expected_retrieval_unit_ids": [
+      "014ba142-795a-5776-9eb4-b60f5fd96c78"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "constitution"
+  },
+  {
+    "query": "How do elections work?",
+    "expected_retrieval_unit_ids": [
+      "8935fb45-3bdf-585f-9257-88979676efba"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "election"
+  },
+  {
+    "query": "What should a treasurer consider before spending?",
+    "expected_retrieval_unit_ids": [
+      "3d840056-b61e-5e07-86a4-a025fb919d26"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "spending"
+  },
+  {
+    "query": "How do we register an external coach?",
+    "expected_retrieval_unit_ids": [
+      "6e3f5f67-a124-527e-929a-28adb6e9c86f"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "coach"
+  },
+  {
+    "query": "What welfare issues must event organisers plan for?",
+    "expected_retrieval_unit_ids": [
+      "667f59e6-df14-5d30-a963-51793d15521a"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "welfare"
+  },
+  {
+    "query": "How should we make activities accessible?",
+    "expected_retrieval_unit_ids": [
+      "69e620f3-2b68-5f88-88b0-99797bff36d2"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "accessibility"
+  },
+  {
+    "query": "What is needed to run a stall?",
+    "expected_retrieval_unit_ids": [
+      "a5833a5b-ff79-5187-828f-4bddc67f7a6e"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "stall"
+  },
+  {
+    "query": "How should we plan a boat party?",
+    "expected_retrieval_unit_ids": [
+      "6b041e28-5d62-5d42-bb46-75dfcc647373"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "boat party"
+  },
+  {
+    "query": "What are the rules for sponsorship agreements?",
+    "expected_retrieval_unit_ids": [
+      "4c601c1f-52b3-525f-a2a6-6f7335cbf253"
+    ],
+    "source_family": "knowledge_requirement",
+    "category": "hard_paraphrase",
+    "label_term": "sponsorship agreement"
+  },
+  {
+    "query": "How do we request access to society spaces?",
+    "expected_retrieval_unit_ids": [
+      "b9f57016-78c0-5da6-9bfb-35566155a78d"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "space access"
+  },
+  {
+    "query": "What is the Union grant timeline?",
+    "expected_retrieval_unit_ids": [
+      "f5d24772-3cbc-531f-a68f-1ed89f19ac4f"
+    ],
+    "source_family": "knowledge_requirement",
+    "category": "hard_paraphrase",
+    "label_term": "grant"
+  },
+  {
+    "query": "How do we submit a funding application?",
+    "expected_retrieval_unit_ids": [
+      "726f76a1-c315-58fc-8edb-1e60c20e78ae"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "funding application"
+  },
+  {
+    "query": "What support exists for summer handover?",
+    "expected_retrieval_unit_ids": [
+      "d97e41d2-2c0f-5d1a-8fc5-44aeac9ac58f"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "summer"
+  },
+  {
+    "query": "What happens when society accounts are frozen?",
+    "expected_retrieval_unit_ids": [
+      "b690f047-22c9-518d-abf3-beb65c15ad6e"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "frozen accounts"
+  },
+  {
+    "query": "What do new committee members need to know?",
+    "expected_retrieval_unit_ids": [
+      "833dbb40-40b0-531f-832b-5f46efec5fd9"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "committee member resources"
+  },
+  {
+    "query": "How should we organise a social?",
+    "expected_retrieval_unit_ids": [
+      "1d47fe53-6f9c-5bc4-a170-ab6fe04b7a9f"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "running a social"
+  },
+  {
+    "query": "What does the drinks token guidance say?",
+    "expected_retrieval_unit_ids": [
+      "6ed9ecf8-43e8-56b0-b857-8e61872d4178"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "drinks tokens"
+  },
+  {
+    "query": "How is event calendar information submitted?",
+    "expected_retrieval_unit_ids": [
+      "06cb3357-5ea6-5c41-b72c-a8f0e27f71ad"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "what's on calendar"
+  },
+  {
+    "query": "What is required for compliance and regulation?",
+    "expected_retrieval_unit_ids": [
+      "5250d843-1fce-50cc-bd1e-15d93c5d2d7e"
+    ],
+    "source_family": "knowledge_resource",
+    "category": "hard_paraphrase",
+    "label_term": "compliance"
+  },
+  {
+    "query": "How can students request adjustments at events?",
+    "expected_retrieval_unit_ids": [
+      "69e620f3-2b68-5f88-88b0-99797bff36d2"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "accessibility"
+  },
+  {
+    "query": "What is the process for equipment hire?",
+    "expected_retrieval_unit_ids": [
+      "dde2e5f7-617b-5d17-960b-ce09ddf80a15"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "equipment hire"
+  },
+  {
+    "query": "How do I use the CSP email account?",
+    "expected_retrieval_unit_ids": [
+      "17f4aa24-29cd-532b-8fce-685a9e879d06"
+    ],
+    "source_family": "knowledge_requirement",
+    "category": "hard_paraphrase",
+    "label_term": "CSP email"
+  },
+  {
+    "query": "What should a society do after an incident?",
+    "expected_retrieval_unit_ids": [
+      "efabf6a9-d549-5754-8f61-76e8fecce169"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "incident"
+  },
+  {
+    "query": "What does sustainable spending mean for a committee?",
+    "expected_retrieval_unit_ids": [
+      "3d840056-b61e-5e07-86a4-a025fb919d26"
+    ],
+    "source_family": "icu_article",
+    "category": "hard_paraphrase",
+    "label_term": "sustainable"
+  },
+  {
+    "query": "How can a society run a fundraising activity?",
+    "expected_retrieval_unit_ids": [
+      "46aea014-7baa-508c-8964-9ee54520cfcd"
+    ],
+    "source_family": "knowledge_requirement",
+    "category": "hard_paraphrase",
+    "label_term": "fundraising"
+  }
+]

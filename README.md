@@ -16,6 +16,7 @@ The current platform includes the database/filesystem foundation, ICU ingestion 
 - ICU Freshdesk articles are synchronised from the existing `icu-crawler/data/` archive into `knowledge_articles`
 - Slack is synchronised by `scripts/sync_slack.py` into private, allowlisted canonical source tables; the Slack token stays in the backend environment
 - The local EFDS OneDrive tree is synchronised by `scripts/sync_filesystem.py` into stable source rows and immutable document versions
+- Meetily's local SQLite meeting outputs are synchronised read-only by `scripts/sync_meetily.py` into versioned, admin-only meeting artifacts and transcript segments
 
 The direct Supabase PostgreSQL connection is suitable for local development, Alembic, and ingestion scripts. A transaction/session pooler may be preferable for a future serverless deployment.
 
@@ -274,3 +275,31 @@ development artifacts, temporary Office files, local databases, credentials and
 private-key patterns. Raw filesystem content is admin-only through RLS. See
 [docs/FILESYSTEM_SYNC.md](docs/FILESYSTEM_SYNC.md) for reconciliation, watch,
 OneDrive placeholder and future Graph compatibility behavior.
+
+## Unified retrieval
+
+Apply the latest Alembic migration and rebuild the derived PostgreSQL retrieval
+index with `python scripts/rebuild_retrieval_index.py --full`. Website member
+and admin search use the permission-filtered retrieval RPC. See
+[docs/RETRIEVAL.md](docs/RETRIEVAL.md).
+
+## Decisions, Actions & Operational Truth V1
+
+Migration `0012_operational_truth` adds the reviewed operational layer for
+decisions, action items, commitments, open questions and status updates. New
+records are proposed, evidence is attached through retrieval-unit IDs, and
+admin review/publication mutations are atomic with their audit events. The
+operations layer never edits Slack, Meetily, OneDrive or ICU source rows. See
+[docs/OPERATIONAL_TRUTH.md](docs/OPERATIONAL_TRUTH.md).
+
+## Semantic and hybrid retrieval V1
+
+Migration `0013_semantic_retrieval` adds versioned pgvector embeddings behind
+the backend-only `OPENAI_API_KEY` provider boundary. The default privacy policy
+embeds ICU and ICU-derived structured knowledge, approved operational records,
+and OneDrive `01_governance` records; other document areas, Slack and Meetily
+require explicit configuration. Use
+`python scripts/embed_retrieval_units.py --dry-run --missing-only` and
+`python scripts/report_embedding_coverage.py` before a real batch. Lexical
+retrieval remains the safe fallback. See
+[docs/EMBEDDINGS.md](docs/EMBEDDINGS.md).

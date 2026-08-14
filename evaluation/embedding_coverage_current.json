@@ -1,0 +1,122 @@
+﻿{
+  "provider": "openai",
+  "model": "text-embedding-3-small",
+  "source_filter": null,
+  "area_filter": null,
+  "totals": {
+    "eligible": 1555,
+    "embedded": 1534,
+    "units": 2707,
+    "ineligible": 1152,
+    "missing": 21
+  },
+  "by_source_type": {
+    "document": {
+      "eligible": 21,
+      "embedded": 0,
+      "missing": 21,
+      "outdated": 0,
+      "ineligible": 1116
+    },
+    "icu_article": {
+      "eligible": 543,
+      "embedded": 543,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "knowledge_contact": {
+      "eligible": 37,
+      "embedded": 37,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "knowledge_process": {
+      "eligible": 23,
+      "embedded": 23,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "knowledge_process_step": {
+      "eligible": 101,
+      "embedded": 101,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "knowledge_requirement": {
+      "eligible": 374,
+      "embedded": 374,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "knowledge_resource": {
+      "eligible": 381,
+      "embedded": 381,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 1
+    },
+    "knowledge_timing_rule": {
+      "eligible": 75,
+      "embedded": 75,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "slack_message": {
+      "eligible": 0,
+      "embedded": 0,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 35
+    }
+  },
+  "by_source_area": {
+    "(none)": {
+      "eligible": 991,
+      "embedded": 991,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 36
+    },
+    "00_inbox": {
+      "eligible": 0,
+      "embedded": 0,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 1058
+    },
+    "01_governance": {
+      "eligible": 21,
+      "embedded": 0,
+      "missing": 21,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "03_committee": {
+      "eligible": 0,
+      "embedded": 0,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 58
+    },
+    "Committee Member Resources": {
+      "eligible": 537,
+      "embedded": 537,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    },
+    "Knowledge base": {
+      "eligible": 6,
+      "embedded": 6,
+      "missing": 0,
+      "outdated": 0,
+      "ineligible": 0
+    }
+  }
+}

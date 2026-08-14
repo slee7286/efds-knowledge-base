@@ -219,3 +219,112 @@ polling for near-real-time updates. It is not authoritative: an hourly or
 daily `--full` reconciliation is required because a laptop can be offline and
 filesystem events can be missed. The model leaves room for future Graph
 `drive_id`/`item_id` metadata without implementing Microsoft Graph now.
+
+## Unified retrieval V1
+
+Canonical ICU, structured knowledge, OneDrive, and Slack tables remain
+independent. `retrieval_units` is a deterministic derived index for
+PostgreSQL-native search. The rebuild maps current source truth into stable
+UUID5 units, chunks long text, stores provenance, and retires superseded units
+without deleting history. A GIN-indexed `tsvector`, title/body weights,
+exact-match boosts, modest authority/recency adjustments, and `ts_headline`
+provide explainable V1 retrieval.
+
+Website search calls the `search_retrieval_units` SECURITY INVOKER RPC. RLS on
+the denormalized index is deliberately restrictive: admins can read admin-only
+Slack/OneDrive sources; member/public scopes can only read explicitly published,
+approved, current, non-stale structured knowledge. No application-side
+post-filtering is used as the access boundary. Rebuild with
+`python scripts/rebuild_retrieval_index.py --full` after source synchronization,
+review, or publication changes.
+
+## Meetily Meeting Ingestion V1
+
+Meetily is a local source producer, not a second EFDS transcription service:
+
+```text
+Meetily SQLite / supported export
+             ↓ read-only adapter
+        meetings (stable logical identity)
+             ↓
+ meeting_artifacts (immutable transcript/summary/note versions)
+             ↓
+ meeting_transcript_segments (timestamps and supplied speakers)
+             ↓
+ retrieval_units (meeting_transcript / meeting_summary / meeting_notes)
+```
+
+The current Windows installation was inspected and stores its records in
+`%APPDATA%\com.meetily.ai\meeting_minutes.sqlite`. The adapter reads the
+`meetings`, `transcripts`, `transcript_chunks`, `summary_processes`, and
+`meeting_notes` tables without modifying them. An export-directory fallback
+supports explicitly staged `meeting.json`, transcript, and summary files.
+
+Meetily's meeting ID is the logical identity. SHA-256 identifies an artifact
+version only. Changed transcripts/summaries retain their old artifact and add
+a current version; unchanged hashes are skipped. Timestamped segments are
+stored structurally and unknown speakers remain null. The summary is marked
+`generated_by=meetily` and `source_generated`; it is not authoritative minutes
+and no decision/action extraction occurs in this milestone.
+
+Meeting tables and meeting retrieval units are admin-only under the V1 RLS and
+retrieval policies. A source file exported into OneDrive remains an independent
+filesystem source instance even when its content hash matches a meeting
+artifact. See [docs/MEETILY_INTEGRATION.md](docs/MEETILY_INTEGRATION.md) for
+sync commands, limitations, and the first-import procedure.
+
+## Decisions, Actions & Operational Truth V1
+
+Operational records are a separate reviewed interpretation layer over ICU,
+Slack, Meetily, document and retrieval evidence. Migration 0012 adds one
+canonical `operational_records` model for decisions, action items,
+commitments, open questions and status updates, plus many-to-many evidence and
+review-event tables. Legacy decisions and action items are backfilled without
+deleting their original rows.
+
+Admin mutations use the `mutate_operational_record` Supabase RPC. The function
+resolves the actor from `auth.uid()`, requires an active admin profile, locks
+the row, checks `review_version`, updates the record and inserts one audit event
+in the same transaction. Source rows remain immutable. Approved/current
+records can be explicitly published; RLS keeps proposed and internal records
+out of member/public retrieval.
+
+## Semantic and hybrid retrieval V1
+
+Migration 0013 adds versioned `retrieval_embeddings` backed by PostgreSQL
+pgvector. The backend-only embedding worker applies an explicit source privacy
+allowlist and content/model hash idempotency. ICU and ICU-derived structured
+knowledge, approved operational records, and normalized OneDrive
+`01_governance` records are eligible by default. Other OneDrive areas, Slack,
+and Meetily sources require explicit configuration.
+
+The Python retrieval service preserves lexical search and adds semantic and
+RRF hybrid modes. Semantic SQL filters current state, visibility, source
+filters, and history before returning vector candidates. Website search keeps
+the existing Supabase lexical boundary until a backend HTTP retrieval service
+is deployed; the provider key is never placed in Next.js.
+## Retrieval Evaluation V2 and agent boundary
+
+Retrieval remains a derived, permission-scoped layer over the canonical ICU,
+OneDrive, Slack, Meetily, and operational models. The final evaluated ranking
+uses semantic retrieval as the primary order and applies lexical rescue only
+for high-confidence exact identifiers, URLs, filenames, and exact-title
+signals. Generic lexical/semantic RRF is retained as an evaluation strategy,
+not the selected default, because it displaced relevant semantic results in
+the reviewed development and holdout tests.
+
+The agent boundary is `ContextPackage`, not a model call. Packages contain
+provenance-preserving `RetrievalResult` values and deterministic diagnostics.
+Empty packages are marked low evidence and are not padded with unrelated
+records. RLS and source-specific authorization remain enforced during both
+lexical and semantic retrieval.
+
+Retrieval Evaluation V2 uses a frozen reviewed benchmark plus deterministic
+development/holdout files. The current corpus has no substantive Slack,
+Meetily, or operational records, and 21 governance document units are
+eligible but currently missing embeddings under the conservative external-
+provider policy. Consequently the
+current evidence remains a NO-GO for certifying a system-wide EFDS Agent V1
+until approved document coverage is embedded; current coverage is reported by
+`scripts/report_embedding_coverage.py` and policy is documented in
+`docs/EMBEDDING_PRIVACY_POLICY.md`.

@@ -20,8 +20,9 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
     text,
+    text as sql_text,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, TimestampMixin
@@ -277,12 +278,30 @@ class DocumentSourceChange(Base):
 
 class Meeting(Base, TimestampMixin):
     __tablename__ = "meetings"
-    __table_args__ = (Index("ix_meetings_meeting_date", "meeting_date"),)
+    __table_args__ = (
+        Index("ix_meetings_meeting_date", "meeting_date"),
+        Index("ix_meetings_source_identity", "source_type", "external_meeting_id"),
+        Index("ix_meetings_started_at", "started_at"),
+        Index("ix_meetings_missing", "is_missing"),
+        UniqueConstraint("source_type", "external_meeting_id", name="uq_meetings_source_external_id"),
+    )
 
     id: Mapped[uuid.UUID] = uuid_column()
     title: Mapped[str] = mapped_column(Text, nullable=False)
     meeting_type: Mapped[str | None] = mapped_column(Text)
     meeting_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_type: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'manual'"))
+    external_meeting_id: Mapped[str | None] = mapped_column(Text)
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    duration_seconds: Mapped[int | None] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'active'"))
+    source_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    last_changed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    is_missing: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
     transcript_document_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("documents.id", ondelete="SET NULL")
     )
@@ -304,6 +323,83 @@ class Meeting(Base, TimestampMixin):
     )
     decisions: Mapped[list["Decision"]] = relationship(back_populates="meeting")
     action_items: Mapped[list["ActionItem"]] = relationship(back_populates="meeting")
+    artifacts: Mapped[list["MeetingArtifact"]] = relationship(back_populates="meeting", cascade="all, delete-orphan")
+    transcript_segments: Mapped[list["MeetingTranscriptSegment"]] = relationship(back_populates="meeting", cascade="all, delete-orphan")
+    source_changes: Mapped[list["MeetingSourceChange"]] = relationship(back_populates="meeting", cascade="all, delete-orphan")
+
+
+class MeetingArtifact(Base):
+    """Immutable version of a Meetily transcript, summary, or note artifact."""
+
+    __tablename__ = "meeting_artifacts"
+    __table_args__ = (
+        UniqueConstraint("meeting_id", "artifact_type", "content_hash", name="uq_meeting_artifact_version"),
+        Index("ix_meeting_artifacts_current", "meeting_id", "artifact_type", "is_current"),
+        Index("ix_meeting_artifacts_hash", "content_hash"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    meeting_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("meetings.id", ondelete="CASCADE"), nullable=False)
+    artifact_type: Mapped[str] = mapped_column(Text, nullable=False)
+    source_record_id: Mapped[str | None] = mapped_column(Text)
+    source_reference: Mapped[str | None] = mapped_column(Text)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    content_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    format: Mapped[str | None] = mapped_column(Text)
+    source_created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    ingested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    is_current: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    generated_by: Mapped[str | None] = mapped_column(Text)
+    review_status: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'source_generated'"))
+    summary_template: Mapped[str | None] = mapped_column(Text)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=sql_text("'{}'::jsonb"))
+
+    meeting: Mapped[Meeting] = relationship(back_populates="artifacts")
+    transcript_segments: Mapped[list["MeetingTranscriptSegment"]] = relationship(back_populates="artifact", cascade="all, delete-orphan")
+
+
+class MeetingTranscriptSegment(Base):
+    __tablename__ = "meeting_transcript_segments"
+    __table_args__ = (
+        UniqueConstraint("artifact_id", "sequence", name="uq_meeting_transcript_segment_order"),
+        Index("ix_meeting_transcript_segments_meeting", "meeting_id", "sequence"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    meeting_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("meetings.id", ondelete="CASCADE"), nullable=False)
+    artifact_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("meeting_artifacts.id", ondelete="CASCADE"), nullable=False)
+    sequence: Mapped[int] = mapped_column(Integer, nullable=False)
+    start_ms: Mapped[int | None] = mapped_column(Integer)
+    end_ms: Mapped[int | None] = mapped_column(Integer)
+    speaker: Mapped[str | None] = mapped_column(Text)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    content_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=sql_text("'{}'::jsonb"))
+
+    meeting: Mapped[Meeting] = relationship(back_populates="transcript_segments")
+    artifact: Mapped[MeetingArtifact] = relationship(back_populates="transcript_segments")
+
+
+class MeetingSourceChange(Base):
+    __tablename__ = "meeting_source_changes"
+    __table_args__ = (
+        Index("ix_meeting_source_changes_meeting", "meeting_id", "detected_at"),
+        Index("ix_meeting_source_changes_type", "change_type", "detected_at"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    meeting_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("meetings.id", ondelete="CASCADE"), nullable=False)
+    change_type: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_hash: Mapped[str | None] = mapped_column(Text)
+    new_hash: Mapped[str | None] = mapped_column(Text)
+    previous_value: Mapped[str | None] = mapped_column(Text)
+    new_value: Mapped[str | None] = mapped_column(Text)
+    detected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    ingestion_run_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("ingestion_runs.id", ondelete="SET NULL"))
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+    meeting: Mapped[Meeting] = relationship(back_populates="source_changes")
 
 
 class MeetingAttendee(Base):
@@ -362,6 +458,92 @@ class ActionItem(Base, TimestampMixin):
 
     meeting: Mapped[Meeting | None] = relationship(back_populates="action_items")
     owner: Mapped[Officer | None] = relationship(back_populates="owned_action_items")
+
+
+class OperationalRecord(Base, TimestampMixin):
+    """Reviewed operational interpretation supported by source evidence."""
+
+    __tablename__ = "operational_records"
+    __table_args__ = (
+        CheckConstraint("record_type IN ('decision', 'action_item', 'commitment', 'open_question', 'status_update')", name="ck_operational_records_type"),
+        CheckConstraint("review_status IN ('proposed', 'approved', 'rejected', 'needs_review', 'superseded')", name="ck_operational_records_review_status"),
+        CheckConstraint("execution_status IS NULL OR execution_status IN ('open', 'in_progress', 'blocked', 'completed', 'cancelled', 'answered', 'resolved', 'closed')", name="ck_operational_records_execution_status"),
+        CheckConstraint("visibility IN ('internal', 'committee', 'member', 'public')", name="ck_operational_records_visibility"),
+        Index("ix_operational_records_type_review", "record_type", "review_status", "is_current"),
+        Index("ix_operational_records_execution", "execution_status", "due_at"),
+        Index("ix_operational_records_owner", "owner_profile_id", "owner_officer_id"),
+        Index("ix_operational_records_workstream", "workstream"),
+        Index("ix_operational_records_visibility", "visibility", "review_status", "is_current"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    record_type: Mapped[str] = mapped_column(Text, nullable=False)
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    description: Mapped[str | None] = mapped_column(Text)
+    priority: Mapped[str | None] = mapped_column(Text)
+    owner_profile_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("profiles.id", ondelete="SET NULL"))
+    owner_officer_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("officers.id", ondelete="SET NULL"))
+    owner_text: Mapped[str | None] = mapped_column(Text)
+    due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    due_text: Mapped[str | None] = mapped_column(Text)
+    occurred_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    workstream: Mapped[str | None] = mapped_column(Text)
+    execution_status: Mapped[str | None] = mapped_column(Text)
+    review_status: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'proposed'"))
+    visibility: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'internal'"))
+    is_current: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    created_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("profiles.id", ondelete="SET NULL"))
+    reviewed_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("profiles.id", ondelete="SET NULL"))
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    superseded_by_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("operational_records.id", ondelete="SET NULL"))
+    review_version: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("1"))
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+    evidence: Mapped[list["OperationalRecordEvidence"]] = relationship(back_populates="operational_record", cascade="all, delete-orphan", foreign_keys="OperationalRecordEvidence.operational_record_id")
+
+
+class OperationalRecordEvidence(Base):
+    __tablename__ = "operational_record_evidence"
+    __table_args__ = (
+        UniqueConstraint("operational_record_id", "retrieval_unit_id", "evidence_role", name="uq_operational_record_evidence_unit_role"),
+        Index("ix_operational_record_evidence_record", "operational_record_id"),
+        Index("ix_operational_record_evidence_unit", "retrieval_unit_id"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    operational_record_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("operational_records.id", ondelete="CASCADE"), nullable=False)
+    retrieval_unit_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("retrieval_units.id", ondelete="RESTRICT"), nullable=False)
+    source_type: Mapped[str] = mapped_column(Text, nullable=False)
+    source_record_id: Mapped[str] = mapped_column(Text, nullable=False)
+    source_version_id: Mapped[str | None] = mapped_column(Text)
+    evidence_text: Mapped[str | None] = mapped_column(Text)
+    start_offset: Mapped[int | None] = mapped_column(Integer)
+    end_offset: Mapped[int | None] = mapped_column(Integer)
+    evidence_role: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'supporting'"))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
+    metadata_: Mapped[dict[str, Any]] = mapped_column("metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+
+    operational_record: Mapped[OperationalRecord] = relationship(back_populates="evidence", foreign_keys=[operational_record_id])
+
+
+class OperationalReviewEvent(Base):
+    __tablename__ = "operational_review_events"
+    __table_args__ = (
+        Index("ix_operational_review_events_record", "operational_record_id", "created_at"),
+        Index("ix_operational_review_events_reviewer", "reviewer_profile_id", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    operational_record_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("operational_records.id", ondelete="CASCADE"), nullable=False)
+    action: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_review_status: Mapped[str | None] = mapped_column(Text)
+    new_review_status: Mapped[str | None] = mapped_column(Text)
+    reviewer_profile_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("profiles.id", ondelete="RESTRICT"), nullable=False)
+    reason: Mapped[str | None] = mapped_column(Text)
+    changes: Mapped[dict[str, Any]] = mapped_column(JsonType, nullable=False, server_default=text("'{}'::jsonb"))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default="now()")
 
 
 class SlackWorkspace(Base):
@@ -940,3 +1122,81 @@ class KnowledgeArticleRelationship(Base):
     relationship_type: Mapped[str] = mapped_column(Text, primary_key=True)
     evidence_text: Mapped[str | None] = mapped_column(Text)
     source_content_hash: Mapped[str | None] = mapped_column(Text)
+
+
+class RetrievalUnit(Base, TimestampMixin):
+    """Derived, permission-filtered search unit over canonical source records.
+
+    ``source_record_id`` is deliberately text rather than a foreign key: the
+    canonical sources use both UUID identities (ICU, documents, Slack
+    messages) and Slack's text channel identities.  The stable key and
+    provenance columns retain the link without introducing a polymorphic
+    foreign-key abstraction into the source schema.
+    """
+
+    __tablename__ = "retrieval_units"
+    __table_args__ = (
+        UniqueConstraint("stable_key", name="uq_retrieval_units_stable_key"),
+        Index("ix_retrieval_units_source_current", "source_type", "is_current"),
+        Index("ix_retrieval_units_visibility_state", "visibility", "review_status", "is_current"),
+        Index("ix_retrieval_units_source_record", "source_type", "source_record_id"),
+        Index("ix_retrieval_units_source_version", "source_version_id"),
+        Index("ix_retrieval_units_area", "source_area"),
+        Index("ix_retrieval_units_channel", "channel"),
+        Index("ix_retrieval_units_occurred_at", "occurred_at"),
+        Index(
+            "ix_retrieval_units_search_vector",
+            "search_vector",
+            postgresql_using="gin",
+        ),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    stable_key: Mapped[str] = mapped_column(Text, nullable=False)
+    source_type: Mapped[str] = mapped_column(Text, nullable=False)
+    source_record_id: Mapped[str] = mapped_column(Text, nullable=False)
+    source_parent_id: Mapped[str | None] = mapped_column(Text)
+    source_version_id: Mapped[str | None] = mapped_column(Text)
+    chunk_index: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    content_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    index_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    source_area: Mapped[str | None] = mapped_column(Text)
+    topic: Mapped[str | None] = mapped_column(Text)
+    channel: Mapped[str | None] = mapped_column(Text)
+    author: Mapped[str | None] = mapped_column(Text)
+    visibility: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'internal'"))
+    review_status: Mapped[str | None] = mapped_column(Text)
+    authority: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'source_record'"))
+    is_current: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    is_stale: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    occurred_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_url: Mapped[str | None] = mapped_column(Text)
+    permalink: Mapped[str | None] = mapped_column(Text)
+    relative_path: Mapped[str | None] = mapped_column(Text)
+    metadata_: Mapped[dict[str, Any]] = mapped_column(
+        "metadata", JsonType, nullable=False, server_default=text("'{}'::jsonb")
+    )
+    search_vector: Mapped[Any] = mapped_column(TSVECTOR, nullable=False)
+
+
+class RetrievalEmbedding(Base, TimestampMixin):
+    """Versioned derived vector; the PostgreSQL column is supplied by migration."""
+
+    __tablename__ = "retrieval_embeddings"
+    __table_args__ = (
+        UniqueConstraint("retrieval_unit_id", "provider", "model", "model_version", name="uq_retrieval_embeddings_model"),
+        Index("ix_retrieval_embeddings_unit_model", "retrieval_unit_id", "provider", "model", "model_version"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    retrieval_unit_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("retrieval_units.id", ondelete="CASCADE"), nullable=False)
+    provider: Mapped[str] = mapped_column(Text, nullable=False)
+    model: Mapped[str] = mapped_column(Text, nullable=False)
+    model_version: Mapped[str] = mapped_column(Text, nullable=False)
+    dimension: Mapped[int] = mapped_column(Integer, nullable=False)
+    input_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    embedding: Mapped[str] = mapped_column(Text, nullable=False)  # raw vector is written with PostgreSQL CAST

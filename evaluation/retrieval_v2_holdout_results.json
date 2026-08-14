@@ -1,0 +1,2748 @@
+{
+  "benchmark_metadata": {
+    "benchmark_version": "retrieval_v2_holdout_v1",
+    "split": "holdout",
+    "split_seed": "efds-retrieval-v2-split-2026-08-14",
+    "holdout_fraction": 0.3,
+    "peer_count": 40
+  },
+  "phase": "holdout",
+  "query_count": 19,
+  "strategies": [
+    "weighted_fts",
+    "semantic",
+    "semantic_primary_exact"
+  ],
+  "best_strategy": "semantic_primary_exact",
+  "methods": {
+    "weighted_fts": {
+      "metrics": {
+        "hit_at_1": 0.0,
+        "hit_at_3": 0.0,
+        "hit_at_5": 0.0,
+        "hit_at_8": 0.0,
+        "hit_at_10": 0.0,
+        "mrr": 0.0,
+        "recall_at_5": 0.0,
+        "recall_at_10": 0.0
+      },
+      "by_source_family": {
+        "document": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "icu_article": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "knowledge_process": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "knowledge_requirement": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        }
+      },
+      "by_category": {
+        "academics": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "events": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "finance": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "governance": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "identifier": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "policy": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "process": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "sponsorship": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        }
+      },
+      "latency_ms": {
+        "lexical_median": 35.895,
+        "embedding_median": 207.64,
+        "semantic_db_median": 135.871,
+        "end_to_end_median": 413.278,
+        "embedding_p95": 314.429,
+        "semantic_db_p95": 850.855,
+        "end_to_end_p95": 2543.165
+      }
+    },
+    "semantic": {
+      "metrics": {
+        "hit_at_1": 0.3158,
+        "hit_at_3": 0.3684,
+        "hit_at_5": 0.4737,
+        "hit_at_8": 0.4737,
+        "hit_at_10": 0.5263,
+        "mrr": 0.3761,
+        "recall_at_5": 0.4737,
+        "recall_at_10": 0.5263
+      },
+      "by_source_family": {
+        "document": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "icu_article": {
+          "hit_at_1": 0.375,
+          "hit_at_3": 0.375,
+          "hit_at_5": 0.625,
+          "hit_at_8": 0.625,
+          "hit_at_10": 0.75,
+          "mrr": 0.4558,
+          "recall_at_5": 0.625,
+          "recall_at_10": 0.75
+        },
+        "knowledge_process": {
+          "hit_at_1": 1.0,
+          "hit_at_3": 1.0,
+          "hit_at_5": 1.0,
+          "hit_at_8": 1.0,
+          "hit_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0
+        },
+        "knowledge_requirement": {
+          "hit_at_1": 0.6667,
+          "hit_at_3": 1.0,
+          "hit_at_5": 1.0,
+          "hit_at_8": 1.0,
+          "hit_at_10": 1.0,
+          "mrr": 0.8333,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0
+        }
+      },
+      "by_category": {
+        "academics": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "events": {
+          "hit_at_1": 0.4286,
+          "hit_at_3": 0.4286,
+          "hit_at_5": 0.7143,
+          "hit_at_8": 0.7143,
+          "hit_at_10": 0.7143,
+          "mrr": 0.4986,
+          "recall_at_5": 0.7143,
+          "recall_at_10": 0.7143
+        },
+        "finance": {
+          "hit_at_1": 0.5,
+          "hit_at_3": 0.5,
+          "hit_at_5": 0.5,
+          "hit_at_8": 0.5,
+          "hit_at_10": 0.5,
+          "mrr": 0.5,
+          "recall_at_5": 0.5,
+          "recall_at_10": 0.5
+        },
+        "governance": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "identifier": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0455,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "policy": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 1.0,
+          "mrr": 0.1111,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0
+        },
+        "process": {
+          "hit_at_1": 0.5,
+          "hit_at_3": 1.0,
+          "hit_at_5": 1.0,
+          "hit_at_8": 1.0,
+          "hit_at_10": 1.0,
+          "mrr": 0.75,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0
+        },
+        "sponsorship": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        }
+      },
+      "latency_ms": {
+        "lexical_median": 35.895,
+        "embedding_median": 207.64,
+        "semantic_db_median": 135.871,
+        "end_to_end_median": 413.278,
+        "embedding_p95": 314.429,
+        "semantic_db_p95": 850.855,
+        "end_to_end_p95": 2543.165
+      }
+    },
+    "semantic_primary_exact": {
+      "metrics": {
+        "hit_at_1": 0.3158,
+        "hit_at_3": 0.3684,
+        "hit_at_5": 0.4737,
+        "hit_at_8": 0.4737,
+        "hit_at_10": 0.5263,
+        "mrr": 0.3761,
+        "recall_at_5": 0.4737,
+        "recall_at_10": 0.5263
+      },
+      "by_source_family": {
+        "document": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "icu_article": {
+          "hit_at_1": 0.375,
+          "hit_at_3": 0.375,
+          "hit_at_5": 0.625,
+          "hit_at_8": 0.625,
+          "hit_at_10": 0.75,
+          "mrr": 0.4558,
+          "recall_at_5": 0.625,
+          "recall_at_10": 0.75
+        },
+        "knowledge_process": {
+          "hit_at_1": 1.0,
+          "hit_at_3": 1.0,
+          "hit_at_5": 1.0,
+          "hit_at_8": 1.0,
+          "hit_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0
+        },
+        "knowledge_requirement": {
+          "hit_at_1": 0.6667,
+          "hit_at_3": 1.0,
+          "hit_at_5": 1.0,
+          "hit_at_8": 1.0,
+          "hit_at_10": 1.0,
+          "mrr": 0.8333,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0
+        }
+      },
+      "by_category": {
+        "academics": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "events": {
+          "hit_at_1": 0.4286,
+          "hit_at_3": 0.4286,
+          "hit_at_5": 0.7143,
+          "hit_at_8": 0.7143,
+          "hit_at_10": 0.7143,
+          "mrr": 0.4986,
+          "recall_at_5": 0.7143,
+          "recall_at_10": 0.7143
+        },
+        "finance": {
+          "hit_at_1": 0.5,
+          "hit_at_3": 0.5,
+          "hit_at_5": 0.5,
+          "hit_at_8": 0.5,
+          "hit_at_10": 0.5,
+          "mrr": 0.5,
+          "recall_at_5": 0.5,
+          "recall_at_10": 0.5
+        },
+        "governance": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "identifier": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0455,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        },
+        "policy": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 1.0,
+          "mrr": 0.1111,
+          "recall_at_5": 0.0,
+          "recall_at_10": 1.0
+        },
+        "process": {
+          "hit_at_1": 0.5,
+          "hit_at_3": 1.0,
+          "hit_at_5": 1.0,
+          "hit_at_8": 1.0,
+          "hit_at_10": 1.0,
+          "mrr": 0.75,
+          "recall_at_5": 1.0,
+          "recall_at_10": 1.0
+        },
+        "sponsorship": {
+          "hit_at_1": 0.0,
+          "hit_at_3": 0.0,
+          "hit_at_5": 0.0,
+          "hit_at_8": 0.0,
+          "hit_at_10": 0.0,
+          "mrr": 0.0,
+          "recall_at_5": 0.0,
+          "recall_at_10": 0.0
+        }
+      },
+      "latency_ms": {
+        "lexical_median": 35.895,
+        "embedding_median": 207.64,
+        "semantic_db_median": 135.871,
+        "end_to_end_median": 413.278,
+        "embedding_p95": 314.429,
+        "semantic_db_p95": 850.855,
+        "end_to_end_p95": 2543.165
+      }
+    }
+  },
+  "failures": {
+    "weighted_fts": [
+      {
+        "query": "How can the society apply for funding?",
+        "category": "finance",
+        "source_family": "knowledge_process",
+        "strategy": "weighted_fts",
+        "expected": [
+          "ee52d403-80aa-54d4-a7f2-842bb9059898"
+        ],
+        "acceptable": [
+          "726f76a1-c315-58fc-8edb-1e60c20e78ae",
+          "a9d31ce1-042a-5f1b-bc13-1359dd8a3099"
+        ],
+        "expected_details": [
+          {
+            "id": "726f76a1-c315-58fc-8edb-1e60c20e78ae",
+            "source_type": "icu_article",
+            "title": "FUNDING APPLICATION SUPPORT",
+            "preview": "Funding Application Support - If you are planning on submitting a funding application here are some tips Know the criteria: Different applications will have different criteria and policies. Before applying make sure you "
+          },
+          {
+            "id": "a9d31ce1-042a-5f1b-bc13-1359dd8a3099",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "#_ACTIVITY_DEVELOPMENT_FUNDFunding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be"
+          },
+          {
+            "id": "ee52d403-80aa-54d4-a7f2-842bb9059898",
+            "source_type": "knowledge_process",
+            "title": "FUNDING APPLICATION SUPPORT",
+            "preview": "FUNDING APPLICATION SUPPORT source_url: https://imperialcollegeunion."
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "7c39405a-3a03-519c-bb07-0d016578e831",
+            "source_type": "document",
+            "title": "Manifestoes 25-27",
+            "preview": "ng, consulting, private equity, data science, and fintech leaders. Make it Fun Introduce socials that mix business with fun, collaborations with other societies, and a community where you can relax as hard as you work. T"
+          },
+          {
+            "rank": 2,
+            "id": "bbb27fa9-afe2-5981-aa8d-a8908b3eba40",
+            "source_type": "document",
+            "title": "Manifestoes 25-27",
+            "preview": "s Guide: a student-led resource covering master’s applications, personal statements, scholarships, and more. This will include mentorship pairings with older students and alumni who’ve successfully navigated the process."
+          }
+        ]
+      },
+      {
+        "query": "How do room booking, approvals and event planning fit together?",
+        "category": "events",
+        "source_family": "knowledge_requirement",
+        "strategy": "weighted_fts",
+        "expected": [
+          "3820fa7f-23eb-5c1f-9f66-f9b201071184"
+        ],
+        "acceptable": [
+          "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+          "1162968a-d789-54c3-8bff-5ecd561fdd3f",
+          "144262bf-5b85-55a6-ac47-20a3667cc216",
+          "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+          "969af8c0-1f1c-5c90-8f64-8f4e3846dc3e",
+          "a231c490-b9a6-5f3f-a40e-3023246cd145",
+          "a2582a1c-2608-508b-bdca-14c03fb06f2a",
+          "b3758153-84d4-589a-80f0-182b2cdae6c5",
+          "daf39864-a73c-50d4-9878-b53f244b85a7",
+          "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+          "e6906882-9309-5dc8-ae05-4b04d664c3dd",
+          "ee448c04-ef9a-5127-8f57-d0b2048480b4",
+          "f93d7c3f-5880-580a-8a94-0b234a5ce87f"
+        ],
+        "expected_details": [
+          {
+            "id": "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "nt execution: major priorities, owners and progress should be visible to the committee. Build repeatable systems: prefer reusable partnerships, templates and processes over one-off heroics. Comply by design: ICU/Imperial"
+          },
+          {
+            "id": "1162968a-d789-54c3-8bff-5ecd561fdd3f",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "ps://www.imperial.ac.uk/timetabling/calendar/cal?vt=month&dt=2026-07-29&et=room) https://www.accessable.co.uk/imperial-college-londonto see whether your chosen room is available. When checking: Search for the room in the"
+          },
+          {
+            "id": "144262bf-5b85-55a6-ac47-20a3667cc216",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "Require on campus space for your Club and Societies’ activity? As an ICU affiliated Club and Society, you are empowered by the Imperial student/staff community to book selected spaces for your student-led activity. ICU o"
+          },
+          {
+            "id": "3820fa7f-23eb-5c1f-9f66-f9b201071184",
+            "source_type": "knowledge_requirement",
+            "title": "Contact the Activities Team if: You are not sure which booking type to useYou cannot find a suitable roomYou need to cancel a confirmed bookingYou need help with a space that is not normally bookableYou are unsure whether your activity needs additional approval Next steps Before submitting your request, make sure you: Confirm your activity is approvedChoose the right booking typeCheck room availabilitySubmit the Committee Admin Request Form (https://www.",
+            "preview": "Contact the Activities Team if: You are not sure which booking type to useYou cannot find a suitable roomYou need to cancel a confirmed bookingYou need help with a space that is not normally bookableYou are unsure whethe"
+          },
+          {
+            "id": "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "es before commitments are made. Industry outreach duplication | Maintain shared prospect pipeline and relationship ownership. Departmental rep/society remit confusion | Keep official representation channels distinct from"
+          },
+          {
+            "id": "969af8c0-1f1c-5c90-8f64-8f4e3846dc3e",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "Require on campus space for your Club and Societies’ activity? As an ICU affiliated Club and Society, you are empowered by the Imperial student/staff community to book selected spaces for your student-led activity. ICU o"
+          },
+          {
+            "id": "a231c490-b9a6-5f3f-a40e-3023246cd145",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "cademic & Research Accountable leads: Chair; VP; Departmental Academic Representative Open channels for research opportunities with Business School professors and researchers. Create applied events linking course content"
+          },
+          {
+            "id": "a2582a1c-2608-508b-bdca-14c03fb06f2a",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "ltiple repeat weekly requests, the team may ask for more information before approving further bookings This helps make sure available space is being used appropriately across student groups. Using the space responsibly W"
+          },
+          {
+            "id": "b3758153-84d4-589a-80f0-182b2cdae6c5",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "EFDS Operating Plan 2026-27 Economics, Finance & Data Science Society | Imperial College London | Executive working plan  | Planning basis. This plan translates the elected 2026-27 manifesto themes and the committee oper"
+          },
+          {
+            "id": "daf39864-a73c-50d4-9878-b53f244b85a7",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "n | Deliver a specific event/initiative | Project brief and action list Term-end | Term review | What worked, what did not, next-term priorities | Term review and updated plan 7. Pre-Term Critical Path Phase | Indicative"
+          },
+          {
+            "id": "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "s: Events Officer; Secretary; Treasurer Standardise event briefs, approvals, room booking, risk management and run-of-show. Maintain a single forward event calendar. Plan sufficiently early for speaker approvals, venues,"
+          },
+          {
+            "id": "e6906882-9309-5dc8-ae05-4b04d664c3dd",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "hould check the [CELCAT live calendar](https://www.imperial.ac.uk/timetabling/calendar/cal?vt=month&dt=2026-07-29&et=room) https://www.accessable.co.uk/imperial-college-londonto see whether your chosen room is available."
+          },
+          {
+            "id": "ee448c04-ef9a-5127-8f57-d0b2048480b4",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "across student groups. Using the space responsibly When you book a room, your club or society is responsible for how that space is used during the booking period. You are expected to: Leave the room clean and tidyReturn "
+          },
+          {
+            "id": "f93d7c3f-5880-580a-8a94-0b234a5ce87f",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "ies Team. The team can then check whether that space can be made available and advise on any different booking process. Need extra support? Contact the Activities Team if: - You are not sure which booking type to use - Y"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "How do we register an external coach?",
+        "category": "process",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "6e3f5f67-a124-527e-929a-28adb6e9c86f"
+        ],
+        "acceptable": [
+          "09a3feaa-75a0-5618-93fd-5476ae6dc313",
+          "1f45295b-82b7-5dc4-90ee-4257d8d5e45d",
+          "20995a95-93bb-54eb-821f-351e5620c3bb",
+          "31650b56-0ff5-5c8b-8b5f-0a5a94a21cf6",
+          "38cc0d04-87aa-5d04-828a-29b283d449c1"
+        ],
+        "expected_details": [
+          {
+            "id": "09a3feaa-75a0-5618-93fd-5476ae6dc313",
+            "source_type": "icu_article",
+            "title": "COACHES & INSTRUCTORS - HOW TO REGISTER A COACH OR INSTRUCTOR",
+            "preview": "--- title: COACHES & INSTRUCTORS - HOW TO REGISTER A COACH OR INSTRUCTOR source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000557624-registering-coaches-instructors category: Committee "
+          },
+          {
+            "id": "1f45295b-82b7-5dc4-90ee-4257d8d5e45d",
+            "source_type": "icu_article",
+            "title": "COACHES & INSTRUCTORS - HOW TO REGISTER A COACH OR INSTRUCTOR",
+            "preview": "HOW TO - REGISTER A COACH OR INSTRUCTORIf your club or society works with a professional coach or instructor, they must be fully registered and approved by the Union before any activity takes place. This article walks yo"
+          },
+          {
+            "id": "20995a95-93bb-54eb-821f-351e5620c3bb",
+            "source_type": "icu_article",
+            "title": "COACHES & INSTRUCTORS - HOW TO REGISTER A COACH OR INSTRUCTOR",
+            "preview": "HOW TO - REGISTER A COACH OR INSTRUCTOR If your club or society works with a professional coach or instructor, they must be fully registered and approved by the Union before any activity takes place. This article walks y"
+          },
+          {
+            "id": "31650b56-0ff5-5c8b-8b5f-0a5a94a21cf6",
+            "source_type": "icu_article",
+            "title": "COACHES & INSTRUCTORS - HOW TO REGISTER A COACH OR INSTRUCTOR",
+            "preview": "HOW TO - REGISTER A COACH OR INSTRUCTORIf your club or society works with a professional coach or instructor, they must be fully registered and approved by the Union before any activity takes place. This article walks yo"
+          },
+          {
+            "id": "38cc0d04-87aa-5d04-828a-29b283d449c1",
+            "source_type": "icu_article",
+            "title": "COACHES & INSTRUCTORS - HOW TO REGISTER A COACH OR INSTRUCTOR",
+            "preview": "HOW TO - REGISTER A COACH OR INSTRUCTORIf your club or society works with a professional coach or instructor, they must be fully registered and approved by the Union before any activity takes place. This article walks yo"
+          },
+          {
+            "id": "6e3f5f67-a124-527e-929a-28adb6e9c86f",
+            "source_type": "icu_article",
+            "title": "COACHES & INSTRUCTORS - FREQUENTLY ASKED QUESTIONS",
+            "preview": "COACHES & INSTRUCTORS - FREQUENTLY ASKED QUESTIONSThis article covers the most common questions we receive from clubs and societies about the Coaches & Instructors registration process. Why would my club or society get a"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "How should event work be organized across the calendar and event process?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "06cb3357-5ea6-5c41-b72c-a8f0e27f71ad"
+        ],
+        "acceptable": [
+          "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+          "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+          "a231c490-b9a6-5f3f-a40e-3023246cd145",
+          "b3758153-84d4-589a-80f0-182b2cdae6c5",
+          "daf39864-a73c-50d4-9878-b53f244b85a7",
+          "e0a41b4d-57c2-546f-b25e-3e3e6db374ea"
+        ],
+        "expected_details": [
+          {
+            "id": "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "nt execution: major priorities, owners and progress should be visible to the committee. Build repeatable systems: prefer reusable partnerships, templates and processes over one-off heroics. Comply by design: ICU/Imperial"
+          },
+          {
+            "id": "06cb3357-5ea6-5c41-b72c-a8f0e27f71ad",
+            "source_type": "icu_article",
+            "title": "HOW TO - ADD AN EVENT TO THE WHAT'S ON CALENDAR",
+            "preview": "e: Check that the date and time are correct before publishing your event. NOTE: Once you've completed the event details, three additional tabs will appear:Event Images Event Signups Event Products Step 3: Adding an event"
+          },
+          {
+            "id": "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "es before commitments are made. Industry outreach duplication | Maintain shared prospect pipeline and relationship ownership. Departmental rep/society remit confusion | Keep official representation channels distinct from"
+          },
+          {
+            "id": "a231c490-b9a6-5f3f-a40e-3023246cd145",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "cademic & Research Accountable leads: Chair; VP; Departmental Academic Representative Open channels for research opportunities with Business School professors and researchers. Create applied events linking course content"
+          },
+          {
+            "id": "b3758153-84d4-589a-80f0-182b2cdae6c5",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "EFDS Operating Plan 2026-27 Economics, Finance & Data Science Society | Imperial College London | Executive working plan  | Planning basis. This plan translates the elected 2026-27 manifesto themes and the committee oper"
+          },
+          {
+            "id": "daf39864-a73c-50d4-9878-b53f244b85a7",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "n | Deliver a specific event/initiative | Project brief and action list Term-end | Term review | What worked, what did not, next-term priorities | Term review and updated plan 7. Pre-Term Critical Path Phase | Indicative"
+          },
+          {
+            "id": "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "s: Events Officer; Secretary; Treasurer Standardise event briefs, approvals, room booking, risk management and run-of-show. Maintain a single forward event calendar. Plan sufficiently early for speaker approvals, venues,"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What does the society's deadline register track?",
+        "category": "governance",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2"
+        ],
+        "acceptable": [
+          "1b364b66-b69c-5c1f-ba43-8712879f5144"
+        ],
+        "expected_details": [
+          {
+            "id": "1b364b66-b69c-5c1f-ba43-8712879f5144",
+            "source_type": "document",
+            "title": "EFDS Deadline Register 2026-27",
+            "preview": "--- Sheet: Executive Summary --- EFDS Deadline Register 2026–27 Executive control sheet | Mandatory dates, notice periods and internal milestones 12\t8\tSecretary\tWeekly Seed items\tHigh priority\tPrimary owner\tReview How to"
+          },
+          {
+            "id": "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2",
+            "source_type": "document",
+            "title": "EFDS Deadline Register 2026-27",
+            "preview": "accountable owner and one concrete next action. 4.\tHigh-priority or overdue items should be raised in the weekly exec meeting. 5.\tLink or paste the authoritative ICU / Imperial / predecessor source in the Source column. "
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What happens when society accounts are frozen?",
+        "category": "finance",
+        "source_family": "knowledge_requirement",
+        "strategy": "weighted_fts",
+        "expected": [
+          "80011cce-d11a-50f7-beb2-4dc535c79d94"
+        ],
+        "acceptable": [
+          "b690f047-22c9-518d-abf3-beb65c15ad6e"
+        ],
+        "expected_details": [
+          {
+            "id": "80011cce-d11a-50f7-beb2-4dc535c79d94",
+            "source_type": "knowledge_requirement",
+            "title": "Management Groups and Constituent Union committees must not approve any expenditure for groups with frozen accounts.",
+            "preview": "Management Groups and Constituent Union committees must not approve any expenditure for groups with frozen accounts. Management Groups and Constituent Union committees must not approve any expenditure for groups with fro"
+          },
+          {
+            "id": "b690f047-22c9-518d-abf3-beb65c15ad6e",
+            "source_type": "icu_article",
+            "title": "FROZEN ACCOUNTS",
+            "preview": "--- title: FROZEN ACCOUNTS source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549338-frozen-accounts category: Committee Member Resources folder: COMMITTEE MANAGEMENT modified_at: Thu"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What internal material tracks the sponsorship process and timing?",
+        "category": "sponsorship",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "65871b03-01b0-54ae-b73b-dd8812c81023"
+        ],
+        "acceptable": [
+          "71d760ff-cc0d-50cb-981a-369706335434",
+          "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+          "c49bf075-700e-5e76-9174-2dbeecd5361f"
+        ],
+        "expected_details": [
+          {
+            "id": "65871b03-01b0-54ae-b73b-dd8812c81023",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "ding/research initiatives, workshops | Chair / VP | To define | 07_Academic_Research | Select flagship initiatives Competitions | Trading, case, data and interdisciplinary competitions | Competition Officer | To define |"
+          },
+          {
+            "id": "71d760ff-cc0d-50cb-981a-369706335434",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "start and Freshers timetable Sponsorship process | September 2026 (verify ICU opening / process) | Medium | Treasurer / Industry | Prepare materials before outreach peaks Committee onboarding | Mid-August 2026 | Planning"
+          },
+          {
+            "id": "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "| Canonical location | Next step Opening position | Inherited balances / restricted funds / commitments | Treasurer | To verify | 04_Finance | Confirm with ICU / predecessor 2026–27 budget | Annual plan by workstream and"
+          },
+          {
+            "id": "c49bf075-700e-5e76-9174-2dbeecd5361f",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "EFDS Master Index 2026–27 Economics, Finance & Data Science Society | Imperial College London | Working operating index  | 3 Operating pillars | 12 EFDS officers | 2 External department reps | 2026–27 Academic year Purpo"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What is needed to run a stall?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "a5833a5b-ff79-5187-828f-4bddc67f7a6e"
+        ],
+        "acceptable": [
+          "13df4ace-db06-580b-82e7-26f5f4a82b4e",
+          "23cfca47-1c93-57df-be9e-1bdeb244cc28",
+          "2c72b76b-36da-573c-8866-59aaa731257e",
+          "33d71ed2-7c07-55f1-90c8-5ee4b0806daa",
+          "45c7cddf-dc76-57a5-9e7d-9d0a6b45a854"
+        ],
+        "expected_details": [
+          {
+            "id": "13df4ace-db06-580b-82e7-26f5f4a82b4e",
+            "source_type": "icu_article",
+            "title": "HOW TO - RUN A STALL",
+            "preview": "--- title: HOW TO - RUN A STALL source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000591213-how-to-run-a-stall category: Committee Member Resources folder: EVENTS & TRIPS modified_at: F"
+          },
+          {
+            "id": "23cfca47-1c93-57df-be9e-1bdeb244cc28",
+            "source_type": "knowledge_process",
+            "title": "HOW TO - RUN A STALL",
+            "preview": "HOW TO - RUN A STALL source_url: https://imperialcollegeunion."
+          },
+          {
+            "id": "2c72b76b-36da-573c-8866-59aaa731257e",
+            "source_type": "icu_article",
+            "title": "HOW TO - RUN A STALL",
+            "preview": "ck ChecklistBefore you set up, run through this:The Activities Team has approved the stall, including any selling, fundraising, or food distribution.Stall is supervised throughout the event.No obstructed walkwaysYou know"
+          },
+          {
+            "id": "33d71ed2-7c07-55f1-90c8-5ee4b0806daa",
+            "source_type": "icu_article",
+            "title": "HOW TO - RUN A STALL",
+            "preview": "HOW TO - RUN A STALL It's More Than Just a Table Running a stall is a great way to reach people, but it’s not as simple as claiming a table. There are some considerations around safety, space, permissions, and how your s"
+          },
+          {
+            "id": "45c7cddf-dc76-57a5-9e7d-9d0a6b45a854",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000591213-how-to-run-a-stall",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000591213-how-to-run-a-stall https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000591213-how-to-run-a-stall"
+          },
+          {
+            "id": "a5833a5b-ff79-5187-828f-4bddc67f7a6e",
+            "source_type": "icu_article",
+            "title": "HOW TO - RUN A STALL",
+            "preview": "footfall areas may require additional permissions from College Estates or Security.Outdoor spaces may have their own booking requirements.If you're unsure whether a location is suitable, submit a ticket to the Activities"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What is the academic representative expected to coordinate?",
+        "category": "academics",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "7dfd4ea1-86e1-5231-8cca-8bfd183c3790"
+        ],
+        "acceptable": [
+          "0526af31-fedd-5eca-982a-bf85fdd845fe",
+          "5da3febf-c919-5fec-9933-669d329eb423"
+        ],
+        "expected_details": [
+          {
+            "id": "0526af31-fedd-5eca-982a-bf85fdd845fe",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "EFDS Departmental Academic Representative Jack Rose | Officer & Handover Profile | 2026–27  | Document status: Working role charter for committee review. Manifesto-derived commitments are source-grounded; role design, KP"
+          },
+          {
+            "id": "5da3febf-c919-5fec-9933-669d329eb423",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "t exec lead. Per term | Set portfolio, deliver initiatives, review outcomes and archive evidence. Year-end | Complete role profile, organise files, transfer contacts and conduct successor handover. 10. Systems, Records &"
+          },
+          {
+            "id": "7dfd4ea1-86e1-5231-8cca-8bfd183c3790",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "ues logged and followed through | [Set target/date] | High O03 | Establish liaison with EFDS Chair/Secretary without duplicating official representation | Students receive closure updates | [Set target/date] | High O04 |"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What is the process for reserving Union rooms?",
+        "category": "process",
+        "source_family": "knowledge_requirement",
+        "strategy": "weighted_fts",
+        "expected": [
+          "3820fa7f-23eb-5c1f-9f66-f9b201071184"
+        ],
+        "acceptable": [
+          "1162968a-d789-54c3-8bff-5ecd561fdd3f",
+          "144262bf-5b85-55a6-ac47-20a3667cc216",
+          "969af8c0-1f1c-5c90-8f64-8f4e3846dc3e",
+          "a2582a1c-2608-508b-bdca-14c03fb06f2a",
+          "e6906882-9309-5dc8-ae05-4b04d664c3dd",
+          "ee448c04-ef9a-5127-8f57-d0b2048480b4",
+          "f93d7c3f-5880-580a-8a94-0b234a5ce87f"
+        ],
+        "expected_details": [
+          {
+            "id": "1162968a-d789-54c3-8bff-5ecd561fdd3f",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "ps://www.imperial.ac.uk/timetabling/calendar/cal?vt=month&dt=2026-07-29&et=room) https://www.accessable.co.uk/imperial-college-londonto see whether your chosen room is available. When checking: Search for the room in the"
+          },
+          {
+            "id": "144262bf-5b85-55a6-ac47-20a3667cc216",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "Require on campus space for your Club and Societies’ activity? As an ICU affiliated Club and Society, you are empowered by the Imperial student/staff community to book selected spaces for your student-led activity. ICU o"
+          },
+          {
+            "id": "3820fa7f-23eb-5c1f-9f66-f9b201071184",
+            "source_type": "knowledge_requirement",
+            "title": "Contact the Activities Team if: You are not sure which booking type to useYou cannot find a suitable roomYou need to cancel a confirmed bookingYou need help with a space that is not normally bookableYou are unsure whether your activity needs additional approval Next steps Before submitting your request, make sure you: Confirm your activity is approvedChoose the right booking typeCheck room availabilitySubmit the Committee Admin Request Form (https://www.",
+            "preview": "Contact the Activities Team if: You are not sure which booking type to useYou cannot find a suitable roomYou need to cancel a confirmed bookingYou need help with a space that is not normally bookableYou are unsure whethe"
+          },
+          {
+            "id": "969af8c0-1f1c-5c90-8f64-8f4e3846dc3e",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "Require on campus space for your Club and Societies’ activity? As an ICU affiliated Club and Society, you are empowered by the Imperial student/staff community to book selected spaces for your student-led activity. ICU o"
+          },
+          {
+            "id": "a2582a1c-2608-508b-bdca-14c03fb06f2a",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "ltiple repeat weekly requests, the team may ask for more information before approving further bookings This helps make sure available space is being used appropriately across student groups. Using the space responsibly W"
+          },
+          {
+            "id": "e6906882-9309-5dc8-ae05-4b04d664c3dd",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "hould check the [CELCAT live calendar](https://www.imperial.ac.uk/timetabling/calendar/cal?vt=month&dt=2026-07-29&et=room) https://www.accessable.co.uk/imperial-college-londonto see whether your chosen room is available."
+          },
+          {
+            "id": "ee448c04-ef9a-5127-8f57-d0b2048480b4",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "across student groups. Using the space responsibly When you book a room, your club or society is responsible for how that space is used during the booking period. You are expected to: Leave the room clean and tidyReturn "
+          },
+          {
+            "id": "f93d7c3f-5880-580a-8a94-0b234a5ce87f",
+            "source_type": "icu_article",
+            "title": "How to SUBMIT A ROOM BOOKING REQUEST",
+            "preview": "ies Team. The team can then check whether that space can be made available and advise on any different booking process. Need extra support? Contact the Activities Team if: - You are not sure which booking type to use - Y"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What must be done to map Union funding routes before term?",
+        "category": "finance",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "8e161396-ee32-57d7-9e19-5e5fa8157b97"
+        ],
+        "acceptable": [
+          "17b77f6f-e09f-59d1-9928-772f1520fa79",
+          "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+          "666eff43-54f4-54cf-a063-40bd61457abb"
+        ],
+        "expected_details": [
+          {
+            "id": "17b77f6f-e09f-59d1-9928-772f1520fa79",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "--- Sheet: Pre-Term Actions --- EFDS Pre-Term Actions 2026–27 Mobilisation tracker from inherited-material consolidation to society launch. Dates are internal targets unless sourced externally. ID\tWorkstream\tAction\tAccou"
+          },
+          {
+            "id": "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "te + admin MVP and content ownership\tChair\tSecretary / relevant officers\t2026-09-05\tMedium\tNot started\tA007 / A022\tWrite MVP scope\tWebsite product brief A024\tLaunch\tRun full pre-launch readiness review and close critical"
+          },
+          {
+            "id": "666eff43-54f4-54cf-a063-40bd61457abb",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "--- Sheet: Executive Summary --- EFDS Pre-Term Actions 2026–27 Delivery plan | 10 August to launch | Executive-level mobilisation tracker 24\t8\t26–27 Sep\tWeekly Seed actions\tWorkstreams\tLaunch window\tReview How to use thi"
+          },
+          {
+            "id": "8e161396-ee32-57d7-9e19-5e5fa8157b97",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "and outstanding commitments\tTreasurer\tChair\t2026-08-24\tHigh\tNot started\tICU / predecessor\tObtain evidence\tOpening position signed off A012\tFinance\tDraft 2026–27 annual budget: base / target / upside\tTreasurer\tWorkstream "
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What needs to be prepared before an EFDS event can go ahead?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+        ],
+        "acceptable": [
+          "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+          "69504da8-e105-515d-a8fe-d5843d581c07",
+          "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+          "a231c490-b9a6-5f3f-a40e-3023246cd145",
+          "b3758153-84d4-589a-80f0-182b2cdae6c5",
+          "daf39864-a73c-50d4-9878-b53f244b85a7",
+          "e0a41b4d-57c2-546f-b25e-3e3e6db374ea"
+        ],
+        "expected_details": [
+          {
+            "id": "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "nt execution: major priorities, owners and progress should be visible to the committee. Build repeatable systems: prefer reusable partnerships, templates and processes over one-off heroics. Comply by design: ICU/Imperial"
+          },
+          {
+            "id": "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "Core Activity Risk Assessments - You must fill out the [Core Activity Risk Assessment Form](https://www.cognitoforms.com/ICUActivities/CoreActivityRiskAssessment202627)https://www.cognitoforms.com/ICUActivities/CoreActiv"
+          },
+          {
+            "id": "69504da8-e105-515d-a8fe-d5843d581c07",
+            "source_type": "knowledge_requirement",
+            "title": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process.",
+            "preview": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process. Submit Your Event Paperwork Once you have identif"
+          },
+          {
+            "id": "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "es before commitments are made. Industry outreach duplication | Maintain shared prospect pipeline and relationship ownership. Departmental rep/society remit confusion | Keep official representation channels distinct from"
+          },
+          {
+            "id": "a231c490-b9a6-5f3f-a40e-3023246cd145",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "cademic & Research Accountable leads: Chair; VP; Departmental Academic Representative Open channels for research opportunities with Business School professors and researchers. Create applied events linking course content"
+          },
+          {
+            "id": "b3758153-84d4-589a-80f0-182b2cdae6c5",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "EFDS Operating Plan 2026-27 Economics, Finance & Data Science Society | Imperial College London | Executive working plan  | Planning basis. This plan translates the elected 2026-27 manifesto themes and the committee oper"
+          },
+          {
+            "id": "daf39864-a73c-50d4-9878-b53f244b85a7",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "n | Deliver a specific event/initiative | Project brief and action list Term-end | Term review | What worked, what did not, next-term priorities | Term review and updated plan 7. Pre-Term Critical Path Phase | Indicative"
+          },
+          {
+            "id": "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "s: Events Officer; Secretary; Treasurer Standardise event briefs, approvals, room booking, risk management and run-of-show. Maintain a single forward event calendar. Plan sufficiently early for speaker approvals, venues,"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What responsibilities does the Events Officer have for society activity?",
+        "category": "events",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "36849faf-5277-5e60-ae88-a8ccb11466ad"
+        ],
+        "acceptable": [
+          "255d7614-7593-5cac-b182-642e0670caea",
+          "7b4cc986-d515-54e8-ba77-e0d2d16bac0b",
+          "9f5d2fd3-18aa-5f32-9956-74faf901e1d7"
+        ],
+        "expected_details": [
+          {
+            "id": "255d7614-7593-5cac-b182-642e0670caea",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "sight: I will leverage my network to bring in top industry speakers, like the Head of Data Analytics at Citadel, who has already expressed interest in our degree. These events will be both insightful and career-defining."
+          },
+          {
+            "id": "36849faf-5277-5e60-ae88-a8ccb11466ad",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "Let’s make EFDS unforgettable, vote Kirill! Handover questions to resolve What recurring processes, deadlines and contacts did the previous officer own? Which initiatives were actually delivered versus only proposed? Whi"
+          },
+          {
+            "id": "7b4cc986-d515-54e8-ba77-e0d2d16bac0b",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "actual approval under the relevant rules. 8. Collaboration Map Works most closely with: All project leads, Treasurer, Secretary, Social Secretary Primary escalation: Chair / Vice President, unless the issue belongs to an"
+          },
+          {
+            "id": "9f5d2fd3-18aa-5f32-9956-74faf901e1d7",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "EFDS Events Officer Shashwat Sarawagi | Officer & Handover Profile | 2026–27  | Document status: Working role charter for committee review. Manifesto-derived commitments are source-grounded; role design, KPIs and gaps ar"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What room-booking uncertainty is still being tracked?",
+        "category": "governance",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b"
+        ],
+        "acceptable": [
+          "d5b0e388-8f05-5424-a755-48c37adb32ae"
+        ],
+        "expected_details": [
+          {
+            "id": "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b",
+            "source_type": "document",
+            "title": "EFDS Open Questions 2026-27",
+            "preview": "EFDS Open Questions 2026–27 Executive issue log | Questions requiring clarification, evidence or committee decisions  | 15 Seed questions | 3 Priority levels | Weekly Review cadence | Secretary Owner How to use. Add a qu"
+          },
+          {
+            "id": "d5b0e388-8f05-5424-a755-48c37adb32ae",
+            "source_type": "document",
+            "title": "EFDS Open Questions 2026-27",
+            "preview": "nd how far ahead? | Events Officer | ICU / Imperial booking guidance | Open | Create room-booking SOP Q011 | Medium | Finance | What spend thresholds require approval and who can authorise them? | Treasurer | ICU finance"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What safety paperwork is needed for an event?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+        ],
+        "acceptable": [
+          "69504da8-e105-515d-a8fe-d5843d581c07"
+        ],
+        "expected_details": [
+          {
+            "id": "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "Core Activity Risk Assessments - You must fill out the [Core Activity Risk Assessment Form](https://www.cognitoforms.com/ICUActivities/CoreActivityRiskAssessment202627)https://www.cognitoforms.com/ICUActivities/CoreActiv"
+          },
+          {
+            "id": "69504da8-e105-515d-a8fe-d5843d581c07",
+            "source_type": "knowledge_requirement",
+            "title": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process.",
+            "preview": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process. Submit Your Event Paperwork Once you have identif"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "What should a society do after an incident?",
+        "category": "policy",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "efabf6a9-d549-5754-8f61-76e8fecce169"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "efabf6a9-d549-5754-8f61-76e8fecce169",
+            "source_type": "icu_article",
+            "title": "REPORTING AN INCIDENT",
+            "preview": "Reporting an incident - Do you need immediate help?In an emergency off campus call 999.In an emergency on any Imperial campus, call Security on 020 75891000 from any phone or dial 4444 from any internal handset. If you a"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "When can alcohol be served at a student event?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "222c2e0d-16e2-5ced-a0f5-4c6536536abd"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "222c2e0d-16e2-5ced-a0f5-4c6536536abd",
+            "source_type": "icu_article",
+            "title": "ALCOHOL GUIDELINES",
+            "preview": "f hire e.g. a welcome drink per attendee, limited wine on tables or drinks vouchers. It is important to consider the impact alcohol can have on your event and how you can mitigate any risks or barriers to participation. "
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "1ae1c5f5-c7db-5579-bfe8-9e39e4e651c2",
+            "source_type": "document",
+            "title": "article",
+            "preview": "ers Always let attendees know how to request adjustments in advance. Venue & Transport When choosing where to go and how to get there, look for options that are: Step-free and wheelchair accessible Equipped with quiet or"
+          },
+          {
+            "rank": 2,
+            "id": "02a4fa11-8a97-5161-886c-2cbacc0cffd5",
+            "source_type": "document",
+            "title": "9faf879bdc106de96a96036da3a2cd0f541d101bc11f5b35ab5783fa5b4210c1",
+            "preview": "ers Always let attendees know how to request adjustments in advance. Venue & Transport When choosing where to go and how to get there, look for options that are: Step-free and wheelchair accessible Equipped with quiet or"
+          }
+        ]
+      },
+      {
+        "query": "Where do officers manage society submissions?",
+        "category": "identifier",
+        "source_family": "icu_article",
+        "strategy": "weighted_fts",
+        "expected": [
+          "1330725d-91d3-51df-bffc-cbac850102a4"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "1330725d-91d3-51df-bffc-cbac850102a4",
+            "source_type": "icu_article",
+            "title": "SUMS - DASHBOARD/SUBMISSIONS/APPLICATIONS",
+            "preview": "r groups processes, view process applications and communicate with your members (more info coming!). This will show you the groups committee, members and open forms. ![A screenshot of a computer Description automatically"
+          }
+        ],
+        "top_5": []
+      },
+      {
+        "query": "Where is the committee's current funding planning material?",
+        "category": "finance",
+        "source_family": "document",
+        "strategy": "weighted_fts",
+        "expected": [
+          "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483"
+        ],
+        "acceptable": [
+          "65871b03-01b0-54ae-b73b-dd8812c81023",
+          "71d760ff-cc0d-50cb-981a-369706335434",
+          "c49bf075-700e-5e76-9174-2dbeecd5361f"
+        ],
+        "expected_details": [
+          {
+            "id": "65871b03-01b0-54ae-b73b-dd8812c81023",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "ding/research initiatives, workshops | Chair / VP | To define | 07_Academic_Research | Select flagship initiatives Competitions | Trading, case, data and interdisciplinary competitions | Competition Officer | To define |"
+          },
+          {
+            "id": "71d760ff-cc0d-50cb-981a-369706335434",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "start and Freshers timetable Sponsorship process | September 2026 (verify ICU opening / process) | Medium | Treasurer / Industry | Prepare materials before outreach peaks Committee onboarding | Mid-August 2026 | Planning"
+          },
+          {
+            "id": "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "| Canonical location | Next step Opening position | Inherited balances / restricted funds / commitments | Treasurer | To verify | 04_Finance | Confirm with ICU / predecessor 2026–27 budget | Annual plan by workstream and"
+          },
+          {
+            "id": "c49bf075-700e-5e76-9174-2dbeecd5361f",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "EFDS Master Index 2026–27 Economics, Finance & Data Science Society | Imperial College London | Working operating index  | 3 Operating pillars | 12 EFDS officers | 2 External department reps | 2026–27 Academic year Purpo"
+          }
+        ],
+        "top_5": []
+      }
+    ],
+    "semantic": [
+      {
+        "query": "What does the society's deadline register track?",
+        "category": "governance",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2"
+        ],
+        "acceptable": [
+          "1b364b66-b69c-5c1f-ba43-8712879f5144"
+        ],
+        "expected_details": [
+          {
+            "id": "1b364b66-b69c-5c1f-ba43-8712879f5144",
+            "source_type": "document",
+            "title": "EFDS Deadline Register 2026-27",
+            "preview": "--- Sheet: Executive Summary --- EFDS Deadline Register 2026–27 Executive control sheet | Mandatory dates, notice periods and internal milestones 12\t8\tSecretary\tWeekly Seed items\tHigh priority\tPrimary owner\tReview How to"
+          },
+          {
+            "id": "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2",
+            "source_type": "document",
+            "title": "EFDS Deadline Register 2026-27",
+            "preview": "accountable owner and one concrete next action. 4.\tHigh-priority or overdue items should be raised in the weekly exec meeting. 5.\tLink or paste the authoritative ICU / Imperial / predecessor source in the Source column. "
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "c5ec4b20-8d91-5e82-b4fc-7c8a3228d568",
+            "source_type": "knowledge_timing_rule",
+            "title": "The deadline for submitting this is 16 August.",
+            "preview": "The deadline for submitting this is 16 August. The deadline for submitting this is 16 August."
+          },
+          {
+            "rank": 2,
+            "id": "46a91b71-b1a0-5a31-9b93-b55e898df530",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000556302-club-society-risk-ratings",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000556302-club-society-risk-ratings https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000556302-club-society-risk-ratings"
+          },
+          {
+            "rank": 3,
+            "id": "37230cd2-91c3-5182-8c53-f56212f36eb7",
+            "source_type": "icu_article",
+            "title": "SUMS - DASHBOARD/SUBMISSIONS/APPLICATIONS",
+            "preview": "SUMS - ![](https://s3-eu-central-1.amazonaws.com/euc-cdn.freshdesk.com/data/helpdesk/attachments/production/101253025291/original/yIbbMvwqLt-tTRc87qjc_ZhJ7uKKjqyeJw.png?1751472683) The dates listed below are the 2024 - 2"
+          },
+          {
+            "rank": 4,
+            "id": "6b6279bb-0870-56ad-9540-f4e1cde37700",
+            "source_type": "knowledge_requirement",
+            "title": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and Secretary) filled after the Autumn Elections or your CSP will be at risk of closing.",
+            "preview": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and S"
+          },
+          {
+            "rank": 5,
+            "id": "6d1cf8ca-448a-5f4e-8d40-374ab9d00b99",
+            "source_type": "knowledge_timing_rule",
+            "title": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and Secretary) filled after the Autumn Elections or your CSP will be at risk of closing.",
+            "preview": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and S"
+          }
+        ]
+      },
+      {
+        "query": "What internal material tracks the sponsorship process and timing?",
+        "category": "sponsorship",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "65871b03-01b0-54ae-b73b-dd8812c81023"
+        ],
+        "acceptable": [
+          "71d760ff-cc0d-50cb-981a-369706335434",
+          "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+          "c49bf075-700e-5e76-9174-2dbeecd5361f"
+        ],
+        "expected_details": [
+          {
+            "id": "65871b03-01b0-54ae-b73b-dd8812c81023",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "ding/research initiatives, workshops | Chair / VP | To define | 07_Academic_Research | Select flagship initiatives Competitions | Trading, case, data and interdisciplinary competitions | Competition Officer | To define |"
+          },
+          {
+            "id": "71d760ff-cc0d-50cb-981a-369706335434",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "start and Freshers timetable Sponsorship process | September 2026 (verify ICU opening / process) | Medium | Treasurer / Industry | Prepare materials before outreach peaks Committee onboarding | Mid-August 2026 | Planning"
+          },
+          {
+            "id": "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "| Canonical location | Next step Opening position | Inherited balances / restricted funds / commitments | Treasurer | To verify | 04_Finance | Confirm with ICU / predecessor 2026–27 budget | Annual plan by workstream and"
+          },
+          {
+            "id": "c49bf075-700e-5e76-9174-2dbeecd5361f",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "EFDS Master Index 2026–27 Economics, Finance & Data Science Society | Imperial College London | Working operating index  | 3 Operating pillars | 12 EFDS officers | 2 External department reps | 2026–27 Academic year Purpo"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "2ded376a-0d51-5677-939d-6e687a1dd6c1",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "Sponsorships step by step -"
+          },
+          {
+            "rank": 2,
+            "id": "b479c7ec-3863-5004-ad87-9ff116f735d6",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "--- title: SPONSORSHIP STEP BY STEP source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000559384-sponsorship-step-by-step category: Committee Member Resources folder: SPONSORSHIPS modifi"
+          },
+          {
+            "rank": 3,
+            "id": "6f0085ec-492d-5f24-a7fd-cadbaf7f6d7b",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "o remember: Be clear on your member demographic Find out corporation needs Promise deliverables Give options Approach the right person Phone call and a follow up email tend to work best Keep a record of all communication"
+          },
+          {
+            "rank": 4,
+            "id": "1a2b778b-7a89-5be1-bc28-c3879e03995d",
+            "source_type": "knowledge_process",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "SPONSORSHIP STEP BY STEP source_url: https://imperialcollegeunion."
+          },
+          {
+            "rank": 5,
+            "id": "b2734ad4-09e7-52f5-a08e-8dd60a6da520",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "to delegate one committee member to be responsible for communications with potential Sponsors. Typically, the routes to Sponsorship are: Alumni Internships and work experience Personal connections e.g. family and friends"
+          }
+        ]
+      },
+      {
+        "query": "What is the academic representative expected to coordinate?",
+        "category": "academics",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "7dfd4ea1-86e1-5231-8cca-8bfd183c3790"
+        ],
+        "acceptable": [
+          "0526af31-fedd-5eca-982a-bf85fdd845fe",
+          "5da3febf-c919-5fec-9933-669d329eb423"
+        ],
+        "expected_details": [
+          {
+            "id": "0526af31-fedd-5eca-982a-bf85fdd845fe",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "EFDS Departmental Academic Representative Jack Rose | Officer & Handover Profile | 2026–27  | Document status: Working role charter for committee review. Manifesto-derived commitments are source-grounded; role design, KP"
+          },
+          {
+            "id": "5da3febf-c919-5fec-9933-669d329eb423",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "t exec lead. Per term | Set portfolio, deliver initiatives, review outcomes and archive evidence. Year-end | Complete role profile, organise files, transfer contacts and conduct successor handover. 10. Systems, Records &"
+          },
+          {
+            "id": "7dfd4ea1-86e1-5231-8cca-8bfd183c3790",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "ues logged and followed through | [Set target/date] | High O03 | Establish liaison with EFDS Chair/Secretary without duplicating official representation | Students receive closure updates | [Set target/date] | High O04 |"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "37d29371-43d3-5755-99a8-95f09856ba31",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549336-committee-structure-change-request",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549336-committee-structure-change-request https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549336-committee-structure"
+          },
+          {
+            "rank": 2,
+            "id": "2367a136-fdf4-5dab-bd37-f99e4a1f505f",
+            "source_type": "knowledge_timing_rule",
+            "title": "(this is optional but highly encouraged) Term 2 Submit annual budget Continue organising events and activity (minimum 2 events/activities) Submit Incubator report (more information on this below (by March) Participate in leadership elections – ensure you have a committee for next year Your progress will then be reviewed by NAC Committee: (March/April) To be eligible for graduation: 20 members All principal roles filled (ready for the next academic year) Approved Constitution Incubator report Annual budget Core RA and Event proposals The NAC Committee will promote all groups who have successfully met all the Incubator milestones.",
+            "preview": "(this is optional but highly encouraged) Term 2 Submit annual budget Continue organising events and activity (minimum 2 events/activities) Submit Incubator report (more information on this below (by March) Participate in"
+          },
+          {
+            "rank": 3,
+            "id": "0deb165d-6629-54b9-81e2-d34b7a1b168c",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "do I need to do? Depending on [your risk rating](https://www.cognitoforms.com/ICUActivities/RiskRatingLookup), there is a different expectation for how you need to engage with the core activity risk assessment process. D"
+          },
+          {
+            "rank": 4,
+            "id": "65650e3d-7480-5aba-974d-d1dbe1c80aff",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "ess. High risk – submit annually, requires technical advisor approval Medium risk – submit annually Low risk – reconfirm annually, submit every 3 years Minimal risk – reconfirm annually All groups must fill out the [Core"
+          },
+          {
+            "rank": 5,
+            "id": "e53a26e7-2156-5554-8a91-dd14b06a518f",
+            "source_type": "icu_article",
+            "title": "EMAIL ACCOUNT MANAGEMENT",
+            "preview": "cles/101000532489-email-account-management category: Committee Member Resources folder: COMMITTEE MANAGEMENT modified_at: Fri, 31 Jul at 4:33 PM crawled_at: 2026-08-10T20:59:14.419478+00:00 --- # EMAIL ACCOUNT MANAGEMENT"
+          }
+        ]
+      },
+      {
+        "query": "What must be done to map Union funding routes before term?",
+        "category": "finance",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "8e161396-ee32-57d7-9e19-5e5fa8157b97"
+        ],
+        "acceptable": [
+          "17b77f6f-e09f-59d1-9928-772f1520fa79",
+          "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+          "666eff43-54f4-54cf-a063-40bd61457abb"
+        ],
+        "expected_details": [
+          {
+            "id": "17b77f6f-e09f-59d1-9928-772f1520fa79",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "--- Sheet: Pre-Term Actions --- EFDS Pre-Term Actions 2026–27 Mobilisation tracker from inherited-material consolidation to society launch. Dates are internal targets unless sourced externally. ID\tWorkstream\tAction\tAccou"
+          },
+          {
+            "id": "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "te + admin MVP and content ownership\tChair\tSecretary / relevant officers\t2026-09-05\tMedium\tNot started\tA007 / A022\tWrite MVP scope\tWebsite product brief A024\tLaunch\tRun full pre-launch readiness review and close critical"
+          },
+          {
+            "id": "666eff43-54f4-54cf-a063-40bd61457abb",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "--- Sheet: Executive Summary --- EFDS Pre-Term Actions 2026–27 Delivery plan | 10 August to launch | Executive-level mobilisation tracker 24\t8\t26–27 Sep\tWeekly Seed actions\tWorkstreams\tLaunch window\tReview How to use thi"
+          },
+          {
+            "id": "8e161396-ee32-57d7-9e19-5e5fa8157b97",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "and outstanding commitments\tTreasurer\tChair\t2026-08-24\tHigh\tNot started\tICU / predecessor\tObtain evidence\tOpening position signed off A012\tFinance\tDraft 2026–27 annual budget: base / target / upside\tTreasurer\tWorkstream "
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "34020b49-ef16-5500-af26-2258404375e0",
+            "source_type": "knowledge_requirement",
+            "title": "- The Union must approve all fundraising in advance.",
+            "preview": "- The Union must approve all fundraising in advance. - The Union must approve all fundraising in advance."
+          },
+          {
+            "rank": 2,
+            "id": "1c78aaaa-e291-5b84-bde3-182d50b2646c",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "## Funding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be trying to achieve and t"
+          },
+          {
+            "rank": 3,
+            "id": "a9d31ce1-042a-5f1b-bc13-1359dd8a3099",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "#_ACTIVITY_DEVELOPMENT_FUNDFunding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be"
+          },
+          {
+            "rank": 4,
+            "id": "6564c084-3355-52a6-a3fe-2af66d19b870",
+            "source_type": "icu_article",
+            "title": "KEY FINANCIAL PROCESSES",
+            "preview": "s can pay securely through the Union system, and the income is recorded against your CSP account. View the step-by-step guidance in eActivities here: https://eactivities.union.ic.ac.uk/training/articles/30[Online Sales |"
+          },
+          {
+            "rank": 5,
+            "id": "931f1e98-baa3-5bee-adf2-5917310bb00f",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "a Past President of Imperial College Union and the current President of Imperial College Union. The Vice-Provost (Education) acts as the Chair of the Committee and the College Secretary & Registrar as its Secretary. The "
+          }
+        ]
+      },
+      {
+        "query": "What needs to be prepared before an EFDS event can go ahead?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "semantic",
+        "expected": [
+          "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+        ],
+        "acceptable": [
+          "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+          "69504da8-e105-515d-a8fe-d5843d581c07",
+          "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+          "a231c490-b9a6-5f3f-a40e-3023246cd145",
+          "b3758153-84d4-589a-80f0-182b2cdae6c5",
+          "daf39864-a73c-50d4-9878-b53f244b85a7",
+          "e0a41b4d-57c2-546f-b25e-3e3e6db374ea"
+        ],
+        "expected_details": [
+          {
+            "id": "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "nt execution: major priorities, owners and progress should be visible to the committee. Build repeatable systems: prefer reusable partnerships, templates and processes over one-off heroics. Comply by design: ICU/Imperial"
+          },
+          {
+            "id": "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "Core Activity Risk Assessments - You must fill out the [Core Activity Risk Assessment Form](https://www.cognitoforms.com/ICUActivities/CoreActivityRiskAssessment202627)https://www.cognitoforms.com/ICUActivities/CoreActiv"
+          },
+          {
+            "id": "69504da8-e105-515d-a8fe-d5843d581c07",
+            "source_type": "knowledge_requirement",
+            "title": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process.",
+            "preview": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process. Submit Your Event Paperwork Once you have identif"
+          },
+          {
+            "id": "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "es before commitments are made. Industry outreach duplication | Maintain shared prospect pipeline and relationship ownership. Departmental rep/society remit confusion | Keep official representation channels distinct from"
+          },
+          {
+            "id": "a231c490-b9a6-5f3f-a40e-3023246cd145",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "cademic & Research Accountable leads: Chair; VP; Departmental Academic Representative Open channels for research opportunities with Business School professors and researchers. Create applied events linking course content"
+          },
+          {
+            "id": "b3758153-84d4-589a-80f0-182b2cdae6c5",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "EFDS Operating Plan 2026-27 Economics, Finance & Data Science Society | Imperial College London | Executive working plan  | Planning basis. This plan translates the elected 2026-27 manifesto themes and the committee oper"
+          },
+          {
+            "id": "daf39864-a73c-50d4-9878-b53f244b85a7",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "n | Deliver a specific event/initiative | Project brief and action list Term-end | Term review | What worked, what did not, next-term priorities | Term review and updated plan 7. Pre-Term Critical Path Phase | Indicative"
+          },
+          {
+            "id": "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "s: Events Officer; Secretary; Treasurer Standardise event briefs, approvals, room booking, risk management and run-of-show. Maintain a single forward event calendar. Plan sufficiently early for speaker approvals, venues,"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "3ea45e68-bb07-51ea-be42-2a22c4ddbe4f",
+            "source_type": "icu_article",
+            "title": "HAVING FOOD AT EVENTS",
+            "preview": "n information from attendees before the event so you can plan accordinglyAvoid cross-contamination; consider how food is stored, handled, and servedPlan your emergency response; know what to do if someone has an allergic"
+          },
+          {
+            "rank": 2,
+            "id": "2cc2fc18-f30c-55f1-ab6d-dab387de88a2",
+            "source_type": "icu_article",
+            "title": "HAVING FOOD AT EVENTS",
+            "preview": "n information from attendees before the event so you can plan accordinglyAvoid cross-contamination; consider how food is stored, handled, and servedPlan your emergency response; know what to do if someone has an allergic"
+          },
+          {
+            "rank": 3,
+            "id": "57186e65-081f-5d83-962a-03d8b0e51356",
+            "source_type": "icu_article",
+            "title": "HAVING FOOD AT EVENTS",
+            "preview": "n information from attendees before the event so you can plan accordinglyAvoid cross-contamination; consider how food is stored, handled, and servedPlan your emergency response; know what to do if someone has an allergic"
+          },
+          {
+            "rank": 4,
+            "id": "c4e1fbad-a4c8-554c-8184-cb7bb88f6438",
+            "source_type": "icu_article",
+            "title": "CONTROL MEASURES TOP TIPS",
+            "preview": "driving license. Drivers to follow speed limits and rules of the road, be fit to drive (no alcohol/drugs, no driving while sleepy). Vehicles used must be in good condition and with a valid MOT, road tax and insurance. | "
+          },
+          {
+            "rank": 5,
+            "id": "57ad3317-d3af-5c3f-8a07-e698b28a8995",
+            "source_type": "icu_article",
+            "title": "CONTROL MEASURES TOP TIPS",
+            "preview": "security at venue.Trips: Ensure accommodation/rooms are locked and encourage attendees not to bring high value items on the trip.Outdoor Extreme weather Cancel the event if extreme weather is forecast.Encourage attendees"
+          }
+        ]
+      },
+      {
+        "query": "What responsibilities does the Events Officer have for society activity?",
+        "category": "events",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "36849faf-5277-5e60-ae88-a8ccb11466ad"
+        ],
+        "acceptable": [
+          "255d7614-7593-5cac-b182-642e0670caea",
+          "7b4cc986-d515-54e8-ba77-e0d2d16bac0b",
+          "9f5d2fd3-18aa-5f32-9956-74faf901e1d7"
+        ],
+        "expected_details": [
+          {
+            "id": "255d7614-7593-5cac-b182-642e0670caea",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "sight: I will leverage my network to bring in top industry speakers, like the Head of Data Analytics at Citadel, who has already expressed interest in our degree. These events will be both insightful and career-defining."
+          },
+          {
+            "id": "36849faf-5277-5e60-ae88-a8ccb11466ad",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "Let’s make EFDS unforgettable, vote Kirill! Handover questions to resolve What recurring processes, deadlines and contacts did the previous officer own? Which initiatives were actually delivered versus only proposed? Whi"
+          },
+          {
+            "id": "7b4cc986-d515-54e8-ba77-e0d2d16bac0b",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "actual approval under the relevant rules. 8. Collaboration Map Works most closely with: All project leads, Treasurer, Secretary, Social Secretary Primary escalation: Chair / Vice President, unless the issue belongs to an"
+          },
+          {
+            "id": "9f5d2fd3-18aa-5f32-9956-74faf901e1d7",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "EFDS Events Officer Shashwat Sarawagi | Officer & Handover Profile | 2026–27  | Document status: Working role charter for committee review. Manifesto-derived commitments are source-grounded; role design, KPIs and gaps ar"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "a0629694-7ea1-5234-a0cc-c0e781e65a1b",
+            "source_type": "icu_article",
+            "title": "RUNNING A SOCIAL",
+            "preview": "3D&CID=8C29051D-DE17-40A5-9369-A4B85F03BD52 Pub crawls and alcohol-related socials If you're organising a pub crawl or another alcohol-focused social, you'll need to consider additional safety measures. This includes: - "
+          },
+          {
+            "rank": 2,
+            "id": "baa75451-629e-5879-84b4-2b580a208b12",
+            "source_type": "knowledge_requirement",
+            "title": "Your Club/Society is responsible for covering these (unlike SUMS, where ICU covers the fees)You must submit an event budget detailing your ticket prices, and update it if prices changeYou must have a clear refund policy in place before tickets go on saleYour event page must clearly display the date, time, and location of the event NOTE: Your committee won't be able to adjust finance settings on Eventbrite; this is restricted to Union staff only.",
+            "preview": "Your Club/Society is responsible for covering these (unlike SUMS, where ICU covers the fees)You must submit an event budget detailing your ticket prices, and update it if prices changeYou must have a clear refund policy "
+          },
+          {
+            "rank": 3,
+            "id": "b6b3bb4d-5064-5d61-afe7-cde78d4c0330",
+            "source_type": "icu_article",
+            "title": "SPEAKER EVENTS PROCESS",
+            "preview": "Speaker Events Process - Having speakers engage with your club/society is an amazing opportunity for your members, and for the wider community at Imperial. Make sure you read our [guidance on inviting and collaborating w"
+          },
+          {
+            "rank": 4,
+            "id": "2420f299-4031-500e-a762-1e229e0e8e89",
+            "source_type": "icu_article",
+            "title": "SPEAKER EVENTS PROCESS",
+            "preview": "eties. The speaker's history and any prior media attention. Potentially controversial subject matter. Compliance with UK laws, including those related to discrimination, incitement, and intimidation. Required Information"
+          },
+          {
+            "rank": 5,
+            "id": "63307ddb-3e8c-5eae-8fd4-55039547cc53",
+            "source_type": "icu_article",
+            "title": "RUNNING A SOCIAL",
+            "preview": "Running a SocialSocials are a great way to welcome new members, strengthen your community and give members the opportunity to socialise outside of your regular activities. Whether you're organising a quiz night, dinner, "
+          }
+        ]
+      },
+      {
+        "query": "What room-booking uncertainty is still being tracked?",
+        "category": "governance",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b"
+        ],
+        "acceptable": [
+          "d5b0e388-8f05-5424-a755-48c37adb32ae"
+        ],
+        "expected_details": [
+          {
+            "id": "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b",
+            "source_type": "document",
+            "title": "EFDS Open Questions 2026-27",
+            "preview": "EFDS Open Questions 2026–27 Executive issue log | Questions requiring clarification, evidence or committee decisions  | 15 Seed questions | 3 Priority levels | Weekly Review cadence | Secretary Owner How to use. Add a qu"
+          },
+          {
+            "id": "d5b0e388-8f05-5424-a755-48c37adb32ae",
+            "source_type": "document",
+            "title": "EFDS Open Questions 2026-27",
+            "preview": "nd how far ahead? | Events Officer | ICU / Imperial booking guidance | Open | Create room-booking SOP Q011 | Medium | Finance | What spend thresholds require approval and who can authorise them? | Treasurer | ICU finance"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "f858c1e6-4a67-563a-8edb-2806ee48efd1",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints"
+          },
+          {
+            "rank": 2,
+            "id": "b5b89170-db07-555b-9979-2a66034bcc87",
+            "source_type": "knowledge_resource",
+            "title": "the room booking",
+            "preview": "the room booking the room booking"
+          },
+          {
+            "rank": 3,
+            "id": "713fb478-b87c-592d-845e-05f155b506f8",
+            "source_type": "knowledge_resource",
+            "title": "Ad-Hoc Room Bookings",
+            "preview": "Ad-Hoc Room Bookings Ad-Hoc Room Bookings"
+          },
+          {
+            "rank": 4,
+            "id": "d0bbd4d7-5593-5a2b-9f7a-cb781c6ce47c",
+            "source_type": "icu_article",
+            "title": "ROOM BOOKING COMPLAINTS",
+            "preview": "--- title: ROOM BOOKING COMPLAINTS source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints category: Committee Member Resources folder: ROOM BOOKINGS modifie"
+          },
+          {
+            "rank": 5,
+            "id": "833dbb40-40b0-531f-832b-5f46efec5fd9",
+            "source_type": "icu_article",
+            "title": "ROOM BOOKING COMPLAINTS",
+            "preview": "ticles/101000540293-room-booking-complaints category: Committee Member Resources folder: ROOM BOOKINGS modified_at: Mon, 17 Nov, 2025 at 11:30 AM crawled_at: 2026-08-10T20:59:18.963496+00:00 --- # ROOM BOOKING COMPLAINTS"
+          }
+        ]
+      },
+      {
+        "query": "What should a society do after an incident?",
+        "category": "policy",
+        "source_family": "icu_article",
+        "strategy": "semantic",
+        "expected": [
+          "efabf6a9-d549-5754-8f61-76e8fecce169"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "efabf6a9-d549-5754-8f61-76e8fecce169",
+            "source_type": "icu_article",
+            "title": "REPORTING AN INCIDENT",
+            "preview": "Reporting an incident - Do you need immediate help?In an emergency off campus call 999.In an emergency on any Imperial campus, call Security on 020 75891000 from any phone or dial 4444 from any internal handset. If you a"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "d9445201-601b-5f3e-8d1c-bc09957a2123",
+            "source_type": "knowledge_process_step",
+            "title": "Process step 2",
+            "preview": "Process step 2 What can I do after an incident has happened and before a disciplinary action/outcome is announced?"
+          },
+          {
+            "rank": 2,
+            "id": "5af84f83-f263-54d2-8c28-ea03b946978a",
+            "source_type": "knowledge_contact",
+            "title": "Knowledge Contact",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: A legal duty to take reasonable care of your own health and safety*.You must also take reason"
+          },
+          {
+            "rank": 3,
+            "id": "708f5509-1028-5e30-8a4f-cab3673d4b83",
+            "source_type": "knowledge_contact",
+            "title": "Knowledge Contact",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: A legal duty to take reasonable care of your own health and safety*.You must also take reason"
+          },
+          {
+            "rank": 4,
+            "id": "667f59e6-df14-5d30-a963-51793d15521a",
+            "source_type": "icu_article",
+            "title": "REPORTING AND HANDLING WELFARE CONCERNS",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: A legal duty to take reasonable care of your own health and safety*.You must also take reason"
+          },
+          {
+            "rank": 5,
+            "id": "579374fb-61e1-5ed5-86c6-712f14a43bb0",
+            "source_type": "icu_article",
+            "title": "REPORTING AND HANDLING WELFARE CONCERNS",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: - A legal duty to take reasonable care of your own health and safety*. - You must also take r"
+          }
+        ]
+      },
+      {
+        "query": "Where do officers manage society submissions?",
+        "category": "identifier",
+        "source_family": "icu_article",
+        "strategy": "semantic",
+        "expected": [
+          "1330725d-91d3-51df-bffc-cbac850102a4"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "1330725d-91d3-51df-bffc-cbac850102a4",
+            "source_type": "icu_article",
+            "title": "SUMS - DASHBOARD/SUBMISSIONS/APPLICATIONS",
+            "preview": "r groups processes, view process applications and communicate with your members (more info coming!). This will show you the groups committee, members and open forms. ![A screenshot of a computer Description automatically"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "76b43af5-20cc-5a63-90bb-2a38fbd9c9e8",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "bmitting.Need help?If you have any questions while completing your constitution, please don't hesitate to [submit a ticket.](https://imperialcollegeunion.freshdesk.com/support/tickets/new)We're happy to provide guidance,"
+          },
+          {
+            "rank": 2,
+            "id": "d332eb12-559b-5075-8ade-0d8cd7b60b2a",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "legeunion.freshdesk.com/support/tickets/new)We're happy to provide guidance, answer any questions or arrange a meeting if you'd like to discuss your constitution in more detail. We're here to help throughout the process."
+          },
+          {
+            "rank": 3,
+            "id": "90462ee1-9a28-5d29-8219-c5d74522c034",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "Step 5: Submit your constitution Step 5: Submit your constitution Once complete, submit your constitution using the [Constitution Submission Form](https://www.cognitoforms.com/ICUActivities/COMMITTEEADMINFORM202627). Onc"
+          },
+          {
+            "rank": 4,
+            "id": "4571878a-2044-500e-a9e8-0e2e21d847ea",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions"
+          },
+          {
+            "rank": 5,
+            "id": "24496a81-b1d8-5fde-967a-957b9cfe40e1",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "--- title: CLUB & SOCIETY CONSTITUTIONS source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions category: Committee Member Resources folder: COMMITTEE MAN"
+          }
+        ]
+      },
+      {
+        "query": "Where is the committee's current funding planning material?",
+        "category": "finance",
+        "source_family": "document",
+        "strategy": "semantic",
+        "expected": [
+          "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483"
+        ],
+        "acceptable": [
+          "65871b03-01b0-54ae-b73b-dd8812c81023",
+          "71d760ff-cc0d-50cb-981a-369706335434",
+          "c49bf075-700e-5e76-9174-2dbeecd5361f"
+        ],
+        "expected_details": [
+          {
+            "id": "65871b03-01b0-54ae-b73b-dd8812c81023",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "ding/research initiatives, workshops | Chair / VP | To define | 07_Academic_Research | Select flagship initiatives Competitions | Trading, case, data and interdisciplinary competitions | Competition Officer | To define |"
+          },
+          {
+            "id": "71d760ff-cc0d-50cb-981a-369706335434",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "start and Freshers timetable Sponsorship process | September 2026 (verify ICU opening / process) | Medium | Treasurer / Industry | Prepare materials before outreach peaks Committee onboarding | Mid-August 2026 | Planning"
+          },
+          {
+            "id": "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "| Canonical location | Next step Opening position | Inherited balances / restricted funds / commitments | Treasurer | To verify | 04_Finance | Confirm with ICU / predecessor 2026–27 budget | Annual plan by workstream and"
+          },
+          {
+            "id": "c49bf075-700e-5e76-9174-2dbeecd5361f",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "EFDS Master Index 2026–27 Economics, Finance & Data Science Society | Imperial College London | Working operating index  | 3 Operating pillars | 12 EFDS officers | 2 External department reps | 2026–27 Academic year Purpo"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "8065d0c6-6fbf-5d65-8687-af999b84aee9",
+            "source_type": "icu_article",
+            "title": "ANNUAL BUDGETING 2026-27",
+            "preview": "--- title: ANNUAL BUDGETING 2026-27 source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000579011-annual-budgeting-2026-27 category: Committee Member Resources folder: FUNDING modified_at"
+          },
+          {
+            "rank": 2,
+            "id": "f8c705f0-fea9-5af3-9aa7-9b4aabe5cae4",
+            "source_type": "icu_article",
+            "title": "ANNUAL BUDGETING 2026-27",
+            "preview": "se yourself with previous budgets submitted. Please make sure you do not copy and paste any previous budget lines or keep the budget lines separate - make sure to group expenditure as illustrated in our training article:"
+          },
+          {
+            "rank": 3,
+            "id": "1c78aaaa-e291-5b84-bde3-182d50b2646c",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "## Funding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be trying to achieve and t"
+          },
+          {
+            "rank": 4,
+            "id": "931f1e98-baa3-5bee-adf2-5917310bb00f",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "a Past President of Imperial College Union and the current President of Imperial College Union. The Vice-Provost (Education) acts as the Chair of the Committee and the College Secretary & Registrar as its Secretary. The "
+          },
+          {
+            "rank": 5,
+            "id": "80b23c15-d960-58f9-a57b-1c9e12310451",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "--- title: INTRODUCTION TO FUNDING source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000533686-introduction-to-funding category: Committee Member Resources folder: FUNDING modified_at: "
+          }
+        ]
+      }
+    ],
+    "semantic_primary_exact": [
+      {
+        "query": "What does the society's deadline register track?",
+        "category": "governance",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2"
+        ],
+        "acceptable": [
+          "1b364b66-b69c-5c1f-ba43-8712879f5144"
+        ],
+        "expected_details": [
+          {
+            "id": "1b364b66-b69c-5c1f-ba43-8712879f5144",
+            "source_type": "document",
+            "title": "EFDS Deadline Register 2026-27",
+            "preview": "--- Sheet: Executive Summary --- EFDS Deadline Register 2026–27 Executive control sheet | Mandatory dates, notice periods and internal milestones 12\t8\tSecretary\tWeekly Seed items\tHigh priority\tPrimary owner\tReview How to"
+          },
+          {
+            "id": "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2",
+            "source_type": "document",
+            "title": "EFDS Deadline Register 2026-27",
+            "preview": "accountable owner and one concrete next action. 4.\tHigh-priority or overdue items should be raised in the weekly exec meeting. 5.\tLink or paste the authoritative ICU / Imperial / predecessor source in the Source column. "
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "c5ec4b20-8d91-5e82-b4fc-7c8a3228d568",
+            "source_type": "knowledge_timing_rule",
+            "title": "The deadline for submitting this is 16 August.",
+            "preview": "The deadline for submitting this is 16 August. The deadline for submitting this is 16 August."
+          },
+          {
+            "rank": 2,
+            "id": "46a91b71-b1a0-5a31-9b93-b55e898df530",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000556302-club-society-risk-ratings",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000556302-club-society-risk-ratings https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000556302-club-society-risk-ratings"
+          },
+          {
+            "rank": 3,
+            "id": "37230cd2-91c3-5182-8c53-f56212f36eb7",
+            "source_type": "icu_article",
+            "title": "SUMS - DASHBOARD/SUBMISSIONS/APPLICATIONS",
+            "preview": "SUMS - ![](https://s3-eu-central-1.amazonaws.com/euc-cdn.freshdesk.com/data/helpdesk/attachments/production/101253025291/original/yIbbMvwqLt-tTRc87qjc_ZhJ7uKKjqyeJw.png?1751472683) The dates listed below are the 2024 - 2"
+          },
+          {
+            "rank": 4,
+            "id": "6b6279bb-0870-56ad-9540-f4e1cde37700",
+            "source_type": "knowledge_requirement",
+            "title": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and Secretary) filled after the Autumn Elections or your CSP will be at risk of closing.",
+            "preview": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and S"
+          },
+          {
+            "rank": 5,
+            "id": "6d1cf8ca-448a-5f4e-8d40-374ab9d00b99",
+            "source_type": "knowledge_timing_rule",
+            "title": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and Secretary) filled after the Autumn Elections or your CSP will be at risk of closing.",
+            "preview": "Please see the dates below: Nominations: October 5th - October 13th, 2026Voting: October 19th - October 22nd, 2026Results announced: October 23rd, 2026 You must have all principal roles (President/Chair, Treasurer, and S"
+          }
+        ]
+      },
+      {
+        "query": "What internal material tracks the sponsorship process and timing?",
+        "category": "sponsorship",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "65871b03-01b0-54ae-b73b-dd8812c81023"
+        ],
+        "acceptable": [
+          "71d760ff-cc0d-50cb-981a-369706335434",
+          "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+          "c49bf075-700e-5e76-9174-2dbeecd5361f"
+        ],
+        "expected_details": [
+          {
+            "id": "65871b03-01b0-54ae-b73b-dd8812c81023",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "ding/research initiatives, workshops | Chair / VP | To define | 07_Academic_Research | Select flagship initiatives Competitions | Trading, case, data and interdisciplinary competitions | Competition Officer | To define |"
+          },
+          {
+            "id": "71d760ff-cc0d-50cb-981a-369706335434",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "start and Freshers timetable Sponsorship process | September 2026 (verify ICU opening / process) | Medium | Treasurer / Industry | Prepare materials before outreach peaks Committee onboarding | Mid-August 2026 | Planning"
+          },
+          {
+            "id": "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "| Canonical location | Next step Opening position | Inherited balances / restricted funds / commitments | Treasurer | To verify | 04_Finance | Confirm with ICU / predecessor 2026–27 budget | Annual plan by workstream and"
+          },
+          {
+            "id": "c49bf075-700e-5e76-9174-2dbeecd5361f",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "EFDS Master Index 2026–27 Economics, Finance & Data Science Society | Imperial College London | Working operating index  | 3 Operating pillars | 12 EFDS officers | 2 External department reps | 2026–27 Academic year Purpo"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "2ded376a-0d51-5677-939d-6e687a1dd6c1",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "Sponsorships step by step -"
+          },
+          {
+            "rank": 2,
+            "id": "b479c7ec-3863-5004-ad87-9ff116f735d6",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "--- title: SPONSORSHIP STEP BY STEP source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000559384-sponsorship-step-by-step category: Committee Member Resources folder: SPONSORSHIPS modifi"
+          },
+          {
+            "rank": 3,
+            "id": "6f0085ec-492d-5f24-a7fd-cadbaf7f6d7b",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "o remember: Be clear on your member demographic Find out corporation needs Promise deliverables Give options Approach the right person Phone call and a follow up email tend to work best Keep a record of all communication"
+          },
+          {
+            "rank": 4,
+            "id": "1a2b778b-7a89-5be1-bc28-c3879e03995d",
+            "source_type": "knowledge_process",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "SPONSORSHIP STEP BY STEP source_url: https://imperialcollegeunion."
+          },
+          {
+            "rank": 5,
+            "id": "b2734ad4-09e7-52f5-a08e-8dd60a6da520",
+            "source_type": "icu_article",
+            "title": "SPONSORSHIP STEP BY STEP",
+            "preview": "to delegate one committee member to be responsible for communications with potential Sponsors. Typically, the routes to Sponsorship are: Alumni Internships and work experience Personal connections e.g. family and friends"
+          }
+        ]
+      },
+      {
+        "query": "What is the academic representative expected to coordinate?",
+        "category": "academics",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "7dfd4ea1-86e1-5231-8cca-8bfd183c3790"
+        ],
+        "acceptable": [
+          "0526af31-fedd-5eca-982a-bf85fdd845fe",
+          "5da3febf-c919-5fec-9933-669d329eb423"
+        ],
+        "expected_details": [
+          {
+            "id": "0526af31-fedd-5eca-982a-bf85fdd845fe",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "EFDS Departmental Academic Representative Jack Rose | Officer & Handover Profile | 2026–27  | Document status: Working role charter for committee review. Manifesto-derived commitments are source-grounded; role design, KP"
+          },
+          {
+            "id": "5da3febf-c919-5fec-9933-669d329eb423",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "t exec lead. Per term | Set portfolio, deliver initiatives, review outcomes and archive evidence. Year-end | Complete role profile, organise files, transfer contacts and conduct successor handover. 10. Systems, Records &"
+          },
+          {
+            "id": "7dfd4ea1-86e1-5231-8cca-8bfd183c3790",
+            "source_type": "document",
+            "title": "Departmental_Academic_Representative - Jack Rose - 2026-27",
+            "preview": "ues logged and followed through | [Set target/date] | High O03 | Establish liaison with EFDS Chair/Secretary without duplicating official representation | Students receive closure updates | [Set target/date] | High O04 |"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "37d29371-43d3-5755-99a8-95f09856ba31",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549336-committee-structure-change-request",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549336-committee-structure-change-request https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000549336-committee-structure"
+          },
+          {
+            "rank": 2,
+            "id": "2367a136-fdf4-5dab-bd37-f99e4a1f505f",
+            "source_type": "knowledge_timing_rule",
+            "title": "(this is optional but highly encouraged) Term 2 Submit annual budget Continue organising events and activity (minimum 2 events/activities) Submit Incubator report (more information on this below (by March) Participate in leadership elections – ensure you have a committee for next year Your progress will then be reviewed by NAC Committee: (March/April) To be eligible for graduation: 20 members All principal roles filled (ready for the next academic year) Approved Constitution Incubator report Annual budget Core RA and Event proposals The NAC Committee will promote all groups who have successfully met all the Incubator milestones.",
+            "preview": "(this is optional but highly encouraged) Term 2 Submit annual budget Continue organising events and activity (minimum 2 events/activities) Submit Incubator report (more information on this below (by March) Participate in"
+          },
+          {
+            "rank": 3,
+            "id": "0deb165d-6629-54b9-81e2-d34b7a1b168c",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "do I need to do? Depending on [your risk rating](https://www.cognitoforms.com/ICUActivities/RiskRatingLookup), there is a different expectation for how you need to engage with the core activity risk assessment process. D"
+          },
+          {
+            "rank": 4,
+            "id": "65650e3d-7480-5aba-974d-d1dbe1c80aff",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "ess. High risk – submit annually, requires technical advisor approval Medium risk – submit annually Low risk – reconfirm annually, submit every 3 years Minimal risk – reconfirm annually All groups must fill out the [Core"
+          },
+          {
+            "rank": 5,
+            "id": "e53a26e7-2156-5554-8a91-dd14b06a518f",
+            "source_type": "icu_article",
+            "title": "EMAIL ACCOUNT MANAGEMENT",
+            "preview": "cles/101000532489-email-account-management category: Committee Member Resources folder: COMMITTEE MANAGEMENT modified_at: Fri, 31 Jul at 4:33 PM crawled_at: 2026-08-10T20:59:14.419478+00:00 --- # EMAIL ACCOUNT MANAGEMENT"
+          }
+        ]
+      },
+      {
+        "query": "What must be done to map Union funding routes before term?",
+        "category": "finance",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "8e161396-ee32-57d7-9e19-5e5fa8157b97"
+        ],
+        "acceptable": [
+          "17b77f6f-e09f-59d1-9928-772f1520fa79",
+          "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+          "666eff43-54f4-54cf-a063-40bd61457abb"
+        ],
+        "expected_details": [
+          {
+            "id": "17b77f6f-e09f-59d1-9928-772f1520fa79",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "--- Sheet: Pre-Term Actions --- EFDS Pre-Term Actions 2026–27 Mobilisation tracker from inherited-material consolidation to society launch. Dates are internal targets unless sourced externally. ID\tWorkstream\tAction\tAccou"
+          },
+          {
+            "id": "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "te + admin MVP and content ownership\tChair\tSecretary / relevant officers\t2026-09-05\tMedium\tNot started\tA007 / A022\tWrite MVP scope\tWebsite product brief A024\tLaunch\tRun full pre-launch readiness review and close critical"
+          },
+          {
+            "id": "666eff43-54f4-54cf-a063-40bd61457abb",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "--- Sheet: Executive Summary --- EFDS Pre-Term Actions 2026–27 Delivery plan | 10 August to launch | Executive-level mobilisation tracker 24\t8\t26–27 Sep\tWeekly Seed actions\tWorkstreams\tLaunch window\tReview How to use thi"
+          },
+          {
+            "id": "8e161396-ee32-57d7-9e19-5e5fa8157b97",
+            "source_type": "document",
+            "title": "EFDS Pre-Term Actions 2026-27",
+            "preview": "and outstanding commitments\tTreasurer\tChair\t2026-08-24\tHigh\tNot started\tICU / predecessor\tObtain evidence\tOpening position signed off A012\tFinance\tDraft 2026–27 annual budget: base / target / upside\tTreasurer\tWorkstream "
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "34020b49-ef16-5500-af26-2258404375e0",
+            "source_type": "knowledge_requirement",
+            "title": "- The Union must approve all fundraising in advance.",
+            "preview": "- The Union must approve all fundraising in advance. - The Union must approve all fundraising in advance."
+          },
+          {
+            "rank": 2,
+            "id": "1c78aaaa-e291-5b84-bde3-182d50b2646c",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "## Funding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be trying to achieve and t"
+          },
+          {
+            "rank": 3,
+            "id": "a9d31ce1-042a-5f1b-bc13-1359dd8a3099",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "#_ACTIVITY_DEVELOPMENT_FUNDFunding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be"
+          },
+          {
+            "rank": 4,
+            "id": "6564c084-3355-52a6-a3fe-2af66d19b870",
+            "source_type": "icu_article",
+            "title": "KEY FINANCIAL PROCESSES",
+            "preview": "s can pay securely through the Union system, and the income is recorded against your CSP account. View the step-by-step guidance in eActivities here: https://eactivities.union.ic.ac.uk/training/articles/30[Online Sales |"
+          },
+          {
+            "rank": 5,
+            "id": "931f1e98-baa3-5bee-adf2-5917310bb00f",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "a Past President of Imperial College Union and the current President of Imperial College Union. The Vice-Provost (Education) acts as the Chair of the Committee and the College Secretary & Registrar as its Secretary. The "
+          }
+        ]
+      },
+      {
+        "query": "What needs to be prepared before an EFDS event can go ahead?",
+        "category": "events",
+        "source_family": "icu_article",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+        ],
+        "acceptable": [
+          "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+          "69504da8-e105-515d-a8fe-d5843d581c07",
+          "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+          "a231c490-b9a6-5f3f-a40e-3023246cd145",
+          "b3758153-84d4-589a-80f0-182b2cdae6c5",
+          "daf39864-a73c-50d4-9878-b53f244b85a7",
+          "e0a41b4d-57c2-546f-b25e-3e3e6db374ea"
+        ],
+        "expected_details": [
+          {
+            "id": "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "nt execution: major priorities, owners and progress should be visible to the committee. Build repeatable systems: prefer reusable partnerships, templates and processes over one-off heroics. Comply by design: ICU/Imperial"
+          },
+          {
+            "id": "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d",
+            "source_type": "icu_article",
+            "title": "CORE ACTIVITY RISK ASSESSMENTS",
+            "preview": "Core Activity Risk Assessments - You must fill out the [Core Activity Risk Assessment Form](https://www.cognitoforms.com/ICUActivities/CoreActivityRiskAssessment202627)https://www.cognitoforms.com/ICUActivities/CoreActiv"
+          },
+          {
+            "id": "69504da8-e105-515d-a8fe-d5843d581c07",
+            "source_type": "knowledge_requirement",
+            "title": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process.",
+            "preview": "Submit Your Event Paperwork Once you have identified a suitable supplier and gathered the required documents, you must follow the Union’s standard event approval process. Submit Your Event Paperwork Once you have identif"
+          },
+          {
+            "id": "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "es before commitments are made. Industry outreach duplication | Maintain shared prospect pipeline and relationship ownership. Departmental rep/society remit confusion | Keep official representation channels distinct from"
+          },
+          {
+            "id": "a231c490-b9a6-5f3f-a40e-3023246cd145",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "cademic & Research Accountable leads: Chair; VP; Departmental Academic Representative Open channels for research opportunities with Business School professors and researchers. Create applied events linking course content"
+          },
+          {
+            "id": "b3758153-84d4-589a-80f0-182b2cdae6c5",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "EFDS Operating Plan 2026-27 Economics, Finance & Data Science Society | Imperial College London | Executive working plan  | Planning basis. This plan translates the elected 2026-27 manifesto themes and the committee oper"
+          },
+          {
+            "id": "daf39864-a73c-50d4-9878-b53f244b85a7",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "n | Deliver a specific event/initiative | Project brief and action list Term-end | Term review | What worked, what did not, next-term priorities | Term review and updated plan 7. Pre-Term Critical Path Phase | Indicative"
+          },
+          {
+            "id": "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+            "source_type": "document",
+            "title": "EFDS Operating Plan 2026-27",
+            "preview": "s: Events Officer; Secretary; Treasurer Standardise event briefs, approvals, room booking, risk management and run-of-show. Maintain a single forward event calendar. Plan sufficiently early for speaker approvals, venues,"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "3ea45e68-bb07-51ea-be42-2a22c4ddbe4f",
+            "source_type": "icu_article",
+            "title": "HAVING FOOD AT EVENTS",
+            "preview": "n information from attendees before the event so you can plan accordinglyAvoid cross-contamination; consider how food is stored, handled, and servedPlan your emergency response; know what to do if someone has an allergic"
+          },
+          {
+            "rank": 2,
+            "id": "2cc2fc18-f30c-55f1-ab6d-dab387de88a2",
+            "source_type": "icu_article",
+            "title": "HAVING FOOD AT EVENTS",
+            "preview": "n information from attendees before the event so you can plan accordinglyAvoid cross-contamination; consider how food is stored, handled, and servedPlan your emergency response; know what to do if someone has an allergic"
+          },
+          {
+            "rank": 3,
+            "id": "57186e65-081f-5d83-962a-03d8b0e51356",
+            "source_type": "icu_article",
+            "title": "HAVING FOOD AT EVENTS",
+            "preview": "n information from attendees before the event so you can plan accordinglyAvoid cross-contamination; consider how food is stored, handled, and servedPlan your emergency response; know what to do if someone has an allergic"
+          },
+          {
+            "rank": 4,
+            "id": "c4e1fbad-a4c8-554c-8184-cb7bb88f6438",
+            "source_type": "icu_article",
+            "title": "CONTROL MEASURES TOP TIPS",
+            "preview": "driving license. Drivers to follow speed limits and rules of the road, be fit to drive (no alcohol/drugs, no driving while sleepy). Vehicles used must be in good condition and with a valid MOT, road tax and insurance. | "
+          },
+          {
+            "rank": 5,
+            "id": "57ad3317-d3af-5c3f-8a07-e698b28a8995",
+            "source_type": "icu_article",
+            "title": "CONTROL MEASURES TOP TIPS",
+            "preview": "security at venue.Trips: Ensure accommodation/rooms are locked and encourage attendees not to bring high value items on the trip.Outdoor Extreme weather Cancel the event if extreme weather is forecast.Encourage attendees"
+          }
+        ]
+      },
+      {
+        "query": "What responsibilities does the Events Officer have for society activity?",
+        "category": "events",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "36849faf-5277-5e60-ae88-a8ccb11466ad"
+        ],
+        "acceptable": [
+          "255d7614-7593-5cac-b182-642e0670caea",
+          "7b4cc986-d515-54e8-ba77-e0d2d16bac0b",
+          "9f5d2fd3-18aa-5f32-9956-74faf901e1d7"
+        ],
+        "expected_details": [
+          {
+            "id": "255d7614-7593-5cac-b182-642e0670caea",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "sight: I will leverage my network to bring in top industry speakers, like the Head of Data Analytics at Citadel, who has already expressed interest in our degree. These events will be both insightful and career-defining."
+          },
+          {
+            "id": "36849faf-5277-5e60-ae88-a8ccb11466ad",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "Let’s make EFDS unforgettable, vote Kirill! Handover questions to resolve What recurring processes, deadlines and contacts did the previous officer own? Which initiatives were actually delivered versus only proposed? Whi"
+          },
+          {
+            "id": "7b4cc986-d515-54e8-ba77-e0d2d16bac0b",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "actual approval under the relevant rules. 8. Collaboration Map Works most closely with: All project leads, Treasurer, Secretary, Social Secretary Primary escalation: Chair / Vice President, unless the issue belongs to an"
+          },
+          {
+            "id": "9f5d2fd3-18aa-5f32-9956-74faf901e1d7",
+            "source_type": "document",
+            "title": "Events_Officer - Shashwat Sarawagi - 2026-27",
+            "preview": "EFDS Events Officer Shashwat Sarawagi | Officer & Handover Profile | 2026–27  | Document status: Working role charter for committee review. Manifesto-derived commitments are source-grounded; role design, KPIs and gaps ar"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "a0629694-7ea1-5234-a0cc-c0e781e65a1b",
+            "source_type": "icu_article",
+            "title": "RUNNING A SOCIAL",
+            "preview": "3D&CID=8C29051D-DE17-40A5-9369-A4B85F03BD52 Pub crawls and alcohol-related socials If you're organising a pub crawl or another alcohol-focused social, you'll need to consider additional safety measures. This includes: - "
+          },
+          {
+            "rank": 2,
+            "id": "baa75451-629e-5879-84b4-2b580a208b12",
+            "source_type": "knowledge_requirement",
+            "title": "Your Club/Society is responsible for covering these (unlike SUMS, where ICU covers the fees)You must submit an event budget detailing your ticket prices, and update it if prices changeYou must have a clear refund policy in place before tickets go on saleYour event page must clearly display the date, time, and location of the event NOTE: Your committee won't be able to adjust finance settings on Eventbrite; this is restricted to Union staff only.",
+            "preview": "Your Club/Society is responsible for covering these (unlike SUMS, where ICU covers the fees)You must submit an event budget detailing your ticket prices, and update it if prices changeYou must have a clear refund policy "
+          },
+          {
+            "rank": 3,
+            "id": "b6b3bb4d-5064-5d61-afe7-cde78d4c0330",
+            "source_type": "icu_article",
+            "title": "SPEAKER EVENTS PROCESS",
+            "preview": "Speaker Events Process - Having speakers engage with your club/society is an amazing opportunity for your members, and for the wider community at Imperial. Make sure you read our [guidance on inviting and collaborating w"
+          },
+          {
+            "rank": 4,
+            "id": "2420f299-4031-500e-a762-1e229e0e8e89",
+            "source_type": "icu_article",
+            "title": "SPEAKER EVENTS PROCESS",
+            "preview": "eties. The speaker's history and any prior media attention. Potentially controversial subject matter. Compliance with UK laws, including those related to discrimination, incitement, and intimidation. Required Information"
+          },
+          {
+            "rank": 5,
+            "id": "63307ddb-3e8c-5eae-8fd4-55039547cc53",
+            "source_type": "icu_article",
+            "title": "RUNNING A SOCIAL",
+            "preview": "Running a SocialSocials are a great way to welcome new members, strengthen your community and give members the opportunity to socialise outside of your regular activities. Whether you're organising a quiz night, dinner, "
+          }
+        ]
+      },
+      {
+        "query": "What room-booking uncertainty is still being tracked?",
+        "category": "governance",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b"
+        ],
+        "acceptable": [
+          "d5b0e388-8f05-5424-a755-48c37adb32ae"
+        ],
+        "expected_details": [
+          {
+            "id": "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b",
+            "source_type": "document",
+            "title": "EFDS Open Questions 2026-27",
+            "preview": "EFDS Open Questions 2026–27 Executive issue log | Questions requiring clarification, evidence or committee decisions  | 15 Seed questions | 3 Priority levels | Weekly Review cadence | Secretary Owner How to use. Add a qu"
+          },
+          {
+            "id": "d5b0e388-8f05-5424-a755-48c37adb32ae",
+            "source_type": "document",
+            "title": "EFDS Open Questions 2026-27",
+            "preview": "nd how far ahead? | Events Officer | ICU / Imperial booking guidance | Open | Create room-booking SOP Q011 | Medium | Finance | What spend thresholds require approval and who can authorise them? | Treasurer | ICU finance"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "f858c1e6-4a67-563a-8edb-2806ee48efd1",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints"
+          },
+          {
+            "rank": 2,
+            "id": "b5b89170-db07-555b-9979-2a66034bcc87",
+            "source_type": "knowledge_resource",
+            "title": "the room booking",
+            "preview": "the room booking the room booking"
+          },
+          {
+            "rank": 3,
+            "id": "713fb478-b87c-592d-845e-05f155b506f8",
+            "source_type": "knowledge_resource",
+            "title": "Ad-Hoc Room Bookings",
+            "preview": "Ad-Hoc Room Bookings Ad-Hoc Room Bookings"
+          },
+          {
+            "rank": 4,
+            "id": "d0bbd4d7-5593-5a2b-9f7a-cb781c6ce47c",
+            "source_type": "icu_article",
+            "title": "ROOM BOOKING COMPLAINTS",
+            "preview": "--- title: ROOM BOOKING COMPLAINTS source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000540293-room-booking-complaints category: Committee Member Resources folder: ROOM BOOKINGS modifie"
+          },
+          {
+            "rank": 5,
+            "id": "833dbb40-40b0-531f-832b-5f46efec5fd9",
+            "source_type": "icu_article",
+            "title": "ROOM BOOKING COMPLAINTS",
+            "preview": "ticles/101000540293-room-booking-complaints category: Committee Member Resources folder: ROOM BOOKINGS modified_at: Mon, 17 Nov, 2025 at 11:30 AM crawled_at: 2026-08-10T20:59:18.963496+00:00 --- # ROOM BOOKING COMPLAINTS"
+          }
+        ]
+      },
+      {
+        "query": "What should a society do after an incident?",
+        "category": "policy",
+        "source_family": "icu_article",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "efabf6a9-d549-5754-8f61-76e8fecce169"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "efabf6a9-d549-5754-8f61-76e8fecce169",
+            "source_type": "icu_article",
+            "title": "REPORTING AN INCIDENT",
+            "preview": "Reporting an incident - Do you need immediate help?In an emergency off campus call 999.In an emergency on any Imperial campus, call Security on 020 75891000 from any phone or dial 4444 from any internal handset. If you a"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "d9445201-601b-5f3e-8d1c-bc09957a2123",
+            "source_type": "knowledge_process_step",
+            "title": "Process step 2",
+            "preview": "Process step 2 What can I do after an incident has happened and before a disciplinary action/outcome is announced?"
+          },
+          {
+            "rank": 2,
+            "id": "5af84f83-f263-54d2-8c28-ea03b946978a",
+            "source_type": "knowledge_contact",
+            "title": "Knowledge Contact",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: A legal duty to take reasonable care of your own health and safety*.You must also take reason"
+          },
+          {
+            "rank": 3,
+            "id": "708f5509-1028-5e30-8a4f-cab3673d4b83",
+            "source_type": "knowledge_contact",
+            "title": "Knowledge Contact",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: A legal duty to take reasonable care of your own health and safety*.You must also take reason"
+          },
+          {
+            "rank": 4,
+            "id": "667f59e6-df14-5d30-a963-51793d15521a",
+            "source_type": "icu_article",
+            "title": "REPORTING AND HANDLING WELFARE CONCERNS",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: A legal duty to take reasonable care of your own health and safety*.You must also take reason"
+          },
+          {
+            "rank": 5,
+            "id": "579374fb-61e1-5ed5-86c6-712f14a43bb0",
+            "source_type": "icu_article",
+            "title": "REPORTING AND HANDLING WELFARE CONCERNS",
+            "preview": "Reporting and Handling Welfare Concerns Committee members of Clubs & Societies have a legal duty of care towards your members: - A legal duty to take reasonable care of your own health and safety*. - You must also take r"
+          }
+        ]
+      },
+      {
+        "query": "Where do officers manage society submissions?",
+        "category": "identifier",
+        "source_family": "icu_article",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "1330725d-91d3-51df-bffc-cbac850102a4"
+        ],
+        "acceptable": [],
+        "expected_details": [
+          {
+            "id": "1330725d-91d3-51df-bffc-cbac850102a4",
+            "source_type": "icu_article",
+            "title": "SUMS - DASHBOARD/SUBMISSIONS/APPLICATIONS",
+            "preview": "r groups processes, view process applications and communicate with your members (more info coming!). This will show you the groups committee, members and open forms. ![A screenshot of a computer Description automatically"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "76b43af5-20cc-5a63-90bb-2a38fbd9c9e8",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "bmitting.Need help?If you have any questions while completing your constitution, please don't hesitate to [submit a ticket.](https://imperialcollegeunion.freshdesk.com/support/tickets/new)We're happy to provide guidance,"
+          },
+          {
+            "rank": 2,
+            "id": "d332eb12-559b-5075-8ade-0d8cd7b60b2a",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "legeunion.freshdesk.com/support/tickets/new)We're happy to provide guidance, answer any questions or arrange a meeting if you'd like to discuss your constitution in more detail. We're here to help throughout the process."
+          },
+          {
+            "rank": 3,
+            "id": "90462ee1-9a28-5d29-8219-c5d74522c034",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "Step 5: Submit your constitution Step 5: Submit your constitution Once complete, submit your constitution using the [Constitution Submission Form](https://www.cognitoforms.com/ICUActivities/COMMITTEEADMINFORM202627). Onc"
+          },
+          {
+            "rank": 4,
+            "id": "4571878a-2044-500e-a9e8-0e2e21d847ea",
+            "source_type": "knowledge_resource",
+            "title": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions",
+            "preview": "https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions"
+          },
+          {
+            "rank": 5,
+            "id": "24496a81-b1d8-5fde-967a-957b9cfe40e1",
+            "source_type": "icu_article",
+            "title": "CLUB & SOCIETY CONSTITUTIONS",
+            "preview": "--- title: CLUB & SOCIETY CONSTITUTIONS source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000590242-club-society-constitutions category: Committee Member Resources folder: COMMITTEE MAN"
+          }
+        ]
+      },
+      {
+        "query": "Where is the committee's current funding planning material?",
+        "category": "finance",
+        "source_family": "document",
+        "strategy": "semantic_primary_exact",
+        "expected": [
+          "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483"
+        ],
+        "acceptable": [
+          "65871b03-01b0-54ae-b73b-dd8812c81023",
+          "71d760ff-cc0d-50cb-981a-369706335434",
+          "c49bf075-700e-5e76-9174-2dbeecd5361f"
+        ],
+        "expected_details": [
+          {
+            "id": "65871b03-01b0-54ae-b73b-dd8812c81023",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "ding/research initiatives, workshops | Chair / VP | To define | 07_Academic_Research | Select flagship initiatives Competitions | Trading, case, data and interdisciplinary competitions | Competition Officer | To define |"
+          },
+          {
+            "id": "71d760ff-cc0d-50cb-981a-369706335434",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "start and Freshers timetable Sponsorship process | September 2026 (verify ICU opening / process) | Medium | Treasurer / Industry | Prepare materials before outreach peaks Committee onboarding | Mid-August 2026 | Planning"
+          },
+          {
+            "id": "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "| Canonical location | Next step Opening position | Inherited balances / restricted funds / commitments | Treasurer | To verify | 04_Finance | Confirm with ICU / predecessor 2026–27 budget | Annual plan by workstream and"
+          },
+          {
+            "id": "c49bf075-700e-5e76-9174-2dbeecd5361f",
+            "source_type": "document",
+            "title": "EFDS Master Index 2026-27",
+            "preview": "EFDS Master Index 2026–27 Economics, Finance & Data Science Society | Imperial College London | Working operating index  | 3 Operating pillars | 12 EFDS officers | 2 External department reps | 2026–27 Academic year Purpo"
+          }
+        ],
+        "top_5": [
+          {
+            "rank": 1,
+            "id": "8065d0c6-6fbf-5d65-8687-af999b84aee9",
+            "source_type": "icu_article",
+            "title": "ANNUAL BUDGETING 2026-27",
+            "preview": "--- title: ANNUAL BUDGETING 2026-27 source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000579011-annual-budgeting-2026-27 category: Committee Member Resources folder: FUNDING modified_at"
+          },
+          {
+            "rank": 2,
+            "id": "f8c705f0-fea9-5af3-9aa7-9b4aabe5cae4",
+            "source_type": "icu_article",
+            "title": "ANNUAL BUDGETING 2026-27",
+            "preview": "se yourself with previous budgets submitted. Please make sure you do not copy and paste any previous budget lines or keep the budget lines separate - make sure to group expenditure as illustrated in our training article:"
+          },
+          {
+            "rank": 3,
+            "id": "1c78aaaa-e291-5b84-bde3-182d50b2646c",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "## Funding: Introduction Activity Development Fund The Activities Development Fund (ADF) is a pot of money set aside for Clubs and Societies to support any new or developing activities they may be trying to achieve and t"
+          },
+          {
+            "rank": 4,
+            "id": "931f1e98-baa3-5bee-adf2-5917310bb00f",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "a Past President of Imperial College Union and the current President of Imperial College Union. The Vice-Provost (Education) acts as the Chair of the Committee and the College Secretary & Registrar as its Secretary. The "
+          },
+          {
+            "rank": 5,
+            "id": "80b23c15-d960-58f9-a57b-1c9e12310451",
+            "source_type": "icu_article",
+            "title": "INTRODUCTION TO FUNDING",
+            "preview": "--- title: INTRODUCTION TO FUNDING source_url: https://imperialcollegeunion.freshdesk.com/support/solutions/articles/101000533686-introduction-to-funding category: Committee Member Resources folder: FUNDING modified_at: "
+          }
+        ]
+      }
+    ]
+  }
+}

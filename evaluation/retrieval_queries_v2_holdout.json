@@ -1,0 +1,278 @@
+{
+  "benchmark_version": "retrieval_v2_holdout_v1",
+  "split": "holdout",
+  "split_seed": "efds-retrieval-v2-split-2026-08-14",
+  "holdout_fraction": 0.3,
+  "peer_count": 40,
+  "queries": [
+    {
+      "query": "How can the society apply for funding?",
+      "source_family": "knowledge_process",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "ee52d403-80aa-54d4-a7f2-842bb9059898"
+      ],
+      "acceptable_expected_ids": [
+        "a9d31ce1-042a-5f1b-bc13-1359dd8a3099",
+        "726f76a1-c315-58fc-8edb-1e60c20e78ae"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do room booking, approvals and event planning fit together?",
+      "expected_retrieval_unit_ids": [
+        "3820fa7f-23eb-5c1f-9f66-f9b201071184"
+      ],
+      "acceptable_expected_ids": [
+        "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+        "1162968a-d789-54c3-8bff-5ecd561fdd3f",
+        "144262bf-5b85-55a6-ac47-20a3667cc216",
+        "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+        "969af8c0-1f1c-5c90-8f64-8f4e3846dc3e",
+        "a231c490-b9a6-5f3f-a40e-3023246cd145",
+        "a2582a1c-2608-508b-bdca-14c03fb06f2a",
+        "b3758153-84d4-589a-80f0-182b2cdae6c5",
+        "daf39864-a73c-50d4-9878-b53f244b85a7",
+        "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+        "e6906882-9309-5dc8-ae05-4b04d664c3dd",
+        "ee448c04-ef9a-5127-8f57-d0b2048480b4",
+        "f93d7c3f-5880-580a-8a94-0b234a5ce87f"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "knowledge_requirement",
+      "category": "events"
+    },
+    {
+      "query": "How do we register an external coach?",
+      "source_family": "icu_article",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "6e3f5f67-a124-527e-929a-28adb6e9c86f"
+      ],
+      "acceptable_expected_ids": [
+        "38cc0d04-87aa-5d04-828a-29b283d449c1",
+        "31650b56-0ff5-5c8b-8b5f-0a5a94a21cf6",
+        "1f45295b-82b7-5dc4-90ee-4257d8d5e45d",
+        "20995a95-93bb-54eb-821f-351e5620c3bb",
+        "09a3feaa-75a0-5618-93fd-5476ae6dc313"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How should event work be organized across the calendar and event process?",
+      "expected_retrieval_unit_ids": [
+        "06cb3357-5ea6-5c41-b72c-a8f0e27f71ad"
+      ],
+      "acceptable_expected_ids": [
+        "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+        "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+        "a231c490-b9a6-5f3f-a40e-3023246cd145",
+        "b3758153-84d4-589a-80f0-182b2cdae6c5",
+        "daf39864-a73c-50d4-9878-b53f244b85a7",
+        "e0a41b4d-57c2-546f-b25e-3e3e6db374ea"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "icu_article",
+      "category": "events"
+    },
+    {
+      "query": "What does the society's deadline register track?",
+      "expected_retrieval_unit_ids": [
+        "ece9c01f-2670-5bd3-bb4f-e7a79e8dbec2"
+      ],
+      "acceptable_expected_ids": [
+        "1b364b66-b69c-5c1f-ba43-8712879f5144"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "governance"
+    },
+    {
+      "query": "What happens when society accounts are frozen?",
+      "source_family": "knowledge_requirement",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "80011cce-d11a-50f7-beb2-4dc535c79d94"
+      ],
+      "acceptable_expected_ids": [
+        "b690f047-22c9-518d-abf3-beb65c15ad6e"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What internal material tracks the sponsorship process and timing?",
+      "expected_retrieval_unit_ids": [
+        "65871b03-01b0-54ae-b73b-dd8812c81023"
+      ],
+      "acceptable_expected_ids": [
+        "c49bf075-700e-5e76-9174-2dbeecd5361f",
+        "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+        "71d760ff-cc0d-50cb-981a-369706335434"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "sponsorship"
+    },
+    {
+      "query": "What is needed to run a stall?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "a5833a5b-ff79-5187-828f-4bddc67f7a6e"
+      ],
+      "acceptable_expected_ids": [
+        "13df4ace-db06-580b-82e7-26f5f4a82b4e",
+        "2c72b76b-36da-573c-8866-59aaa731257e",
+        "45c7cddf-dc76-57a5-9e7d-9d0a6b45a854",
+        "23cfca47-1c93-57df-be9e-1bdeb244cc28",
+        "33d71ed2-7c07-55f1-90c8-5ee4b0806daa"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What is the academic representative expected to coordinate?",
+      "expected_retrieval_unit_ids": [
+        "7dfd4ea1-86e1-5231-8cca-8bfd183c3790"
+      ],
+      "acceptable_expected_ids": [
+        "0526af31-fedd-5eca-982a-bf85fdd845fe",
+        "5da3febf-c919-5fec-9933-669d329eb423"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "academics"
+    },
+    {
+      "query": "What is the process for reserving Union rooms?",
+      "source_family": "knowledge_requirement",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "3820fa7f-23eb-5c1f-9f66-f9b201071184"
+      ],
+      "acceptable_expected_ids": [
+        "1162968a-d789-54c3-8bff-5ecd561fdd3f",
+        "144262bf-5b85-55a6-ac47-20a3667cc216",
+        "969af8c0-1f1c-5c90-8f64-8f4e3846dc3e",
+        "a2582a1c-2608-508b-bdca-14c03fb06f2a",
+        "ee448c04-ef9a-5127-8f57-d0b2048480b4",
+        "e6906882-9309-5dc8-ae05-4b04d664c3dd",
+        "f93d7c3f-5880-580a-8a94-0b234a5ce87f"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What must be done to map Union funding routes before term?",
+      "expected_retrieval_unit_ids": [
+        "8e161396-ee32-57d7-9e19-5e5fa8157b97"
+      ],
+      "acceptable_expected_ids": [
+        "666eff43-54f4-54cf-a063-40bd61457abb",
+        "17b77f6f-e09f-59d1-9928-772f1520fa79",
+        "3956a272-a19f-53a2-b371-e9fe11ea22c4"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "finance"
+    },
+    {
+      "query": "What needs to be prepared before an EFDS event can go ahead?",
+      "expected_retrieval_unit_ids": [
+        "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+      ],
+      "acceptable_expected_ids": [
+        "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+        "69504da8-e105-515d-a8fe-d5843d581c07",
+        "6b90791b-2207-5c5f-bbd7-6526d8ab9b70",
+        "a231c490-b9a6-5f3f-a40e-3023246cd145",
+        "b3758153-84d4-589a-80f0-182b2cdae6c5",
+        "daf39864-a73c-50d4-9878-b53f244b85a7",
+        "e0a41b4d-57c2-546f-b25e-3e3e6db374ea"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "icu_article",
+      "category": "events"
+    },
+    {
+      "query": "What responsibilities does the Events Officer have for society activity?",
+      "expected_retrieval_unit_ids": [
+        "36849faf-5277-5e60-ae88-a8ccb11466ad"
+      ],
+      "acceptable_expected_ids": [
+        "9f5d2fd3-18aa-5f32-9956-74faf901e1d7",
+        "255d7614-7593-5cac-b182-642e0670caea",
+        "7b4cc986-d515-54e8-ba77-e0d2d16bac0b"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "events"
+    },
+    {
+      "query": "What room-booking uncertainty is still being tracked?",
+      "expected_retrieval_unit_ids": [
+        "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b"
+      ],
+      "acceptable_expected_ids": [
+        "d5b0e388-8f05-5424-a755-48c37adb32ae"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "governance"
+    },
+    {
+      "query": "What safety paperwork is needed for an event?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "3d3f0eeb-e6bb-58df-9f6f-ea95aaa2650d"
+      ],
+      "acceptable_expected_ids": [
+        "69504da8-e105-515d-a8fe-d5843d581c07"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What should a society do after an incident?",
+      "source_family": "icu_article",
+      "category": "policy",
+      "expected_retrieval_unit_ids": [
+        "efabf6a9-d549-5754-8f61-76e8fecce169"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "When can alcohol be served at a student event?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "222c2e0d-16e2-5ced-a0f5-4c6536536abd"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "Where do officers manage society submissions?",
+      "source_family": "icu_article",
+      "category": "identifier",
+      "expected_retrieval_unit_ids": [
+        "1330725d-91d3-51df-bffc-cbac850102a4"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "Where is the committee's current funding planning material?",
+      "expected_retrieval_unit_ids": [
+        "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483"
+      ],
+      "acceptable_expected_ids": [
+        "c49bf075-700e-5e76-9174-2dbeecd5361f",
+        "65871b03-01b0-54ae-b73b-dd8812c81023",
+        "71d760ff-cc0d-50cb-981a-369706335434"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "finance"
+    }
+  ]
+}

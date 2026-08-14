@@ -1,0 +1,402 @@
+[
+  {
+    "query": "00bd3e02adc5fe194aeda47becdc61c6f480e99d764f541c9dfe51a68a9f6e09",
+    "expected_retrieval_unit_ids": [
+      "335d9f56-8ea4-599b-952a-b592c25b24bb"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "022ffb2a259a4b82b1224814dbc2e78c94abd6988a84e0d7a8cd49a44c11c3be",
+    "expected_retrieval_unit_ids": [
+      "772ed4fd-3eba-5c2a-ba45-e7b4b2f6b973"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "02e70b6e9d743fa130250cb348506b7301898f13d090cfce2f4f8cf3c645c219",
+    "expected_retrieval_unit_ids": [
+      "539b1f9e-8549-5788-b184-d71647eec4ab"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "078446894abb2ec134ad715f990aab4966794c039249f5d47948aaaceb58248b",
+    "expected_retrieval_unit_ids": [
+      "6b3635ec-db44-5edf-b2e9-3f5168200f0f"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "080f15b95fbcb31c17b926dc562b7ffc50eeb208b5e14e19ac23e5a58f105e36",
+    "expected_retrieval_unit_ids": [
+      "8263bc93-2eb2-5565-855b-eaffee7f3fdc"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "091df8021a14765d6252e979b0f3781b0e00333fdf2ad2da6e3eb8d646597b05",
+    "expected_retrieval_unit_ids": [
+      "78c2a4ca-a7ea-57eb-b2b5-c578d2457419"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "09f41122254c361406ab0bc9432b5a103d2d621c053f88260e898b97a0b1ef26",
+    "expected_retrieval_unit_ids": [
+      "f0c2081f-9c19-5a19-9cc0-3856c89f8385"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "0c7474cb3ed90da5534fb65cc71ba362c437323e74aab9552786dc9973373726",
+    "expected_retrieval_unit_ids": [
+      "50f84ae0-e343-5d7d-8233-4e551e512999"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "109325a1bfb59bb1c8f2bba3db864a02c662cc321ed579f7f251f46cdd101f36",
+    "expected_retrieval_unit_ids": [
+      "48d51344-8013-55f6-8c77-948b8c8dc693"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "11f075b53c0cf0e4829e0a14c667e8371c2e29daa9db306d1494fc90088865ba",
+    "expected_retrieval_unit_ids": [
+      "de9d910a-9d57-54db-8783-718b7c619bf9"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "147fc35251681a8664d9d51694996c34b096944bbd9d92322911326002089c25",
+    "expected_retrieval_unit_ids": [
+      "225e5aae-7f06-5808-a344-f58973802f08"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "1d73d29a7cc998f453bbd485cced8c4218201b445d94c8498fd23453f10a1445",
+    "expected_retrieval_unit_ids": [
+      "6ca77a45-5c17-57f4-8e36-ecec2c2e000d"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "1d77f860c9e23898d86c6596ac5d94de2c4d5964afefcc642b39061157eb6276",
+    "expected_retrieval_unit_ids": [
+      "3d319d92-ae60-56ee-83d1-a63d91bccc43"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "22562f5d4add83332967f8270deec811e7c1da61a9d9d83d5fcee6b63aea5240",
+    "expected_retrieval_unit_ids": [
+      "083599c4-5a30-528b-af64-455b1065a714"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "2617d532a6f12d497cba313ff38b7c469198531783b4b92786a3685b0058a6f5",
+    "expected_retrieval_unit_ids": [
+      "93b5b6f9-0b9b-5975-b66b-f570baf19e9c"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "2962213012b7bbf69105f71de948ac73cf080acc05ad0afbfa28fbcd6c7eda24",
+    "expected_retrieval_unit_ids": [
+      "42017b25-3ab1-5981-9bbe-1758ca5dddf6"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "299d6fa4aecf62a228d9db1001e49595bbcc1d588b4dc82dde4289524d065bf0",
+    "expected_retrieval_unit_ids": [
+      "d663ce71-41d4-5309-9964-84463d70a934"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "29b612a80fb11d1884772167cd3ff3f803b13d169591e79aa309ed1e006bedb6",
+    "expected_retrieval_unit_ids": [
+      "929c013b-bb20-5504-b7c3-b63b4c3faff8"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "2b160208956826d5957ae963969116b92eeff6d8cffe7cd78de8885390ec01f7",
+    "expected_retrieval_unit_ids": [
+      "a7c5ff49-aebf-547c-acc2-3c6d5dd503b1"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "2b2c57b9f49346be37b1e512a2bf97f6f35838bc72a26bd17797b6902209d25e",
+    "expected_retrieval_unit_ids": [
+      "68bb3912-6188-53be-ba8c-bbd2d4f1fd26"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "2cfbb0addbfa596df87605eab6614d4c7a22c2c39fd0c48ded19e0e4bdb2358e",
+    "expected_retrieval_unit_ids": [
+      "ccb1a837-a556-5d14-98be-6ba5f6facf5a"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "2dccf57d822cdafe31d375416f12e2cf99d61a0a35a22ce47a0f63df0f4dc104",
+    "expected_retrieval_unit_ids": [
+      "702fef09-737d-5bc8-bf0d-d6c9fbe8bde9"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "31d4b9bd03e512513fcfa2329c4026df24000b84e21a3f83522f6bb21552aeb7",
+    "expected_retrieval_unit_ids": [
+      "0aa29aef-1f35-5485-83ab-6ef89c60e25e"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "34d406d2dcf9f35199ff42e8680c805c3e18d30298a78a0830f29e585332eff3",
+    "expected_retrieval_unit_ids": [
+      "6950cf46-b48e-5047-88d6-7e342dc4629f"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "36f46c62f88faffbefcd326df68a21dd8baaa466dc8061f97cedf1a5f498627e",
+    "expected_retrieval_unit_ids": [
+      "5aed4d60-858f-54be-a1c6-c3e3873764a9"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "3861f70be6d13a4703de9f8537f8107ee5c055ba854dab94b07b34362b47527d",
+    "expected_retrieval_unit_ids": [
+      "45a9bd87-6ad5-509a-aa5f-ef003e07a522"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "3a553f2d0677f06e7b82ef76319db027ea4b619549744efca63512a106e3c927",
+    "expected_retrieval_unit_ids": [
+      "27674909-4f35-583d-8b54-10cd2db34166"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "3b328c58530c784c365342dfa955efd1f4cd935b32b152e55a03b1a2cadfe07c",
+    "expected_retrieval_unit_ids": [
+      "83da7cee-f4ad-5a2d-a662-9125cd95cabb"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "3d2fe38cc2eb62f6d8b699e7171476c672f17665cc8038653506013de4f1f618",
+    "expected_retrieval_unit_ids": [
+      "5d4148a1-f976-5d77-9fd6-ae66db14a48c"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "3d4fb52de2b78fa86e70fb78178f9d947575ca6639b0fd52cefff9e3397475f0",
+    "expected_retrieval_unit_ids": [
+      "600ff84f-54ef-5f9c-b06e-82477c39e3fa"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "3e20a373d1378a8d38aaa5e38a5a99dca935ff3ffcd30caaa5101f569bba6fa6",
+    "expected_retrieval_unit_ids": [
+      "0f9b2972-cf75-546e-8eec-aed8c3c91a51"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "442bc712b6895f21c06204e8b6a934e85ed53b1f637bd8d7f5dedb01a5e70692",
+    "expected_retrieval_unit_ids": [
+      "86df69cc-ffa5-5458-8baf-6ae95c10b9c8"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "443259b572d73d62eefd58100d1d1995ae0f445140eda3058527bc5b42409d4e",
+    "expected_retrieval_unit_ids": [
+      "72f6a7ed-95d1-5f5b-bca6-3b6434cd435f"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "460b86c35090e56ad1c8283abb1ad3fa39152a30f05538524fdff624addccc48",
+    "expected_retrieval_unit_ids": [
+      "4f05f26c-2673-5f3d-95a0-d7c91a777e6f"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "47371b0_CSP_Policy_-_PASSED_13_Jun_2024",
+    "expected_retrieval_unit_ids": [
+      "3a2e3c0f-4340-59b1-bfd1-cdbcaea4fd62"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "4931c9f396c3beca6ddfb35b2cda90d552712cb1d251136b3362355451bb178e",
+    "expected_retrieval_unit_ids": [
+      "479e5865-0a3f-548c-aabc-109d41496f27"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "4934199ae2ab55502eb13c1bf2991c4207bafbe8f1df66d4d9b16174fb1f743b",
+    "expected_retrieval_unit_ids": [
+      "dd0b308c-717d-52f0-bbcb-ac7ec7bb05d7"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "4977e579a3f39d05a059cd4916fd2213775cb293d6c68565273dbf2db42a8967",
+    "expected_retrieval_unit_ids": [
+      "40adb1b6-c5d0-5387-981a-0a3830aea198"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "4b115df2923b11fc6e351fe31660d8bc46caeeabf6af084d4bae9e902bdd3463",
+    "expected_retrieval_unit_ids": [
+      "5783fc33-e378-5ea9-91e4-a8d6837e9717"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "522bb5fdf834d3e7037a07af914b92be55be4b33eda1976599700b91dc88abda",
+    "expected_retrieval_unit_ids": [
+      "ae666767-d483-5568-88f7-9bb504d5816b"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "55914702fe8e7dc72e1a7d1315dada24d1ce44b559ba85e235987dc4a404f438",
+    "expected_retrieval_unit_ids": [
+      "33f47e71-f267-5546-b7e0-379bc295e626"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "5974c70_General_RA_Template_2024",
+    "expected_retrieval_unit_ids": [
+      "099c3a00-58cd-5f19-8618-4456020eef09"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "5c06af28_Trips_Funding_Policy",
+    "expected_retrieval_unit_ids": [
+      "119800ed-42fb-5a83-a570-8060172e5bb7"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "5c3edcb2120cd2766bb35c1e6628d557afbedd2f4e44b64a399c63e189da84b3",
+    "expected_retrieval_unit_ids": [
+      "d57e4dcb-ec36-50be-b2b4-00f8ee9ff6bc"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "5c719e1de3b75fcc1faa31bf1f220c61aa7310a17423ff5ca70c09de79ef4f19",
+    "expected_retrieval_unit_ids": [
+      "1c486b37-2b60-5cd5-b2ce-bf37fb536966"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "5c936c0708f2c344ab8c6d0d757cb44b72d23f590acdf1f653532c867f4d1d04",
+    "expected_retrieval_unit_ids": [
+      "0b5a8ede-6a7e-5c6a-89fd-39e520642248"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "623e03e0c43aafe522b44313deba683a934c58b94edd235ad6fff0122262d75b",
+    "expected_retrieval_unit_ids": [
+      "2be2cfbf-4928-59ff-b461-021e682bbcfc"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "62a00088d1c3ba72851dce15c33ea4182b8d41c24d62d30c425a22e86778c53a",
+    "expected_retrieval_unit_ids": [
+      "41bbcef5-dde5-55b6-bdd7-c570148ba11c"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "67184e2b5b4fb429032bf08e713b5a56cfe7f1394c17fa8e1c6ee0d224f4cc1a",
+    "expected_retrieval_unit_ids": [
+      "7bad2391-9e07-51af-b585-9a17fc5e58fd"
+    ],
+    "source_family": "document",
+    "category": "title"
+  },
+  {
+    "query": "6bf8dfdc974c6987a2c2395522fe3f9a7f429e3e7b4b74586d6833036dfd1746",
+    "expected_retrieval_unit_ids": [
+      "080a26c8-8a19-5c24-9e8f-116a2664f2be"
+    ],
+    "source_family": "document",
+    "category": "title"
+  }
+]

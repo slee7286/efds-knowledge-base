@@ -1,0 +1,565 @@
+{
+  "benchmark_version": "retrieval_v2_dev_v1",
+  "split": "development",
+  "split_seed": "efds-retrieval-v2-split-2026-08-14",
+  "holdout_fraction": 0.3,
+  "peer_count": 19,
+  "queries": [
+    {
+      "query": "Can we invite someone from outside Imperial to speak at our event?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "e2a8eef0-956e-5e56-a3da-a4d3e35d13cd"
+      ],
+      "acceptable_expected_ids": [
+        "173153f2-9558-5fec-9e5f-32d0581989ff",
+        "5832a57a-788b-5eb5-b14b-7d3cd37fe3be",
+        "4d9ae06e-8da2-511b-9b0a-9ae87854078b",
+        "8da9e05b-5cd2-5c84-a5f4-a8d154c3c15c",
+        "b6b3bb4d-5064-5d61-afe7-cde78d4c0330"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How can a society run a fundraising activity?",
+      "source_family": "knowledge_requirement",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "46aea014-7baa-508c-8964-9ee54520cfcd"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How can students request adjustments at events?",
+      "source_family": "icu_article",
+      "category": "policy",
+      "expected_retrieval_unit_ids": [
+        "69e620f3-2b68-5f88-88b0-99797bff36d2"
+      ],
+      "acceptable_expected_ids": [
+        "0586457b-fc74-5bc1-af35-a4df37c48247",
+        "e5e1ff5f-fcfc-5ba4-b5f4-0cfee2a800f3",
+        "94b5a572-8d5d-5b34-9920-c680f1105f5f",
+        "7637966e-39b4-59ca-9d36-87c01ce6df12",
+        "7ef1684c-1c5d-5a2c-9ca9-5dfdd21b06d6",
+        "99133539-7cef-5c2e-bd1b-ff83cf9fefa8",
+        "ea213e39-6013-5a2e-9ed3-dbda17894d36"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do I get money back for something I paid for personally?",
+      "source_family": "icu_article",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "02c20dc4-8df2-519f-89f7-d17e601d7a29"
+      ],
+      "acceptable_expected_ids": [
+        "ad91277c-0a34-5577-b0c4-00559b8f9fc2",
+        "c883d78f-00ca-59f0-8866-f981ad12fcd9",
+        "a5a45881-be88-5d83-a7ab-6f516c8c0d53",
+        "15a6abdd-2701-56b7-b78e-c4968d6a2694",
+        "072ad323-f682-51f6-afc0-c37b3a9da048",
+        "aa74af7c-595f-5357-b937-b9b5d75cbe6c"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do I use the CSP email account?",
+      "source_family": "knowledge_requirement",
+      "category": "identifier",
+      "expected_retrieval_unit_ids": [
+        "17f4aa24-29cd-532b-8fce-685a9e879d06"
+      ],
+      "acceptable_expected_ids": [
+        "e53a26e7-2156-5554-8a91-dd14b06a518f"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do elections work?",
+      "source_family": "icu_article",
+      "category": "governance",
+      "expected_retrieval_unit_ids": [
+        "8935fb45-3bdf-585f-9257-88979676efba"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do we hire a minibus?",
+      "source_family": "icu_article",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "2eb46279-3a7a-548d-9a26-2673540b2745"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do we request access to society spaces?",
+      "source_family": "icu_article",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "b9f57016-78c0-5da6-9bfb-35566155a78d"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How do we submit a funding application?",
+      "source_family": "knowledge_process",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "ee52d403-80aa-54d4-a7f2-842bb9059898"
+      ],
+      "acceptable_expected_ids": [
+        "726f76a1-c315-58fc-8edb-1e60c20e78ae"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How is event calendar information submitted?",
+      "source_family": "icu_article",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "06cb3357-5ea6-5c41-b72c-a8f0e27f71ad"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How is the committee constitution changed?",
+      "source_family": "icu_article",
+      "category": "governance",
+      "expected_retrieval_unit_ids": [
+        "014ba142-795a-5776-9eb4-b60f5fd96c78"
+      ],
+      "acceptable_expected_ids": [
+        "3cbfe654-4cb3-52bc-a121-8bf577d2a0e7",
+        "f0b34ee5-b6d2-517f-9fc6-2163e5009120",
+        "34a1491e-f076-5d64-abb0-7764ae7490a1",
+        "06246d58-9287-5181-b34f-0ec37170aed3",
+        "223a0293-8f3f-5774-9f70-ec092b2ec210"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How should we make activities accessible?",
+      "source_family": "icu_article",
+      "category": "policy",
+      "expected_retrieval_unit_ids": [
+        "69e620f3-2b68-5f88-88b0-99797bff36d2"
+      ],
+      "acceptable_expected_ids": [
+        "0586457b-fc74-5bc1-af35-a4df37c48247",
+        "e5e1ff5f-fcfc-5ba4-b5f4-0cfee2a800f3",
+        "94b5a572-8d5d-5b34-9920-c680f1105f5f",
+        "7637966e-39b4-59ca-9d36-87c01ce6df12",
+        "7ef1684c-1c5d-5a2c-9ca9-5dfdd21b06d6",
+        "99133539-7cef-5c2e-bd1b-ff83cf9fefa8",
+        "ea213e39-6013-5a2e-9ed3-dbda17894d36"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How should we organise a social?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "1d47fe53-6f9c-5bc4-a170-ab6fe04b7a9f"
+      ],
+      "acceptable_expected_ids": [
+        "63307ddb-3e8c-5eae-8fd4-55039547cc53",
+        "aeaaba60-e266-51c9-88f7-59a7aee06f8a",
+        "a0629694-7ea1-5234-a0cc-c0e781e65a1b",
+        "0e0ef4b1-0159-5e68-8598-e9389bc7f05e",
+        "e034740c-2ef3-55c5-bbaa-8c2c6d55388a"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "How should we plan a boat party?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "6b041e28-5d62-5d42-bb46-75dfcc647373"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What are the competition officer's priorities for the year?",
+      "expected_retrieval_unit_ids": [
+        "19d14cd6-ebb1-515d-a240-d0fb6f92ed17"
+      ],
+      "acceptable_expected_ids": [
+        "e4f68d96-74e3-55ed-8924-2253e25903ba",
+        "7ce05f97-8a8d-5851-8204-0e5c13348c0a",
+        "f3817a3e-8010-5ed8-b289-e095a73b0749",
+        "a76eed13-4f6c-51b3-bdf0-7fd0ff820227"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "competitions"
+    },
+    {
+      "query": "What are the rules for sponsorship agreements?",
+      "source_family": "knowledge_requirement",
+      "category": "sponsorship",
+      "expected_retrieval_unit_ids": [
+        "8a70d830-25e3-5a5f-89cc-91e6763bad77"
+      ],
+      "acceptable_expected_ids": [
+        "1c33de14-fa30-5b70-9462-d78ef14bc492"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What controls should the Treasurer consider before spending?",
+      "expected_retrieval_unit_ids": [
+        "3d840056-b61e-5e07-86a4-a025fb919d26"
+      ],
+      "acceptable_expected_ids": [
+        "65871b03-01b0-54ae-b73b-dd8812c81023",
+        "71d760ff-cc0d-50cb-981a-369706335434",
+        "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+        "c49bf075-700e-5e76-9174-2dbeecd5361f"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "icu_article",
+      "category": "finance"
+    },
+    {
+      "query": "What do we need to do before accepting money from a company?",
+      "source_family": "icu_article",
+      "category": "sponsorship",
+      "expected_retrieval_unit_ids": [
+        "1c33de14-fa30-5b70-9462-d78ef14bc492"
+      ],
+      "acceptable_expected_ids": [
+        "45c06ab2-e014-5323-9f75-2f117635cf1d",
+        "1ce37989-4d7a-5fbe-b505-09f4e0c686ee",
+        "32f87da0-ff4d-59aa-8f97-a1989e2f042a",
+        "2e51f880-a199-5f43-932c-0f85b5167421",
+        "c6d3c8f7-6d91-570a-a557-bbdcd09aca87"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What does sustainable spending mean for a committee?",
+      "source_family": "icu_article",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "3d840056-b61e-5e07-86a4-a025fb919d26"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What does the Finance Industry Officer maintain for external relationships?",
+      "expected_retrieval_unit_ids": [
+        "6eb8145c-3d93-5f4f-b043-24a4b4ad9ba7"
+      ],
+      "acceptable_expected_ids": [
+        "d839ce1f-9e8a-57e8-9667-78bbc6167d29",
+        "bce658bc-e91b-5602-a040-b869f03239a3"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "finance"
+    },
+    {
+      "query": "What does the drinks token guidance say?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "6ed9ecf8-43e8-56b0-b857-8e61872d4178"
+      ],
+      "acceptable_expected_ids": [
+        "fbecd9da-bb75-5438-9446-235647786ead",
+        "b3411a50-d2ba-5796-8750-d12cf5d0539d",
+        "c73fa4a5-fd82-5e22-b93b-d903b22acd64",
+        "d04354e5-42f4-57e0-9cdb-f67715e4f10a",
+        "f4179a50-c248-55e8-8926-15d8a088eddd"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What does the requirements register say about AI-generated meeting notes?",
+      "expected_retrieval_unit_ids": [
+        "da8164b4-25d1-508a-9b47-3d34900a8262"
+      ],
+      "acceptable_expected_ids": [
+        "c45d75c5-dde1-5876-9126-7a35d7d3b830",
+        "78150285-48d7-518b-9f96-79f0831443bd"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "meetings"
+    },
+    {
+      "query": "What does the society's annual plan say about preparing events?",
+      "expected_retrieval_unit_ids": [
+        "a231c490-b9a6-5f3f-a40e-3023246cd145"
+      ],
+      "acceptable_expected_ids": [
+        "b3758153-84d4-589a-80f0-182b2cdae6c5",
+        "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+        "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+        "daf39864-a73c-50d4-9878-b53f244b85a7",
+        "6b90791b-2207-5c5f-bbd7-6526d8ab9b70"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "events"
+    },
+    {
+      "query": "What finance work is scheduled before the society launches?",
+      "expected_retrieval_unit_ids": [
+        "8e161396-ee32-57d7-9e19-5e5fa8157b97"
+      ],
+      "acceptable_expected_ids": [
+        "666eff43-54f4-54cf-a063-40bd61457abb",
+        "17b77f6f-e09f-59d1-9928-772f1520fa79",
+        "3956a272-a19f-53a2-b371-e9fe11ea22c4"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "finance"
+    },
+    {
+      "query": "What handover questions should the Chair resolve?",
+      "expected_retrieval_unit_ids": [
+        "fd1c8c3a-8708-5d39-916f-0c051b104902"
+      ],
+      "acceptable_expected_ids": [
+        "9ad07e40-9844-5076-b735-29b3ba2f0b42",
+        "b5ae8eb9-e346-597a-b66d-22c1d723233b",
+        "fc5f3736-6217-58b3-881d-bdba89c26ab4",
+        "d1d1d27a-96ab-5572-b3c8-5fad04072a8f",
+        "c6db0fd8-9ba3-50ea-87a2-fcb8d8656fa2"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "governance"
+    },
+    {
+      "query": "What is the Union grant timeline?",
+      "source_family": "icu_article",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "147d1967-1db2-5cd1-b8b3-8754e7beebaa"
+      ],
+      "acceptable_expected_ids": [
+        "792349a3-3c5f-5954-bcab-dd54bc83c36b",
+        "097a7ed3-39a9-52d7-bf8f-bd037dc03cf5",
+        "a9d31ce1-042a-5f1b-bc13-1359dd8a3099"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What is the process for equipment hire?",
+      "source_family": "icu_article",
+      "category": "process",
+      "expected_retrieval_unit_ids": [
+        "dde2e5f7-617b-5d17-960b-ce09ddf80a15"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What preparation is planned before sponsorship outreach begins?",
+      "expected_retrieval_unit_ids": [
+        "8e161396-ee32-57d7-9e19-5e5fa8157b97"
+      ],
+      "acceptable_expected_ids": [
+        "666eff43-54f4-54cf-a063-40bd61457abb",
+        "17b77f6f-e09f-59d1-9928-772f1520fa79",
+        "3956a272-a19f-53a2-b371-e9fe11ea22c4"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "sponsorship"
+    },
+    {
+      "query": "What questions remain about member data retention?",
+      "expected_retrieval_unit_ids": [
+        "d5b0e388-8f05-5424-a755-48c37adb32ae"
+      ],
+      "acceptable_expected_ids": [
+        "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "policy"
+    },
+    {
+      "query": "What should a treasurer consider before spending?",
+      "source_family": "icu_article",
+      "category": "finance",
+      "expected_retrieval_unit_ids": [
+        "3d840056-b61e-5e07-86a4-a025fb919d26"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What should be handed over when the committee changes?",
+      "expected_retrieval_unit_ids": [
+        "d97e41d2-2c0f-5d1a-8fc5-44aeac9ac58f"
+      ],
+      "acceptable_expected_ids": [
+        "000e51c8-fffa-50ee-8579-8ffecf03c465",
+        "4e66ade9-e824-57cc-b6fd-fb19c71e5293",
+        "70ac3cf9-a152-5c42-b665-49e448b48bf0",
+        "7179837f-2a25-5f05-85da-b535af9b9f5f",
+        "946d4fd9-398c-5946-9d28-7a94df31606b",
+        "9ad07e40-9844-5076-b735-29b3ba2f0b42",
+        "b5ae8eb9-e346-597a-b66d-22c1d723233b",
+        "c6db0fd8-9ba3-50ea-87a2-fcb8d8656fa2",
+        "d1d1d27a-96ab-5572-b3c8-5fad04072a8f",
+        "fc5f3736-6217-58b3-881d-bdba89c26ab4",
+        "fd1c8c3a-8708-5d39-916f-0c051b104902"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "icu_article",
+      "category": "governance"
+    },
+    {
+      "query": "What should the wellbeing representative do with member feedback?",
+      "expected_retrieval_unit_ids": [
+        "a69f0163-dfbc-5d09-af79-1a52432779f4"
+      ],
+      "acceptable_expected_ids": [
+        "ddcc474b-093b-5e6c-ae8d-eda9676155b7",
+        "d30454ca-b0f2-510a-8317-852dfb991b48"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "welfare"
+    },
+    {
+      "query": "What should we prepare before approaching sponsors?",
+      "expected_retrieval_unit_ids": [
+        "1c33de14-fa30-5b70-9462-d78ef14bc492"
+      ],
+      "acceptable_expected_ids": [
+        "17b77f6f-e09f-59d1-9928-772f1520fa79",
+        "1ce37989-4d7a-5fbe-b505-09f4e0c686ee",
+        "2e51f880-a199-5f43-932c-0f85b5167421",
+        "32f87da0-ff4d-59aa-8f97-a1989e2f042a",
+        "3956a272-a19f-53a2-b371-e9fe11ea22c4",
+        "45c06ab2-e014-5323-9f75-2f117635cf1d",
+        "666eff43-54f4-54cf-a063-40bd61457abb",
+        "8e161396-ee32-57d7-9e19-5e5fa8157b97",
+        "c6d3c8f7-6d91-570a-a557-bbdcd09aca87"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "icu_article",
+      "category": "sponsorship"
+    },
+    {
+      "query": "What spending approvals still need clarification?",
+      "expected_retrieval_unit_ids": [
+        "2aa282dd-afb5-50fd-a2d2-4a1481d38d7b"
+      ],
+      "acceptable_expected_ids": [
+        "d5b0e388-8f05-5424-a755-48c37adb32ae"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "finance"
+    },
+    {
+      "query": "What support exists for summer handover?",
+      "source_family": "icu_article",
+      "category": "governance",
+      "expected_retrieval_unit_ids": [
+        "d97e41d2-2c0f-5d1a-8fc5-44aeac9ac58f"
+      ],
+      "acceptable_expected_ids": [
+        "000e51c8-fffa-50ee-8579-8ffecf03c465",
+        "946d4fd9-398c-5946-9d28-7a94df31606b",
+        "7179837f-2a25-5f05-85da-b535af9b9f5f",
+        "70ac3cf9-a152-5c42-b665-49e448b48bf0",
+        "4e66ade9-e824-57cc-b6fd-fb19c71e5293"
+      ],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "What welfare issues must event organisers plan for?",
+      "source_family": "icu_article",
+      "category": "events",
+      "expected_retrieval_unit_ids": [
+        "667f59e6-df14-5d30-a963-51793d15521a"
+      ],
+      "acceptable_expected_ids": [],
+      "supporting_expected_ids": []
+    },
+    {
+      "query": "Where are the rules about keeping official society files?",
+      "expected_retrieval_unit_ids": [
+        "78150285-48d7-518b-9f96-79f0831443bd"
+      ],
+      "acceptable_expected_ids": [
+        "c45d75c5-dde1-5876-9126-7a35d7d3b830",
+        "da8164b4-25d1-508a-9b47-3d34900a8262"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "governance"
+    },
+    {
+      "query": "Where can I find both the external funding rules and EFDS funding plan?",
+      "expected_retrieval_unit_ids": [
+        "ee52d403-80aa-54d4-a7f2-842bb9059898"
+      ],
+      "acceptable_expected_ids": [
+        "65871b03-01b0-54ae-b73b-dd8812c81023",
+        "71d760ff-cc0d-50cb-981a-369706335434",
+        "726f76a1-c315-58fc-8edb-1e60c20e78ae",
+        "a9d31ce1-042a-5f1b-bc13-1359dd8a3099",
+        "ba7168d4-fcdb-5abf-8ec0-0a0eee11d483",
+        "c49bf075-700e-5e76-9174-2dbeecd5361f"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "knowledge_process",
+      "category": "finance"
+    },
+    {
+      "query": "Where is the forward calendar and event-planning approach described?",
+      "expected_retrieval_unit_ids": [
+        "a231c490-b9a6-5f3f-a40e-3023246cd145"
+      ],
+      "acceptable_expected_ids": [
+        "b3758153-84d4-589a-80f0-182b2cdae6c5",
+        "01439f69-4298-5c0e-834a-f42c7ae91b2b",
+        "e0a41b4d-57c2-546f-b25e-3e3e6db374ea",
+        "daf39864-a73c-50d4-9878-b53f244b85a7",
+        "6b90791b-2207-5c5f-bbd7-6526d8ab9b70"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "events"
+    },
+    {
+      "query": "Which decisions require executive approval?",
+      "expected_retrieval_unit_ids": [
+        "fd1c8c3a-8708-5d39-916f-0c051b104902"
+      ],
+      "acceptable_expected_ids": [
+        "9ad07e40-9844-5076-b735-29b3ba2f0b42",
+        "b5ae8eb9-e346-597a-b66d-22c1d723233b",
+        "fc5f3736-6217-58b3-881d-bdba89c26ab4",
+        "d1d1d27a-96ab-5572-b3c8-5fad04072a8f",
+        "c6db0fd8-9ba3-50ea-87a2-fcb8d8656fa2"
+      ],
+      "supporting_expected_ids": [],
+      "source_family": "document",
+      "category": "governance"
+    }
+  ]
+}
