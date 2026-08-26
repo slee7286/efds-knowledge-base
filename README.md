@@ -60,7 +60,26 @@ ICU / OneDrive / Slack / Meetings
 **Frontend:** Next.js · TypeScript · Supabase Auth · server-side authorization · SSE streaming
 **Sources:** ICU Freshdesk · OneDrive · Slack · meeting transcripts · structured operational records
 
-# EFDS Platform — V1 ingestion foundation
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+# Current Repo: EFDS Platform — V1 ingestion foundation
 
 This repository is the first EFDS (Economics, Finance & Data Science Society) institutional-memory layer. It stores structured records and extracted document text in PostgreSQL while OneDrive/SharePoint remains the canonical store for binary files.
 
