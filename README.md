@@ -1,3 +1,65 @@
+# EFDS Knowledge Platform
+
+**An end-to-end data, AI and software platform built for Imperial College London's Economics, Finance & Data Science Society.**
+
+I designed and built the system across the full application stack — from **data ingestion and PostgreSQL architecture to secure retrieval, AI integration, authentication, APIs and the user-facing web application**.
+
+### What this project demonstrates
+
+* **End-to-end system design:** multiple data sources → ingestion pipelines → PostgreSQL/Supabase → permission-aware retrieval → AI service → web application.
+* **Backend & data engineering:** relational schema design, migrations, versioned ingestion, provenance, audit trails, structured extraction and hybrid search.
+* **AI systems:** embedding-based retrieval, grounded model calls, citation validation, context controls and streamed responses.
+* **Security & access control:** Supabase Auth, PostgreSQL Row-Level Security, role-based authorization and separation of browser, server, database and model credentials.
+* **Full-stack integration:** Python services, PostgreSQL, FastAPI and a Next.js/TypeScript frontend integrated into one working system.
+
+This is not an isolated chatbot or database project: it demonstrates my ability to **design, build and integrate a multi-service software system from data ingestion through backend infrastructure and AI services to the final application.**
+
+## Repositories
+
+| Repository                                                                 | Role                                                                                                                                                              |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[efds-knowledge-base](https://github.com/slee7286/efds-knowledge-base)** | Core PostgreSQL/Supabase data platform, ingestion, schema migrations, provenance, permissions, retrieval and embeddings                                           |
+| **[efds-agent](https://github.com/slee7286/efds-agent)**                   | FastAPI AI service for authenticated retrieval, grounded model synthesis, citation validation and streaming                                                       |
+| **[efds-site](https://github.com/slee7286/efds-site)**                     | Next.js/TypeScript web application, authentication, authorization, admin tooling and agent integration                                                            |
+| **[efds-recruiting](https://github.com/slee7286/efds-recruiting)**         | Separate local-first recruiting intelligence system demonstrating application workflows, APIs, automation, browser integration and private/public data boundaries |
+
+## System architecture
+
+```text
+ICU / OneDrive / Slack / Meetings
+              │
+              ▼
+      Ingestion + Versioning
+              │
+              ▼
+      PostgreSQL / Supabase
+   RLS · Audit · Search · pgvector
+              │
+              ▼
+   Permission-aware Retrieval
+              │
+              ▼
+       FastAPI AI Service
+              │
+              ▼
+ Grounded Model Responses + Citations
+              │
+         SSE / API Layer
+              │
+              ▼
+      Next.js / TypeScript
+              │
+              ▼
+        End-user Application
+```
+
+## Technical stack
+
+**Data & backend:** Python · PostgreSQL · Supabase · SQLAlchemy · Alembic · pgvector
+**AI:** FastAPI · OpenAI Responses API · embeddings · hybrid retrieval · citation validation
+**Frontend:** Next.js · TypeScript · Supabase Auth · server-side authorization · SSE streaming
+**Sources:** ICU Freshdesk · OneDrive · Slack · meeting transcripts · structured operational records
+
 # EFDS Platform — V1 ingestion foundation
 
 This repository is the first EFDS (Economics, Finance & Data Science Society) institutional-memory layer. It stores structured records and extracted document text in PostgreSQL while OneDrive/SharePoint remains the canonical store for binary files.
