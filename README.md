@@ -334,6 +334,13 @@ edits and explicit deletions are append-only change events plus a current
 message projection. Links are extracted and files are metadata-only. After a successful sync of the
 enabled `meetings` channel, its Google Docs links are fetched into private, versioned meeting notes. See [docs/SLACK_INTEGRATION.md](docs/SLACK_INTEGRATION.md).
 
+## Open ticket reposts
+
+The archived `#actions-tickets` channel can be reviewed with
+`python scripts/repost_open_tickets.py --dry-run`. With a Slack bot token
+reinstalled with `chat:write`, the command reposts only X-marked tickets;
+checked tickets are skipped. See [docs/TICKET_REPOSTS.md](docs/TICKET_REPOSTS.md).
+
 ## Planned extensions
 
 The next integrations may include PostgreSQL text-search refinement, Slack

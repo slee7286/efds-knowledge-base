@@ -13,7 +13,7 @@ Slack Web API → Python sync_slack.py → ingestion_runs + canonical Slack tabl
 ```
 
 No LLM, summarization, decision extraction, embeddings or RAG is part of this
-milestone.
+milestone. The separate ticket repost command is the only Slack write path.
 
 ## Token and effective scopes
 
@@ -23,7 +23,7 @@ Set the token only in the backend `.env`:
 SLACK_BOT_TOKEN=xoxb-...
 ```
 
-The implementation uses the intended read-only scopes as follows:
+The collector uses the intended read-only scopes as follows:
 
 | Scope | API use |
 | --- | --- |

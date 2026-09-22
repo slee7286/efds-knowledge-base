@@ -1,4 +1,4 @@
-"""Small read-only Slack Web API client used by the backend sync command.
+"""Small Slack Web API client used by backend sync and ticket reposting.
 
 The client deliberately uses the Python standard library so ordinary backend
 imports do not require a Slack SDK. It only sends Bearer authentication and
@@ -36,7 +36,7 @@ class SlackIdentity:
 
 
 class SlackClient:
-    """Read-only Slack Web API adapter with cursor pagination and backoff."""
+    """Slack Web API adapter with read pagination and explicit ticket posting."""
 
     def __init__(
         self,
@@ -141,6 +141,47 @@ class SlackClient:
         payload = self.call("chat.getPermalink", channel=channel_id, message_ts=message_ts)
         value = payload.get("permalink")
         return str(value) if value else None
+
+    def post_message(self, channel_id: str, text: str) -> str:
+        """Post one ticket as this bot. An ambiguous network failure is never retried."""
+
+        request = Request(
+            self._base_url + "chat.postMessage",
+            data=json.dumps({
+                "channel": channel_id,
+                "text": text,
+                "parse": "none",
+                "link_names": False,
+                "unfurl_links": False,
+                "unfurl_media": False,
+            }).encode("utf-8"),
+            headers={
+                "Authorization": f"Bearer {self._token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json; charset=utf-8",
+            },
+            method="POST",
+        )
+        try:
+            with urlopen(request, timeout=self._timeout) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+        except HTTPError as error:
+            raise SlackApiError(f"Slack post failed (HTTP {error.code})", method="chat.postMessage") from None
+        except (URLError, TimeoutError, OSError):
+            raise SlackApiError("Slack post outcome is uncertain; check channel before retrying", method="chat.postMessage") from None
+        except (ValueError, UnicodeError):
+            raise SlackApiError("Slack post returned malformed JSON", method="chat.postMessage") from None
+        if not isinstance(payload, dict):
+            raise SlackApiError("Slack post returned an invalid response", method="chat.postMessage")
+        if not payload.get("ok"):
+            code = str(payload.get("error") or "unknown_error")
+            if code == "missing_scope" and payload.get("needed"):
+                code += f" (needed: {payload['needed']})"
+            raise SlackApiError(f"Slack rejected chat.postMessage: {code}", method="chat.postMessage", error_code=code)
+        timestamp = str(payload.get("ts") or "")
+        if not timestamp:
+            raise SlackApiError("Slack post response omitted its timestamp; check channel before retrying", method="chat.postMessage")
+        return timestamp
 
     def _paginate(self, method: str, result_key: str, **params: Any) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []
