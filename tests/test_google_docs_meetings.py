@@ -73,10 +73,11 @@ def test_reverted_notes_reuse_historical_version():
     current = MeetingArtifact(content_hash='newer',is_current=True)
     old = MeetingArtifact(is_current=False)
     session.scalar.side_effect = [meeting,current,old]
-    assert save_document(session,DocumentLink('doc1'),'Earlier notes',uuid.uuid4()) == 'updated'
+    assert save_document(session,DocumentLink('doc1'),'📝 Notes\nEarlier notes',uuid.uuid4()) == 'updated'
     assert old.is_current and not current.is_current
     assert not any(isinstance(call.args[0],MeetingArtifact) for call in session.add.call_args_list)
     assert meeting.started_at is None
+    assert meeting.title == "Earlier notes"
 
 
 def test_dry_run_never_mutates_database_and_continues_after_inaccessible_doc():

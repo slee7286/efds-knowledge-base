@@ -35,7 +35,7 @@ references. A reversion reuses the original artifact rather than violating
 version uniqueness. Failed exports retain the last good version and produce
 an ingestion-run error. Missing Slack links do not delete historical meetings.
 
-Document first-line titles are retained (generic “Quick notes” headings skipped).
+Document first-line titles are retained (generic “Notes”, “Quick notes” and “Transcript” headings skipped).
 Posting timestamps are not presented as meeting dates. Authorship, approval,
 and AI generation are not inferred. Existing admin-only RLS protects the data;
 no migrations or permission changes are required.

@@ -77,7 +77,8 @@ def save_document(session, doc, content, run_id):
     now = datetime.now(timezone.utc)
     digest = hashlib.sha256(content.encode()).hexdigest()
     lines = [line.strip() for line in content.splitlines() if line.strip()]
-    title = next((line for line in lines if "quick notes" not in line.casefold()), lines[0])[:240]
+    title = next((line for line in lines if " ".join(re.findall(r"[a-z]+", line.casefold()))
+                  not in {"notes", "quick notes", "transcript"}), lines[0])[:240]
     meeting = session.scalar(select(Meeting).where(
         Meeting.source_type == SOURCE_TYPE, Meeting.external_meeting_id == doc.document_id))
     created = meeting is None
