@@ -5,8 +5,12 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+import uuid
 from datetime import datetime, timezone
 
+from sqlalchemy import select
+
+from efds.integrations.google_docs_meetings import sync_google_docs_meetings
 from efds.config import get_settings, get_slack_bot_token
 from efds.db.models import SlackChannel, SlackChannelSyncSetting
 from efds.db.session import session_scope
@@ -119,7 +123,27 @@ def main(argv: list[str] | None = None) -> int:
         f"files={summary.files_seen}, reactions={summary.reactions_seen}, "
         f"errors={len(summary.errors)}"
     )
-    return 1 if summary.channels_failed else 0
+    meeting_errors = False
+    if not args.dry_run:
+        with session_scope() as session:
+            statement = select(SlackChannel).join(SlackChannelSyncSetting).where(
+                SlackChannel.name == "meetings", SlackChannelSyncSetting.enabled.is_(True),
+                SlackChannel.workspace_id == uuid.UUID(summary.workspace_id),
+                SlackChannel.id.in_(summary.synced_channel_ids),
+            )
+            if args.channel:
+                statement = statement.where(SlackChannel.id == args.channel)
+            failed_ids = {error.get("channel_id") for error in summary.errors}
+            for channel in session.scalars(statement).all():
+                if channel.id in failed_ids:
+                    continue
+                result = sync_google_docs_meetings(session, channel.id)
+                meeting_errors = meeting_errors or bool(result["errors"])
+                print(f"Google Docs #{channel.name}: {result['status']}; "
+                      f"found={result['documents_found']}, created={result['created']}, "
+                      f"updated={result['updated']}, unchanged={result['unchanged']}, "
+                      f"errors={len(result['errors'])}")
+    return 1 if summary.errors or meeting_errors else 0
 
 
 if __name__ == "__main__":

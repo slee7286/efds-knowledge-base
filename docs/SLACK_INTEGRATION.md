@@ -116,3 +116,9 @@ The token is never included in Next.js environment variables or browser code.
 
 Future milestones may derive decisions/actions from these immutable source
 records, but should never overwrite the canonical Slack message fields.
+
+## Google Docs meeting logs
+
+A successful non-dry sync of the enabled `meetings` channel now also imports
+its Google Docs links as private, versioned meeting notes. Other channel links
+are not fetched. See [Google Docs meeting sync](GOOGLE_DOCS_MEETINGS.md).

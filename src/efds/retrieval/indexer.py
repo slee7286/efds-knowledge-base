@@ -171,7 +171,7 @@ def build_retrieval_units(session: Session, source: str | None = None) -> list[R
     if wanted.intersection({"meeting_transcript", "meeting_summary", "meeting_notes"}):
         statement = select(Meeting, MeetingArtifact).join(
             MeetingArtifact, MeetingArtifact.meeting_id == Meeting.id
-        ).where(Meeting.source_type == "meetily", Meeting.is_missing.is_(False), MeetingArtifact.is_current.is_(True))
+        ).where(Meeting.source_type.in_(("meetily", "google_docs_meetings")), Meeting.is_missing.is_(False), MeetingArtifact.is_current.is_(True))
         for meeting, artifact in session.execute(statement):
             source_type = f"meeting_{artifact.artifact_type}"
             if source_type not in wanted:
@@ -182,7 +182,7 @@ def build_retrieval_units(session: Session, source: str | None = None) -> list[R
                 "meeting_notes": "meeting_notes",
             }[source_type]
             metadata = {
-                "meeting_id": str(meeting.id), "meeting_title": meeting.title,
+                "meeting_id": str(meeting.id), "meeting_title": meeting.title, "meeting_source_type": meeting.source_type,
                 "artifact_id": str(artifact.id), "artifact_type": artifact.artifact_type,
                 "source_reference": artifact.source_reference, "artifact_content_hash": artifact.content_hash,
                 "generated_by": artifact.generated_by, "ai_generated": artifact.artifact_type == "summary",
@@ -211,7 +211,7 @@ def build_retrieval_units(session: Session, source: str | None = None) -> list[R
                 else:
                     units.extend(_make_units(source_type=source_type, record_id=meeting.id, version_id=artifact.id, title=meeting.title, content=artifact.content, metadata=metadata, source_parent_id=str(meeting.id), source_updated_at=artifact.source_updated_at or meeting.source_updated_at, authority=authority, visibility="internal", review_status=artifact.review_status, occurred_at=meeting.started_at))
             else:
-                units.extend(_make_units(source_type=source_type, record_id=meeting.id, version_id=artifact.id, title=f"{meeting.title} — Meetily {artifact.artifact_type}", content=artifact.content, metadata=metadata, source_parent_id=str(meeting.id), source_updated_at=artifact.source_updated_at or meeting.source_updated_at, authority=authority, visibility="internal", review_status=artifact.review_status, occurred_at=meeting.started_at))
+                units.extend(_make_units(source_type=source_type, record_id=meeting.id, version_id=artifact.id, title=f"{meeting.title} — {artifact.artifact_type}", content=artifact.content, source_url=artifact.source_reference if meeting.source_type == "google_docs_meetings" else None, metadata=metadata, source_parent_id=str(meeting.id), source_updated_at=artifact.source_updated_at or meeting.source_updated_at, authority=authority, visibility="internal", review_status=artifact.review_status, occurred_at=meeting.started_at))
 
     operational_types = {
         "decision": "operational_decision", "action_item": "operational_action",
@@ -293,7 +293,7 @@ def rebuild_retrieval_index(session: Session, *, source: str | None = None, dry_
         session.flush()
     if not dry_run:
         for row in existing.values():
-            if row.is_current and row.stable_key not in desired_keys:
+            if (source is None or row.source_type == source) and row.is_current and row.stable_key not in desired_keys:
                 row.is_current = False
                 stats["retired"] += 1
     return stats

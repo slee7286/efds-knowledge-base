@@ -1,3 +1,7 @@
+> Retired on 2026-09-22. The Meetily importer has been removed. Use
+> [Google Docs meeting sync](GOOGLE_DOCS_MEETINGS.md). The material below
+> documents historical data only; the old commands no longer ingest.
+
 # Meetily integration
 
 Meetily is a local-first recorder/transcriber/summarizer. EFDS reads its

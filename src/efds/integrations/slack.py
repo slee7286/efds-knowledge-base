@@ -44,6 +44,7 @@ class SlackSyncSummary:
     channels_attempted: int = 0
     channels_succeeded: int = 0
     channels_failed: int = 0
+    synced_channel_ids: list[str] = field(default_factory=list)
     users_seen: int = 0
     messages_seen: int = 0
     messages_created: int = 0
@@ -64,6 +65,7 @@ class SlackSyncSummary:
             "channels_attempted": self.channels_attempted,
             "channels_succeeded": self.channels_succeeded,
             "channels_failed": self.channels_failed,
+            "synced_channel_ids": self.synced_channel_ids,
             "users_seen": self.users_seen,
             "messages_seen": self.messages_seen,
             "messages_created": self.messages_created,
@@ -446,6 +448,7 @@ def sync_slack(
             else:
                 synchronizer.sync_channel(channel, full=full, since=since, lookback_days=lookback_days, dry_run=dry_run, summary=summary)
             summary.channels_succeeded += 1
+            summary.synced_channel_ids.append(channel.id)
         except Exception as error:
             summary.channels_failed += 1
             detail = {"channel_id": channel.id, "channel_name": channel.name, "error_type": type(error).__name__, "message": str(error)}

@@ -16,3 +16,18 @@ def test_retrieval_identity_includes_source_version_and_chunk():
     assert first != second
     assert _unit_id(first) == _unit_id(first)
     assert _unit_id(first) != _unit_id(second)
+
+
+def test_partial_rebuild_never_retires_other_source_families():
+    from unittest.mock import Mock, patch
+    from efds.db.models import RetrievalUnit
+    from efds.retrieval.indexer import rebuild_retrieval_index
+    slack = RetrievalUnit(stable_key="slack:old", source_type="slack_message", is_current=True)
+    article = RetrievalUnit(stable_key="icu:keep", source_type="icu_article", is_current=True)
+    session = Mock()
+    session.scalars.return_value.all.return_value = [slack, article]
+    with patch("efds.retrieval.indexer.build_retrieval_units", return_value=[]):
+        result = rebuild_retrieval_index(session, source="slack_message")
+    assert result["retired"] == 1
+    assert not slack.is_current
+    assert article.is_current

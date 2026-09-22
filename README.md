@@ -97,7 +97,7 @@ The current platform includes the database/filesystem foundation, ICU ingestion 
 - ICU Freshdesk articles are synchronised from the existing `icu-crawler/data/` archive into `knowledge_articles`
 - Slack is synchronised by `scripts/sync_slack.py` into private, allowlisted canonical source tables; the Slack token stays in the backend environment
 - The local EFDS OneDrive tree is synchronised by `scripts/sync_filesystem.py` into stable source rows and immutable document versions
-- Meetily's local SQLite meeting outputs are synchronised read-only by `scripts/sync_meetily.py` into versioned, admin-only meeting artifacts and transcript segments
+- Google Docs linked in the enabled Slack `meetings` channel are imported automatically after Slack sync into versioned, admin-only meeting notes. See [Google Docs meeting sync](docs/GOOGLE_DOCS_MEETINGS.md). Meetily sync is retired; existing history is retained.
 
 The direct Supabase PostgreSQL connection is suitable for local development, Alembic, and ingestion scripts. A transaction/session pooler may be preferable for a future serverless deployment.
 
@@ -331,8 +331,8 @@ validates the token with Slack, discovers channels without ingesting content,
 and archives only channels explicitly enabled in `slack_channel_sync_settings`.
 New channels default to disabled. Threads remain separate message rows;
 edits and explicit deletions are append-only change events plus a current
-message projection. Links are extracted without fetching them and files are
-metadata-only. See [docs/SLACK_INTEGRATION.md](docs/SLACK_INTEGRATION.md).
+message projection. Links are extracted and files are metadata-only. After a successful sync of the
+enabled `meetings` channel, its Google Docs links are fetched into private, versioned meeting notes. See [docs/SLACK_INTEGRATION.md](docs/SLACK_INTEGRATION.md).
 
 ## Planned extensions
 
