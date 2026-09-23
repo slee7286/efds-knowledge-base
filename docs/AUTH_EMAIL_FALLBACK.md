@@ -2,9 +2,7 @@
 
 ## Deployment state
 
-`send-auth-email` is deployed in project `immldithmugfrpojetmm`. Deployment does **not** enable the Auth Hook. Keep existing Resend SMTP working until configuration and real-account tests are complete.
-
-The initial deployed health check confirmed `BREVO_API_KEY` exists. It reported missing `RESEND_API_KEY` and `SEND_EMAIL_HOOK_SECRET`. No real email has been sent by this implementation during preparation.
+`send-auth-email` version 4 is deployed in project `immldithmugfrpojetmm`. The user reported activating its Auth Hook and receiving a real email. The service-only ledger recorded two Resend provider acceptances. A fresh production link, the Brevo fallback and provider delivery callbacks still need live verification. The preserved Resend SMTP configuration is the rollback path if the hook fails.
 
 Sender: `EFDS <no-reply@imperial-efds.com>`. This address/domain must be authorized in both providers. Disable provider click/link tracking for authentication email.
 
@@ -41,7 +39,18 @@ group by provider, status;
 
 RLS with no user policies is deliberate: only the service role and database administrators access this table. The existing Supabase security-advisor findings elsewhere in the project were not changed by this migration.
 
-Still planned separately: provider quota alerts, delivery/bounce webhooks, dashboard monitoring, bounded recovery of failed attempts, and automated retention cleanup. Brevo may queue accepted mail after its own daily allowance is exhausted; this implementation does not yet detect that queue. It must not be described as unlimited or guaranteed immediate overflow capacity.
+Version 4 records provider message IDs and a separate delivery state without retaining recipients or tokens. A timed-out or 5xx Resend attempt gets one same-provider retry with the *same* idempotency key; it never switches to Brevo after an ambiguous result. Resend documents a 24-hour idempotency window. Brevo receives no automatic retry because its API does not provide the same deduplication guarantee for this hook. Do not describe Brevo as unlimited or guaranteed immediate overflow capacity: it may queue accepted mail after its daily allowance is exhausted.
+
+The admin-only `/admin/integrations` page reports EFDS hook handoffs, failures, quota/rate rejections and signed delivery/bounce callbacks. It distinguishes provider acceptance from delivery. A separate GitHub Actions job runs at 04:43 and 16:43 UTC, writes aggregate results to its run summary, raises a failing check on a recorded failure/bounce/quota rejection, warns about older missing callbacks, and removes ledger rows after 45 days. GitHub notification delivery depends on maintainers' notification settings. Counts exclude emails sent outside this hook, so provider dashboards remain the source for actual quota usage.
+
+## Activate provider delivery callbacks
+
+The `auth-email-events` function is deployed with JWT verification disabled because it performs its own provider authentication. It will return 503 until the two webhook secrets are configured. The current agent session cannot read or write the provider accounts or Supabase Edge Function secrets, so this step requires an EFDS project administrator. Never send the secrets in chat or commit them.
+
+1. In [Resend Webhooks](https://resend.com/webhooks), create an HTTPS webhook at `https://immldithmugfrpojetmm.supabase.co/functions/v1/auth-email-events/resend` for `email.delivered`, `email.delivery_delayed`, `email.bounced`, `email.complained`, `email.failed`, and `email.suppressed`. Copy its `whsec_` signing secret into a password manager.
+2. In [Brevo transactional webhooks](https://developers.brevo.com/docs/how-to-use-webhooks), create a **non-batched** webhook at `https://immldithmugfrpojetmm.supabase.co/functions/v1/auth-email-events/brevo` for Delivered, Deferred, Soft Bounce, Hard Bounce, Blocked, Spam, Invalid Email and Error. Use [bearer-token authentication](https://developers.brevo.com/docs/secured-webhooks). Generate a token locally with `openssl rand -hex 32`, then enter it in Brevo and a password manager. Disable open/click tracking for authentication mail.
+3. From `/home/siheon/projects/efds-knowledge-base` in a Linux/WSL terminal, run `python3 scripts/configure_auth_email_events.py`. It prompts invisibly for a Supabase personal access token, the Resend **webhook signing** secret, and the Brevo bearer token. It stores only the latter two as Edge Function secrets and verifies both endpoints reject unsigned requests. It does not send mail.
+4. Request a fresh controlled EFDS authentication email. Confirm a provider `delivered` callback appears under `/admin/integrations`, and verify the link opens the expected sign-in or recovery page. To test Brevo, use a controlled provider-side rejection test; do not exhaust the production quota or disable Resend globally. Until this is done, Brevo acceptance and live delivery event handling are unverified.
 
 ## Local checks
 

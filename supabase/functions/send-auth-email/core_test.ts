@@ -9,6 +9,7 @@ import {
   type Outcome,
   type Provider,
   providerRequest,
+  providerResult,
 } from "./core.ts";
 import { handler } from "./index.ts";
 import { Webhook } from "standardwebhooks";
@@ -33,8 +34,8 @@ function memoryLedger(): Ledger {
       records.set(key, "sending");
       return "claimed";
     },
-    async finish(key, _provider, outcome) {
-      records.set(key, outcome);
+    async finish(key, _provider, result) {
+      records.set(key, result.outcome);
     },
   };
 }
@@ -122,9 +123,9 @@ Deno.test("accepted primary is not sent again, including concurrent/replayed req
   const ledger = memoryLedger();
   const calls: Provider[] = [];
   const mail = buildMails(sample(), project, "event")[0];
-  const send = async (p: Provider): Promise<Outcome> => {
+  const send = async (p: Provider): Promise<{ outcome: Outcome }> => {
     calls.push(p);
-    return "accepted";
+    return { outcome: "accepted" };
   };
   await deliver(mail, ledger, send);
   await deliver(mail, ledger, send);
@@ -134,9 +135,9 @@ Deno.test("explicit primary rejection uses backup once and preserves acceptance 
   const ledger = memoryLedger();
   const calls: Provider[] = [];
   const mail = buildMails(sample(), project, "event")[0];
-  const send = async (p: Provider): Promise<Outcome> => {
+  const send = async (p: Provider): Promise<{ outcome: Outcome }> => {
     calls.push(p);
-    return p === "resend" ? "rejected" : "accepted";
+    return { outcome: p === "resend" ? "rejected" : "accepted" };
   };
   await deliver(mail, ledger, send);
   await deliver(mail, ledger, send);
@@ -151,12 +152,12 @@ Deno.test("uncertain primary, provider exception, and ledger failure never invok
       await deliver(mail, memoryLedger(), async (p) => {
         calls.push(p);
         if (throws) throw new Error("timeout");
-        return "uncertain";
+        return { outcome: "uncertain" as const };
       });
     } catch {
       failed = true;
     }
-    assert(failed && calls.join() === "resend");
+    assert(failed && calls.join() === "resend,resend");
   }
   let called = false;
   const ledger = memoryLedger();
@@ -166,7 +167,7 @@ Deno.test("uncertain primary, provider exception, and ledger failure never invok
   try {
     await deliver(mail, ledger, async () => {
       called = true;
-      return "accepted";
+      return { outcome: "accepted" as const };
     });
   } catch { /* expected */ }
   assert(!called);
@@ -180,7 +181,7 @@ Deno.test("two rejected providers return failure without replaying rejected atte
     try {
       await deliver(mail, ledger, async () => {
         calls++;
-        return "rejected";
+        return { outcome: "rejected" as const };
       });
     } catch {
       failed = true;
@@ -205,6 +206,34 @@ Deno.test("provider payloads preserve recipient and content without tracking fla
   assert(classifyResponse(409, {}, "resend") === "uncertain");
   assert(classifyResponse(200, {}, "resend") === "uncertain");
   assert(classifyResponse(201, { messageId: "id" }, "brevo") === "accepted");
+  assert(providerResult(201, { messageId: "id" }, "brevo").messageId === "id");
+});
+Deno.test("uncertain Resend delivery retries once with the same identity and never falls back", async () => {
+  const mail = buildMails(sample(), project, "event")[0];
+  const keys: string[] = [];
+  const providers: Provider[] = [];
+  let calls = 0;
+  const ledger = memoryLedger();
+  await deliver(mail, ledger, async (provider, _mail, key) => {
+    providers.push(provider);
+    keys.push(key);
+    calls++;
+    return calls === 1
+      ? { outcome: "uncertain" }
+      : { outcome: "accepted", messageId: "provider-id" };
+  });
+  assert(providers.join() === "resend,resend" && keys[0] === keys[1]);
+  const blocked = memoryLedger();
+  let threw = false;
+  try {
+    await deliver(mail, blocked, async (provider) => {
+      providers.push(provider);
+      return { outcome: providers.length === 3 ? "uncertain" : "rejected" };
+    });
+  } catch {
+    threw = true;
+  }
+  assert(threw && providers.slice(2).join() === "resend,resend");
 });
 Deno.test("HTTP rejects forged webhook and exposes only configuration presence", async () => {
   for (

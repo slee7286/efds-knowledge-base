@@ -1,11 +1,11 @@
 import { Webhook } from "standardwebhooks";
 import {
   buildMails,
-  classifyResponse,
   deliver,
   type Ledger,
   type Payload,
   providerRequest,
+  providerResult,
 } from "./core.ts";
 
 const REQUIRED = [
@@ -101,20 +101,33 @@ export async function handler(req: Request): Promise<Response> {
       const rows = await prior.json();
       return rows[0]?.status === "accepted" ? "accepted" : "blocked";
     },
-    async finish(key, provider, status) {
-      const result = await timedFetch(`${endpoint}?delivery_key=eq.${key}`, {
+    async finish(
+      key,
+      provider,
+      result,
+      resendRejected,
+      resendQuotaOrRateLimited,
+    ) {
+      const response = await timedFetch(`${endpoint}?delivery_key=eq.${key}`, {
         method: "PATCH",
         headers,
         body: JSON.stringify({
           provider,
-          status,
+          status: result.outcome,
+          provider_message_id: result.messageId ?? null,
+          resend_rejected: resendRejected,
+          resend_quota_or_rate_limited: resendQuotaOrRateLimited,
           updated_at: new Date().toISOString(),
         }),
       }, 700);
-      if (!result.ok) throw new Error("delivery_ledger_update_failed");
-      await result.body?.cancel();
+      if (!response.ok) throw new Error("delivery_ledger_update_failed");
+      await response.body?.cancel();
       console.info(
-        JSON.stringify({ event: "auth_email_attempt", provider, status }),
+        JSON.stringify({
+          event: "auth_email_attempt",
+          provider,
+          status: result.outcome,
+        }),
       );
     },
   };
@@ -133,7 +146,7 @@ export async function handler(req: Request): Promise<Response> {
           );
           const response = await timedFetch(target, init, 1300);
           const body = await response.json().catch(() => ({}));
-          return classifyResponse(response.status, body, provider);
+          return providerResult(response.status, body, provider);
         })
       ),
     );

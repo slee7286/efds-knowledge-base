@@ -7,9 +7,20 @@ export type Mail = {
 };
 export type Provider = "resend" | "brevo";
 export type Outcome = "accepted" | "rejected" | "uncertain";
+export type SendResult = {
+  outcome: Outcome;
+  messageId?: string;
+  quotaOrRateLimited?: boolean;
+};
 export interface Ledger {
   claim(key: string): Promise<"claimed" | "accepted" | "blocked">;
-  finish(key: string, provider: Provider, status: Outcome): Promise<void>;
+  finish(
+    key: string,
+    provider: Provider,
+    result: SendResult,
+    resendRejected: boolean,
+    resendQuotaOrRateLimited: boolean,
+  ): Promise<void>;
 }
 export type Payload = {
   user: { email: string; new_email?: string };
@@ -179,31 +190,51 @@ export async function deliveryKey(mail: Mail): Promise<string> {
 export async function deliver(
   mail: Mail,
   ledger: Ledger,
-  send: (provider: Provider, mail: Mail, key: string) => Promise<Outcome>,
+  send: (provider: Provider, mail: Mail, key: string) => Promise<SendResult>,
 ): Promise<void> {
   const key = await deliveryKey(mail);
   const state = await ledger.claim(key);
   if (state === "accepted") return;
   if (state !== "claimed") throw new Error("previous_delivery_not_confirmed");
   let provider: Provider = "resend";
-  let outcome: Outcome;
+  let result: SendResult;
   try {
-    outcome = await send(provider, mail, key);
+    result = await send(provider, mail, key);
   } catch {
-    outcome = "uncertain";
+    result = { outcome: "uncertain" };
   }
+  // Resend remembers this idempotency key for 24 hours. A single same-provider
+  // retry can resolve a timeout/5xx without risking a second email.
+  if (result.outcome === "uncertain") {
+    try {
+      result = await send(provider, mail, key);
+    } catch {
+      result = { outcome: "uncertain" };
+    }
+    // The first attempt may have been accepted even if this one was rejected.
+    if (result.outcome === "rejected") result = { outcome: "uncertain" };
+  }
+  const resendRejected = result.outcome === "rejected";
+  const resendQuotaOrRateLimited = resendRejected &&
+    Boolean(result.quotaOrRateLimited);
   // Only explicit rejection proves the primary did not accept the message.
   // Timeouts/5xx can have ambiguous outcomes: do not send a second copy.
-  if (outcome === "rejected") {
+  if (resendRejected) {
     provider = "brevo";
     try {
-      outcome = await send(provider, mail, key);
+      result = await send(provider, mail, key);
     } catch {
-      outcome = "uncertain";
+      result = { outcome: "uncertain" };
     }
   }
-  await ledger.finish(key, provider, outcome);
-  if (outcome !== "accepted") throw new Error(`email_${outcome}`);
+  await ledger.finish(
+    key,
+    provider,
+    result,
+    resendRejected,
+    resendQuotaOrRateLimited,
+  );
+  if (result.outcome !== "accepted") throw new Error(`email_${result.outcome}`);
 }
 export function providerRequest(
   provider: Provider,
@@ -246,11 +277,28 @@ export function classifyResponse(
   provider: Provider,
 ): Outcome {
   if (status >= 200 && status < 300) {
-    return typeof body[provider === "resend" ? "id" : "messageId"] === "string"
+    const id = body[provider === "resend" ? "id" : "messageId"];
+    return typeof id === "string" && id.length > 0 && id.length <= 256
       ? "accepted"
       : "uncertain";
   }
   // 409 may be a concurrent idempotent send; never switch providers on it.
   if ([400, 401, 402, 403, 404, 422, 429].includes(status)) return "rejected";
   return "uncertain";
+}
+
+export function providerResult(
+  status: number,
+  body: Record<string, unknown>,
+  provider: Provider,
+): SendResult {
+  const outcome = classifyResponse(status, body, provider);
+  const id = body[provider === "resend" ? "id" : "messageId"];
+  return {
+    outcome,
+    ...(outcome === "accepted" && typeof id === "string" && id.length <= 256
+      ? { messageId: id }
+      : {}),
+    quotaOrRateLimited: status === 429,
+  };
 }
