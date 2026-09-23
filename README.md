@@ -342,6 +342,8 @@ enabled `meetings` channel, its Google Docs links are fetched into private, vers
 
 ## Open ticket reposts
 
+The site ticket board reads the archived `#actions-tickets` messages, reactions and linked thread replies after each channel sync. The `committee_ticket_history` RPC exposes named, dated committee ticket edits to committee and admin users without granting them direct access to other people's profile rows. Slack status signals remain review suggestions until a committee member confirms the ticket status on the site.
+
 The archived `#actions-tickets` channel can be reviewed with
 `python scripts/repost_open_tickets.py --dry-run`. With a Slack bot token
 reinstalled with `chat:write`, the command reposts only X-marked tickets;
