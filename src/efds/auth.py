@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Literal
 
-AccessRole = Literal["viewer", "member", "committee", "admin"]
+AccessRole = Literal["viewer", "member", "efds_member", "committee", "admin"]
 MemberType = Literal[
     "imperial", "external", "alumni", "departmental_representative", "other"
 ]
@@ -14,8 +14,9 @@ MemberType = Literal[
 ROLE_RANK: dict[AccessRole, int] = {
     "viewer": 1,
     "member": 2,
-    "committee": 3,
-    "admin": 4,
+    "efds_member": 3,
+    "committee": 4,
+    "admin": 5,
 }
 
 
@@ -85,5 +86,7 @@ def resolve_access(
     if exception_role and is_active_exception(
         active=exception_active, expires_at=exception_expires_at, now=now
     ):
-        return AccessDecision(True, exception_role, exception_member_type or "external")
+        # An exception permits an external identity to register. It never
+        # confers a privileged role without a separate reviewed grant.
+        return AccessDecision(True, "member", exception_member_type or "external")
     return AccessDecision(False, None, None)

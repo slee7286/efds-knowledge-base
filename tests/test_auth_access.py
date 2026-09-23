@@ -48,9 +48,11 @@ def test_provisioning_decision_and_no_role_downgrade() -> None:
         now=datetime(2026, 8, 11, tzinfo=timezone.utc),
     )
     assert external.allowed is True
+    assert external.access_role == "member"
     assert external.member_type == "external"
     assert highest_role("admin", "member") == "admin"
     assert highest_role("viewer", "committee") == "committee"
+    assert highest_role("member", "efds_member") == "efds_member"
 
 
 def test_grant_access_cli_update_is_idempotent() -> None:

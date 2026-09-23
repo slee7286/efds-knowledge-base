@@ -17,8 +17,9 @@ current-state preference, and a small Slack recency adjustment. `ts_headline`
 returns compact snippets.
 
 The `search_retrieval_units` SECURITY INVOKER RPC and RLS constrain access during
-retrieval. Admins can search current admin sources. Members can search only
-approved, current, non-stale member/public structured knowledge. Raw Slack and
+retrieval. Admins can search current admin sources. Basic accounts can search
+approved, current, non-stale public structured knowledge. Verified EFDS members
+can also search approved member-visible structured knowledge. Raw Slack and
 OneDrive remain admin-only. Public search is limited to explicitly public
 approved records. History is opt-in and admin-only.
 

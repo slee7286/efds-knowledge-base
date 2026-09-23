@@ -80,9 +80,15 @@ class Profile(Base, TimestampMixin):
             name="ck_profiles_member_type",
         ),
         CheckConstraint(
-            "access_role IN ('viewer', 'member', 'committee', 'admin')",
+            "access_role IN ('viewer', 'member', 'efds_member', 'committee', 'admin')",
             name="ck_profiles_access_role",
         ),
+        CheckConstraint(
+            "efds_verification_status IN ('pending', 'approved', 'declined')",
+            name="profiles_efds_verification_status_check",
+        ),
+        CheckConstraint("length(efds_verification_claim) <= 500", name="profiles_efds_verification_claim_check"),
+        CheckConstraint("access_version > 0", name="profiles_access_version_check"),
         CheckConstraint(
             "avatar_path IS NULL OR ("
             "avatar_path ~ '^[0-9a-f-]{36}/[0-9a-f-]{36}\\.webp$' "
@@ -92,6 +98,7 @@ class Profile(Base, TimestampMixin):
         Index("ix_profiles_auth_user_id", "auth_user_id"),
         Index("ix_profiles_access_role", "access_role"),
         Index("ix_profiles_officer_id", "officer_id"),
+        Index("profiles_active_officer_identity", "officer_id", unique=True, postgresql_where=text("officer_id IS NOT NULL AND active")),
     )
 
     id: Mapped[uuid.UUID] = uuid_column()
@@ -107,6 +114,15 @@ class Profile(Base, TimestampMixin):
     access_role: Mapped[str] = mapped_column(
         Text, nullable=False, server_default=text("'member'")
     )
+    efds_verification_status: Mapped[str] = mapped_column(
+        Text, nullable=False, server_default=text("'pending'")
+    )
+    efds_verification_claim: Mapped[str | None] = mapped_column(Text)
+    efds_verified_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("profiles.id", ondelete="SET NULL")
+    )
+    efds_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    access_version: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("1"))
     officer_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("officers.id", ondelete="SET NULL")
     )
@@ -122,6 +138,32 @@ class Profile(Base, TimestampMixin):
     )
 
 
+class AccountAccessEvent(Base):
+    """Immutable record of a reviewed EFDS membership or access decision."""
+
+    __tablename__ = "account_access_events"
+    __table_args__ = (
+        CheckConstraint(
+            "action IN ('verify', 'decline', 'promote_committee', 'promote_admin', 'demote_member', 'link_officer')",
+            name="account_access_events_action_check",
+        ),
+        Index("account_access_events_target_time", "target_profile_id", text("occurred_at DESC")),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    target_profile_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("profiles.id", ondelete="RESTRICT"), nullable=False)
+    actor_profile_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("profiles.id", ondelete="RESTRICT"), nullable=False)
+    action: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_role: Mapped[str] = mapped_column(Text, nullable=False)
+    new_role: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_verification_status: Mapped[str] = mapped_column(Text, nullable=False)
+    new_verification_status: Mapped[str] = mapped_column(Text, nullable=False)
+    previous_officer_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    new_officer_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    reason: Mapped[str | None] = mapped_column(Text)
+    occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text("now()"))
+
+
 class AuthAccessException(Base, TimestampMixin):
     """Explicit access allowlist for non-Imperial identities."""
 
@@ -131,7 +173,7 @@ class AuthAccessException(Base, TimestampMixin):
             "email = lower(email)", name="ck_auth_access_exceptions_email_lowercase"
         ),
         CheckConstraint(
-            "access_role IN ('viewer', 'member', 'committee', 'admin')",
+            "access_role IN ('viewer', 'member', 'efds_member', 'committee', 'admin')",
             name="ck_auth_access_exceptions_access_role",
         ),
         CheckConstraint(
