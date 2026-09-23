@@ -1,6 +1,8 @@
 import json
+from datetime import datetime, timezone
 from io import BytesIO
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+from uuid import uuid4
 
 import pytest
 
@@ -15,14 +17,14 @@ from efds.db.models import (
     SlackUser,
     SlackWorkspace,
 )
-from efds.integrations.slack import extract_links, max_slack_ts, message_content_hash
+from efds.integrations.slack import SlackSyncSummary, SlackSynchronizer, extract_links, max_slack_ts, message_content_hash
 from efds.integrations.slack_api import SlackApiError, SlackClient
 
 
 class FakeResponse:
-    def __init__(self, payload: dict):
+    def __init__(self, payload: dict, headers: dict | None = None):
         self.payload = payload
-        self.headers = {}
+        self.headers = headers or {}
 
     def __enter__(self):
         return self
@@ -69,6 +71,14 @@ def test_slack_identity_validation_uses_auth_and_team_identity() -> None:
     assert identity.bot_user_id == "Ubot"
 
 
+def test_scope_check_reads_only_granted_header() -> None:
+    response = FakeResponse({"ok": True}, {"x-oauth-scopes": "channels:history,reactions:read"})
+    with patch("efds.integrations.slack_api.urlopen", return_value=response):
+        client = SlackClient("xoxb-secret")
+        assert client.has_scope("reactions:read")
+        assert not client.has_scope("chat:write")
+
+
 def test_message_identity_hash_is_stable_and_content_sensitive() -> None:
     message = {"ts": "1.000", "user": "U1", "text": "hello", "reactions": [{"name": "thumbsup"}]}
     assert message_content_hash(message) == message_content_hash({**message, "reactions": []})
@@ -96,3 +106,27 @@ def test_slack_schema_contains_private_archive_entities() -> None:
     assert SlackMessageLink.__table__.c.normalized_url is not None
     assert SlackFile.__table__.c.slack_file_id is not None
     assert SlackMessageChange.__table__.c.previous_text is not None
+
+
+def test_reaction_refresh_keeps_original_observation_and_removes_withdrawn_reactions() -> None:
+    message = SlackMessage(id=uuid4())
+    originally_seen = datetime(2026, 9, 20, tzinfo=timezone.utc)
+    existing = SlackReaction(message_id=message.id, name="white_check_mark", slack_user_id="U1", first_seen_at=originally_seen, last_seen_at=originally_seen)
+    withdrawn = SlackReaction(message_id=message.id, name="x", slack_user_id="U2", first_seen_at=originally_seen, last_seen_at=originally_seen)
+    session = Mock()
+    session.scalars.return_value = [existing, withdrawn]
+    synchronizer = object.__new__(SlackSynchronizer)
+    synchronizer.session = session
+    synchronizer._find_user = lambda _slack_id: None
+    summary = SlackSyncSummary(run_id=None, status="running")
+
+    SlackSynchronizer._sync_reactions(synchronizer, message, {
+        "reactions": [{"name": "white_check_mark", "users": ["U1", "U1"]}, {"name": "x", "users": ["U3"]}]
+    }, summary)
+
+    assert existing.first_seen_at == originally_seen
+    assert existing.last_seen_at > originally_seen
+    assert summary.reactions_seen == 2
+    session.delete.assert_called_once_with(withdrawn)
+    added = session.add.call_args.args[0]
+    assert (added.name, added.slack_user_id) == ("x", "U3")

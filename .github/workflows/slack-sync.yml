@@ -37,3 +37,16 @@ jobs:
           done
           echo 'Refresh failed after three attempts. Review the run and channel checkpoints.' >> "$GITHUB_STEP_SUMMARY"
           exit 1
+      - name: Import newly archived action tickets into the committee register
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python scripts/import_slack_tickets.py --apply
+      - name: Repost up to five unfinished X-marked tickets after the fresh sync
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/repost_open_tickets.py --limit 5
+          echo 'Unfinished ticket reminders checked after the successful archive refresh.' >> "$GITHUB_STEP_SUMMARY"

@@ -4,11 +4,12 @@ from __future__ import annotations
 import re
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from efds.db.models import SlackChannel, SlackChannelSyncSetting, SlackMessage, SlackReaction
+from efds.db.models import OperationalRecord, SlackChannel, SlackChannelSyncSetting, SlackMessage, SlackReaction
 from .slack_api import SlackClient
 
 TICKET = re.compile(r"^ACTION-(\d{3})\b", re.IGNORECASE)
@@ -16,6 +17,7 @@ REPOST = re.compile(r"^\[EFDS archive repost: ACTION-(\d{3})\]", re.IGNORECASE)
 CHECK = "white_check_mark"
 OPEN = "x"
 REPOST_INTERVAL_SECONDS = 21 * 24 * 60 * 60
+MAX_SYNC_AGE_SECONDS = 2 * 60 * 60
 
 
 @dataclass(frozen=True)
@@ -37,25 +39,48 @@ def plan_reposts(session: Session, client: SlackClient, channel_id: str, *, now:
     setting = session.get(SlackChannelSyncSetting, channel_id)
     if not channel or channel.name != "actions-tickets" or not setting or not setting.enabled:
         raise ValueError("The enabled #actions-tickets archive is required")
-    if not setting.last_successful_sync_at:
+    synced_at = setting.last_successful_sync_at
+    if not synced_at:
         raise ValueError("Sync #actions-tickets successfully before reposting")
+    clock = time.time() if now is None else now
+    if not isinstance(synced_at, datetime):
+        raise ValueError("The #actions-tickets sync checkpoint is invalid")
+    if synced_at.tzinfo is None:
+        synced_at = synced_at.replace(tzinfo=timezone.utc)
+    if clock - synced_at.timestamp() > MAX_SYNC_AGE_SECONDS:
+        raise ValueError("The #actions-tickets archive is stale; sync it before reposting")
 
     originals: dict[str, SlackMessage] = {}
+    archived_reposts: dict[str, list[SlackMessage]] = {}
     rows = session.scalars(select(SlackMessage).where(
         SlackMessage.channel_id == channel_id,
         SlackMessage.is_deleted.is_(False),
     )).all()
     for row in rows:
+        repost = REPOST.match(row.message_text or "")
+        if repost:
+            archived_reposts.setdefault(repost.group(1), []).append(row)
+            continue
         match = TICKET.match(row.message_text or "")
         if match and (match.group(1) not in originals or float(row.slack_ts) > float(originals[match.group(1)].slack_ts)):
             originals[match.group(1)] = row
 
     if not originals:
         return []
-    original_reactions: dict[str, set[str]] = {}
-    ids = [row.id for row in originals.values()]
+    # Committee edits are authoritative too. Never resurrect work that the
+    # dashboard has already marked completed or cancelled.
+    closed_codes = {
+        str(record.metadata_.get("slack_ticket_code", "")).upper()
+        for record in session.scalars(select(OperationalRecord).where(
+            OperationalRecord.record_type == "action_item",
+            OperationalRecord.execution_status.in_(("completed", "cancelled")),
+        )).all()
+        if record.metadata_.get("origin") == "slack_actions_tickets"
+    }
+    archived_reactions: dict[str, set[str]] = {}
+    ids = [row.id for row in originals.values()] + [row.id for group in archived_reposts.values() for row in group]
     for reaction in session.scalars(select(SlackReaction).where(SlackReaction.message_id.in_(ids))).all():
-        original_reactions.setdefault(str(reaction.message_id), set()).add(reaction.name.lower())
+        archived_reactions.setdefault(str(reaction.message_id), set()).add(reaction.name.lower())
 
     # A fresh read catches checks added after the last database sync. It also
     # sees our prior reposts if a process died after posting but before syncing.
@@ -74,21 +99,29 @@ def plan_reposts(session: Session, client: SlackClient, channel_id: str, *, now:
                 if previous is None or float(row.get("ts") or 0) > float(previous.get("ts") or 0):
                     live_originals[original.group(1)] = row
 
-    clock = time.time() if now is None else now
     candidates = []
     for ticket_id, source in sorted(originals.items()):
+        if f"ACTION-{ticket_id}" in closed_codes:
+            continue
         related_reposts = reposts.get(ticket_id, [])
+        visible_reposts = {str(row.get("ts")): row for row in related_reposts}
         current = live_originals.get(ticket_id)
-        archived_status = original_reactions.get(str(source.id), set())
+        archived_status = archived_reactions.get(str(source.id), set())
         live_status = reaction_names(current) if current else set()
         source_status = live_status if current else archived_status
         # A check on any visible version wins. When Slack has hidden the
-        # original, its last archived check still prevents resurrection.
-        if CHECK in source_status or any(CHECK in reaction_names(row) for row in related_reposts):
+        # original or a repost, its last archived check still prevents resurrection.
+        if (CHECK in source_status
+            or any(CHECK in reaction_names(row) for row in related_reposts)
+            or any(CHECK in (reaction_names(visible_reposts[row.slack_ts]) if row.slack_ts in visible_reposts
+                             else archived_reactions.get(str(row.id), set()))
+                   for row in archived_reposts.get(ticket_id, []))):
             continue
-        if OPEN not in source_status and not related_reposts:
-            continue
-        if current and not source_status and not any(OPEN in reaction_names(row) for row in related_reposts):
+        if (OPEN not in source_status
+            and not any(OPEN in reaction_names(row) for row in related_reposts)
+            and not any(OPEN in (reaction_names(visible_reposts[row.slack_ts]) if row.slack_ts in visible_reposts
+                                 else archived_reactions.get(str(row.id), set()))
+                        for row in archived_reposts.get(ticket_id, []))):
             continue
         latest = max(related_reposts, key=lambda row: float(row.get("ts") or 0), default=None)
         last_ts = str(latest.get("ts")) if latest else None
@@ -104,10 +137,16 @@ def plan_reposts(session: Session, client: SlackClient, channel_id: str, *, now:
 
 def repost_text(ticket: TicketCandidate) -> str:
     source = f"Original: <{ticket.original_permalink}|view source>" if ticket.original_permalink else f"Original Slack timestamp: {ticket.original_ts}"
+    # Archived text can contain user/channel mentions. Escape Slack's special
+    # characters so a reminder cannot ping people or re-expand old links.
+    safe_text = ticket.original_text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    safe_text = re.sub(r"@(?=(?:here|channel|everyone)\b)", "@\u200b", safe_text, flags=re.IGNORECASE)
+    if len(safe_text) > 3500:
+        safe_text = safe_text[:3500].rstrip() + "\n[Long source truncated; open the EFDS ticket archive for the full record.]"
     return (f"[EFDS archive repost: {ticket.ticket_id}]\n"
             f":x: Still open. Reposted by the EFDS bot so this ticket stays visible. "
             f"React with :white_check_mark: on this copy when complete.\n"
-            f"{source}\n\n{ticket.original_text}")
+            f"{source}\n\n{safe_text}")
 
 
 def execute_reposts(client: SlackClient, channel_id: str, candidates: list[TicketCandidate], *, sleep=time.sleep) -> list[tuple[str, str]]:

@@ -125,6 +125,25 @@ class SlackClient:
             bot_name=str(auth["user"]) if auth.get("user") else None,
         )
 
+    def has_scope(self, scope: str) -> bool:
+        """Read Slack's granted-scope header without exposing the bot token."""
+        request = Request(
+            self._base_url + "auth.test",
+            headers={"Authorization": f"Bearer {self._token}", "Accept": "application/json"},
+            method="GET",
+        )
+        try:
+            with urlopen(request, timeout=self._timeout) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+                raw_scopes = response.headers.get("x-oauth-scopes")
+        except HTTPError as error:
+            raise SlackApiError(f"Slack scope check failed (HTTP {error.code})", method="auth.test") from None
+        except (URLError, TimeoutError, OSError, ValueError, UnicodeError):
+            raise SlackApiError("Slack scope check failed", method="auth.test") from None
+        if not isinstance(payload, dict) or not payload.get("ok") or raw_scopes is None:
+            raise SlackApiError("Slack did not confirm granted scopes", method="auth.test")
+        return scope in {part.strip() for part in raw_scopes.split(",")}
+
     def list_channels(self) -> list[dict[str, Any]]:
         return self._paginate("conversations.list", "channels", types="public_channel,private_channel", exclude_archived="false")
 

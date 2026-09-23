@@ -354,17 +354,33 @@ class SlackSynchronizer:
         self.session.add(SlackMessageChange(message_id=message.id, change_type=change_type, previous_content_hash=previous_hash, new_content_hash=new_hash, previous_text=previous_text, new_text=new_text, source_edited_at=edited_at, ingestion_run_id=self.ingestion_run_id))
 
     def _sync_reactions(self, message: SlackMessage, payload: dict[str, Any], summary: SlackSyncSummary) -> None:
-        self.session.execute(delete(SlackReaction).where(SlackReaction.message_id == message.id))
+        existing = {
+            (row.name, row.slack_user_id): row
+            for row in self.session.scalars(select(SlackReaction).where(SlackReaction.message_id == message.id))
+        }
         now = utc_now()
+        seen: set[tuple[str, str]] = set()
         for reaction in payload.get("reactions") or []:
             name = str(reaction.get("name") or "").strip()
             if not name:
                 continue
             for slack_user_id in reaction.get("users") or []:
                 slack_user_id = str(slack_user_id)
+                key = (name, slack_user_id)
+                if key in seen:
+                    continue
+                seen.add(key)
                 user = self._find_user(slack_user_id)
-                self.session.add(SlackReaction(message_id=message.id, name=name, slack_user_id=slack_user_id, user_id=user.id if user else None, first_seen_at=now, last_seen_at=now))
+                current = existing.get(key)
+                if current is None:
+                    self.session.add(SlackReaction(message_id=message.id, name=name, slack_user_id=slack_user_id, user_id=user.id if user else None, first_seen_at=now, last_seen_at=now))
+                else:
+                    current.user_id = user.id if user else None
+                    current.last_seen_at = now
                 summary.reactions_seen += 1
+        for key, row in existing.items():
+            if key not in seen:
+                self.session.delete(row)
 
     def _sync_links(self, message: SlackMessage, text: str | None, summary: SlackSyncSummary) -> None:
         self.session.execute(delete(SlackMessageLink).where(SlackMessageLink.message_id == message.id))
