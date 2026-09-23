@@ -259,7 +259,13 @@ The first admin is granted only after a profile exists from a successful login:
 python scripts/grant_access.py person@imperial.ac.uk --role admin
 ```
 
-This command is idempotent, normalizes the email, validates optional officer IDs and never receives database credentials as arguments. It does not run against the remote database automatically.
+For a new committee member who has signed in once, grant access and connect the matching active officer roster entry in one step:
+
+```powershell
+python scripts/grant_access.py person@imperial.ac.uk --role committee --officer-name "Full Roster Name"
+```
+
+Add `--academic-year "2026/27"` if an officer name appears in more than one active roster year. The command is idempotent, normalizes the email, rejects ambiguous or already-linked officer identities, and never receives database credentials as arguments. It acts only on the database selected by the operator's `DATABASE_URL`. The member-facing Word guide is in the sibling `efds-site/docs/EFDS_Committee_Account_Setup_Guide.docx`.
 
 Approved external identities are managed through the backend CLI as well:
 

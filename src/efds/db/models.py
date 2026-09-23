@@ -504,6 +504,19 @@ class OperationalRecord(Base, TimestampMixin):
     evidence: Mapped[list["OperationalRecordEvidence"]] = relationship(back_populates="operational_record", cascade="all, delete-orphan", foreign_keys="OperationalRecordEvidence.operational_record_id")
 
 
+class OperationalTicketAssignee(Base):
+    __tablename__ = "operational_ticket_assignees"
+    __table_args__ = (
+        Index("ix_operational_ticket_assignees_officer", "officer_id"),
+        Index("ix_operational_ticket_assignees_actor", "assigned_by_profile_id"),
+    )
+
+    ticket_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("operational_records.id", ondelete="CASCADE"), primary_key=True)
+    officer_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("officers.id", ondelete="CASCADE"), primary_key=True)
+    assigned_by_profile_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("profiles.id", ondelete="SET NULL"))
+    assigned_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text("now()"))
+
+
 class OperationalRecordEvidence(Base):
     __tablename__ = "operational_record_evidence"
     __table_args__ = (
