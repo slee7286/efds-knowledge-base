@@ -401,3 +401,5 @@ require explicit configuration. Use
 `python scripts/report_embedding_coverage.py` before a real batch. Lexical
 retrieval remains the safe fallback. See
 [docs/EMBEDDINGS.md](docs/EMBEDDINGS.md).
+
+Authentication email failover is implemented as the signed `send-auth-email` Supabase Edge Function. Its service-only delivery ledger prevents duplicate attempts. Deployment, required secrets, activation tests, rollback and remaining monitoring work are documented in [AUTH_EMAIL_FALLBACK.md](docs/AUTH_EMAIL_FALLBACK.md). Deploying the function alone does not enable the Auth Hook.
