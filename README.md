@@ -247,6 +247,8 @@ Migration `0004_auth_profiles_and_rls` adds the production application-access la
 
 The migration does not modify `auth.users` or Supabase Auth internals. The backend's direct `DATABASE_URL` connection remains the trusted ingestion writer and is not replaced by browser Supabase clients.
 
+Migration `0021_profile_photos` adds an optional, owner-constrained `profiles.avatar_path` and the private `efds-profile-photos` Storage bucket. Authenticated active members may read, upload and delete only WebP files under their own Auth user ID folder; the bucket limits files to 2 MB. The website crops uploads to a 512-pixel square before storing them and serves each account's photo through an authenticated route.
+
 Review the migration before applying it locally:
 
 ```powershell

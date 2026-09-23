@@ -83,6 +83,12 @@ class Profile(Base, TimestampMixin):
             "access_role IN ('viewer', 'member', 'committee', 'admin')",
             name="ck_profiles_access_role",
         ),
+        CheckConstraint(
+            "avatar_path IS NULL OR ("
+            "avatar_path ~ '^[0-9a-f-]{36}/[0-9a-f-]{36}\\.webp$' "
+            "AND split_part(avatar_path, '/', 1) = auth_user_id::text)",
+            name="ck_profiles_avatar_owner",
+        ),
         Index("ix_profiles_auth_user_id", "auth_user_id"),
         Index("ix_profiles_access_role", "access_role"),
         Index("ix_profiles_officer_id", "officer_id"),
@@ -94,6 +100,7 @@ class Profile(Base, TimestampMixin):
     )
     email: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     full_name: Mapped[str | None] = mapped_column(Text)
+    avatar_path: Mapped[str | None] = mapped_column(Text)
     member_type: Mapped[str] = mapped_column(
         Text, nullable=False, server_default=text("'imperial'")
     )
