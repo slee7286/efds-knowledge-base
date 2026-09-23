@@ -57,3 +57,18 @@ curl -fsS https://immldithmugfrpojetmm.supabase.co/functions/v1/send-auth-email
 The Deno lockfile pins the webhook verifier and transitive packages. The tests use synthetic credentials and mocked provider requests; they send no emails.
 
 References: [Supabase Send Email Hook](https://supabase.com/docs/guides/auth/auth-hooks/send-email-hook), [hook execution limits](https://supabase.com/docs/guides/auth/auth-hooks), [Brevo transactional API](https://developers.brevo.com/reference/send-transac-email), [Resend errors](https://resend.com/docs/api-reference/errors).
+
+## Bash setup helper
+
+A project owner/admin with a [Supabase personal access token](https://supabase.com/dashboard/account/tokens) can run the following from this repository. Python 3 is the only local dependency. The script prompts invisibly, never writes credentials to disk, generates the shared signing secret, and preserves SMTP settings.
+
+```bash
+python3 scripts/configure_auth_email_fallback.py --configure
+python3 scripts/configure_auth_email_fallback.py --status
+# Enable when ready to test sign-in/reset immediately:
+python3 scripts/configure_auth_email_fallback.py --activate
+# Roll back if needed:
+python3 scripts/configure_auth_email_fallback.py --disable
+```
+
+Configuration leaves the hook disabled; activation is a separate command. The helper refuses to overwrite another hook or rotate the signing secret of an enabled hook. Status verifies configuration only, not inbox delivery. A 403 requires an owner/admin to grant the necessary Auth configuration and Edge Function secret permissions; do not bypass it.
