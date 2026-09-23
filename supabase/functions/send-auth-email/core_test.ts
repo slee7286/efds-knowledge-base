@@ -38,7 +38,7 @@ function memoryLedger(): Ledger {
     },
   };
 }
-Deno.test("all link flows use Supabase verification and preserve recovery setup", () => {
+Deno.test("email links wait for the human confirmation POST", () => {
   for (const action of ["signup", "invite", "magiclink", "recovery"]) {
     const data = sample(action);
     if (action === "recovery") {
@@ -47,17 +47,29 @@ Deno.test("all link flows use Supabase verification and preserve recovery setup"
     }
     const mail = buildMails(data, project, "event")[0];
     const url = new URL(mail.text.split("Continue: ")[1].split("\n")[0]);
-    assert(url.origin === project && url.pathname === "/auth/v1/verify");
-    assert(url.searchParams.get("type") === action);
-    assert(url.searchParams.get("token") === "a".repeat(64));
-    if (action === "recovery") {
-      assert(
-        url.searchParams.get("redirect_to")?.endsWith(
-          "/auth/recovery?flow=setup",
-        ),
-      );
-    }
+    assert(
+      url.origin === "https://www.imperial-efds.com" &&
+        url.pathname === "/auth/confirm",
+    );
+    assert(
+      url.searchParams.get("type") ===
+        (action === "recovery" ? "recovery" : "email"),
+    );
+    assert(url.searchParams.get("token_hash") === "a".repeat(64));
+    if (action === "recovery") assert(url.searchParams.get("next") === null);
   }
+  const setup = sample("magiclink");
+  setup.email_data.redirect_to =
+    "https://www.imperial-efds.com/auth/recovery?flow=setup";
+  const setupLink = new URL(
+    buildMails(setup, project, "event")[0].text.split("Continue: ")[1].split(
+      "\n",
+    )[0],
+  );
+  assert(
+    setupLink.searchParams.get("next") ===
+      "https://www.imperial-efds.com/auth/recovery?flow=setup",
+  );
 });
 Deno.test("rejects external redirects and unsupported email actions", () => {
   for (

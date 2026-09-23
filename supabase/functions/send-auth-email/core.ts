@@ -116,10 +116,28 @@ export function buildMails(
     if (!hash || !/^[a-zA-Z0-9_-]{16,256}$/.test(hash)) {
       throw new Error("missing_token_hash");
     }
-    const link = new URL("/auth/v1/verify", supabaseUrl);
-    link.searchParams.set("token", hash);
-    link.searchParams.set("type", action);
-    link.searchParams.set("redirect_to", redirectFor(action, data.redirect_to));
+    // The site's confirmation page requires a human POST before consuming the
+    // one-time token. Mail scanners that open a link cannot use it up.
+    const link = action === "email_change"
+      ? new URL("/auth/v1/verify", supabaseUrl)
+      : new URL("/auth/confirm", SITE);
+    if (action === "email_change") {
+      link.searchParams.set("token", hash);
+      link.searchParams.set("type", action);
+      link.searchParams.set(
+        "redirect_to",
+        redirectFor(action, data.redirect_to),
+      );
+    } else {
+      link.searchParams.set("token_hash", hash);
+      link.searchParams.set(
+        "type",
+        action === "recovery" ? "recovery" : "email",
+      );
+      if (action !== "recovery") {
+        link.searchParams.set("next", redirectFor(action, data.redirect_to));
+      }
+    }
     const text = `${
       titles[action]
     }\n\nContinue: ${link}\n\nUse the browser where you started. If you did not request this, ignore this email.\n\nEFDS is a student society at Imperial College London.`;
