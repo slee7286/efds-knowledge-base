@@ -65,8 +65,8 @@ export function buildAccountNotice(row: AccountNotice): Mail {
     row.new_verification_status === "declined" &&
     row.previous_verification_status !== "declined"
   ) {
-    subject = "Update on your EFDS membership review";
-    detail = "Your EFDS membership could not be verified. Your basic member account and event access remain available. Please contact the EFDS team if this seems incorrect.";
+    subject = "Your EFDS standard member access is confirmed";
+    detail = "Your account is confirmed as a standard member. EFDS society membership has not been verified, so EFDS member resources are not available to this account. You can still sign in and access events and public resources. If you believe you are an EFDS member, update your membership details in your profile and contact the EFDS team for another review.";
   } else if (row.new_role !== row.previous_role) {
     detail = `Your EFDS account access is now ${roleName[row.new_role]}.`;
   } else if (row.new_officer_id !== row.previous_officer_id) {
