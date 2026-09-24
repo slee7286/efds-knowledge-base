@@ -34,4 +34,4 @@ Trace the two missing signup emails through recipients' Junk/quarantine folders 
 - The user authorized publishing validated EFDS work to `main` and `origin`.
 - There is no active Goal token budget.
 - Do not mark any milestone live verified solely from a configured secret or mocked test.
-- One controlled password-reset email was sent to the account owner on 24 September after announcing the test. No Slack reminder messages were posted by this Goal.
+- One controlled password-reset email was sent to the account owner on 24 September after announcing the test. One fresh account email was then sent to each of two recipients at the owner's request on 24 September at 06:46 UTC. No Slack reminder messages were posted by this Goal.
