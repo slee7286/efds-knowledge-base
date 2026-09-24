@@ -117,7 +117,8 @@ def main(argv: list[str] | None = None) -> int:
                                        allowed_senders=senders, since=since, dry_run=args.dry_run)
             _save_cache(_cache_path(), cache)
             print(f"Outlook {'dry run' if args.dry_run else 'sync'} complete: senders={summary.senders}, "
-                  f"seen={summary.seen}, created={summary.created}, updated={summary.updated}, "
+                  f"seen={summary.seen}, rechecked={summary.rechecked}, created={summary.created}, "
+                  f"updated={summary.updated}, "
                   f"unchanged={summary.unchanged}, missing={summary.missing}, deleted={summary.deleted}")
             return 0
         finally:

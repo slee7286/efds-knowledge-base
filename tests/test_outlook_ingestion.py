@@ -1,11 +1,12 @@
 """The Outlook boundary never persists mail from outside the two senders."""
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import httpx
 import pytest
 
-from efds.integrations.outlook import parse_graph_message
+from efds.db.models import OutlookMessage
+from efds.integrations.outlook import MAX_RECHECKS_PER_SENDER, _recheck_candidates, parse_graph_message, sync_outlook
 from efds.integrations.outlook_graph import OutlookGraphClient, OutlookGraphError
 
 
@@ -107,3 +108,107 @@ def test_graph_client_retries_a_bounded_rate_limit_without_logging_message_conte
     assert len(attempts) == 2
     assert sleeps == [1]
     http.close()
+
+
+def _stored_message(message_id: str, now: datetime) -> OutlookMessage:
+    return OutlookMessage(
+        mailbox_graph_id="synthetic-mailbox",
+        graph_message_id=message_id,
+        sender_address="one@example.org",
+        subject="Stored mail",
+        body_text="Stored evidence",
+        received_at=now - timedelta(days=10),
+        content_hash="synthetic-hash",
+        first_seen_at=now - timedelta(days=9),
+        last_seen_at=now - timedelta(days=1),
+        missing_observations=0,
+        is_deleted=False,
+    )
+
+
+def test_rechecks_rotate_through_large_archives_and_prioritize_due_deletions():
+    now = datetime(2026, 9, 24, 10, tzinfo=timezone.utc)
+    rows = [_stored_message(f"message-{index:04}", now) for index in range(1001)]
+    due = rows[-1]
+    due.missing_observations = 1
+    due.last_missing_checked_at = now - timedelta(hours=7)
+    recent = rows[-2]
+    recent.missing_observations = 1
+    recent.last_missing_checked_at = now - timedelta(hours=1)
+
+    first = _recheck_candidates(rows, set(), now)
+    assert len(first) == MAX_RECHECKS_PER_SENDER
+    assert first[0] is due
+    assert recent not in first
+    for row in first:
+        row.last_seen_at = now
+        row.last_missing_checked_at = None
+        row.missing_observations = 0
+
+    second = _recheck_candidates(rows, set(), now)
+    assert len(second) == MAX_RECHECKS_PER_SENDER
+    assert {row.graph_message_id for row in first}.isdisjoint(
+        {row.graph_message_id for row in second}
+    )
+
+
+def test_sync_imports_new_mail_despite_more_than_one_thousand_stored_messages(monkeypatch):
+    now = datetime(2026, 9, 24, 10, tzinfo=timezone.utc)
+    stored = [_stored_message(f"stored-{index:04}", now) for index in range(1001)]
+
+    class MemorySession:
+        def __init__(self):
+            self.sender_queries = 0
+            self.added = []
+
+        def get(self, model, key):
+            return None
+
+        def scalars(self, statement):
+            self.sender_queries += 1
+            return self
+
+        def all(self):
+            return stored if self.sender_queries == 1 else []
+
+        def add(self, value):
+            self.added.append(value)
+
+        def flush(self):
+            pass
+
+    class Graph:
+        def __init__(self):
+            self.rechecked = []
+
+        def identity(self):
+            return {"id": "synthetic-mailbox", "mail": "owner@example.org"}
+
+        def iter_sender_messages(self, sender, since):
+            return [graph_message(id="new-message")] if sender == "one@example.org" else []
+
+        def get_message(self, message_id):
+            self.rechecked.append(message_id)
+            return None
+
+    monkeypatch.setattr("efds.integrations.outlook.rebuild_retrieval_index", lambda *args, **kwargs: None)
+    session, client = MemorySession(), Graph()
+    summary = sync_outlook(
+        session, client, expected_mailbox_email="owner@example.org",
+        allowed_senders=("one@example.org", "two@example.org"), now=now,
+    )
+    assert summary.seen == 1
+    assert summary.created == 1
+    assert summary.rechecked == MAX_RECHECKS_PER_SENDER
+    assert summary.missing == MAX_RECHECKS_PER_SENDER
+    assert summary.deleted == 0
+    assert len(client.rechecked) == MAX_RECHECKS_PER_SENDER
+
+    session.sender_queries = 0
+    confirmation = sync_outlook(
+        session, client, expected_mailbox_email="owner@example.org",
+        allowed_senders=("one@example.org", "two@example.org"),
+        now=now + timedelta(hours=7),
+    )
+    assert confirmation.deleted == MAX_RECHECKS_PER_SENDER
+    assert sum(row.is_deleted for row in stored) == MAX_RECHECKS_PER_SENDER

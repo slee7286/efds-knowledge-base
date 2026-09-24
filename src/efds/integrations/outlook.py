@@ -18,7 +18,8 @@ from efds.retrieval.indexer import rebuild_retrieval_index
 
 SOURCE_TYPE = "outlook_messages"
 MAX_BODY_CHARS = 50_000
-MAX_TRACKED_MESSAGES = 1000
+MAX_RECHECKS_PER_SENDER = 200
+MISSING_RECHECK_INTERVAL = timedelta(hours=6)
 
 
 @dataclass(frozen=True)
@@ -40,6 +41,7 @@ class OutlookSyncSummary:
     mailbox_graph_id: str
     senders: int
     seen: int
+    rechecked: int
     created: int
     updated: int
     unchanged: int
@@ -139,6 +141,26 @@ def _assign(message: OutlookMessage, item: OutlookEvidence, now: datetime) -> bo
     return changed
 
 
+def _recheck_candidates(
+    known: list[OutlookMessage], seen_ids: set[str], now: datetime,
+) -> list[OutlookMessage]:
+    """Rotate bounded point checks, prioritizing a second missing observation."""
+    # A successful check refreshes last_seen_at; a 404 refreshes
+    # last_missing_checked_at. The later timestamp rotates either result.
+    candidates = [
+        row for row in known
+        if row.graph_message_id not in seen_ids
+        and (row.last_missing_checked_at is None
+             or now - row.last_missing_checked_at >= MISSING_RECHECK_INTERVAL)
+    ]
+    candidates.sort(key=lambda row: (
+        not (row.missing_observations > 0 and not row.is_deleted),
+        max(row.last_seen_at, row.last_missing_checked_at or row.last_seen_at),
+        row.graph_message_id,
+    ))
+    return candidates[:MAX_RECHECKS_PER_SENDER]
+
+
 def sync_outlook(
     session: Session,
     client: OutlookGraphClient,
@@ -174,23 +196,21 @@ def sync_outlook(
             OutlookMessage.mailbox_graph_id == mailbox_graph_id,
             OutlookMessage.sender_address == sender,
         )).all())
-        if len(known[sender]) > MAX_TRACKED_MESSAGES:
-            raise ValueError("Outlook deletion reconciliation exceeded its safety limit")
         seen_ids = {item.graph_message_id for item in fetched[sender]}
         inspected[sender] = {}
-        for row in known[sender]:
-            if row.graph_message_id in seen_ids:
-                continue
+        for row in _recheck_candidates(known[sender], seen_ids, now):
             payload = client.get_message(row.graph_message_id)
             inspected[sender][row.graph_message_id] = parse_graph_message(payload, sender) if payload is not None else None
 
+    rechecked = sum(map(len, inspected.values()))
     created = updated = unchanged = missing = deleted = 0
     if dry_run:
         return OutlookSyncSummary(mailbox_graph_id, len(senders), sum(map(len, fetched.values())),
-                                  0, 0, 0, 0, 0, True)
+                                  rechecked, 0, 0, 0, 0, 0, True)
 
     run = IngestionRun(source_type=SOURCE_TYPE, source_path=None, status="running",
-                       metadata_={"mailbox_graph_id": mailbox_graph_id, "sender_count": len(senders)})
+                       metadata_={"mailbox_graph_id": mailbox_graph_id, "sender_count": len(senders),
+                                  "rechecked": rechecked})
     session.add(run)
     session.flush()
     for sender in senders:
@@ -214,15 +234,14 @@ def sync_outlook(
         for row in known[sender]:
             if row.graph_message_id not in inspected[sender] or inspected[sender][row.graph_message_id] is not None:
                 continue
+            row.last_missing_checked_at = now
             if row.is_deleted:
                 continue
-            if row.last_missing_checked_at is None or now - row.last_missing_checked_at >= timedelta(hours=6):
-                row.missing_observations += 1
-                row.last_missing_checked_at = now
-                missing += 1
-                if row.missing_observations >= 2 and not row.is_deleted:
-                    row.is_deleted = True
-                    deleted += 1
+            row.missing_observations += 1
+            missing += 1
+            if row.missing_observations >= 2:
+                row.is_deleted = True
+                deleted += 1
         checkpoint = checkpoints[sender]
         if checkpoint is None:
             checkpoint = OutlookSyncCheckpoint(mailbox_graph_id=mailbox_graph_id, sender_address=sender)
@@ -240,4 +259,4 @@ def sync_outlook(
     run.records_updated = updated
     run.records_skipped = unchanged
     return OutlookSyncSummary(mailbox_graph_id, len(senders), run.records_seen,
-                              created, updated, unchanged, missing, deleted, False)
+                              rechecked, created, updated, unchanged, missing, deleted, False)

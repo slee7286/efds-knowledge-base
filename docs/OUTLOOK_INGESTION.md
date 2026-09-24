@@ -72,7 +72,12 @@ observations at least six hours apart mark a message deleted. The retrieval
 index then retires its source units. A later successful read restores the
 message. This avoids using Graph message delta, whose server filter cannot
 restrict changes to the two senders. It also avoids treating an empty sender
-query as proof that every old message was deleted.
+query as proof that every old message was deleted. Rechecks rotate through a
+maximum of 200 older messages per sender per run; a due second `404` is
+prioritized. This keeps Graph request volume bounded as the archive grows,
+but source deletions can take multiple runs to appear in EFDS, especially
+when a sender has a large history or the collector is offline. The sync
+output and ingestion run report the number rechecked.
 
 `outlook_message` units remain `internal` and are searchable only by admins.
 The admin ticket panel enables Outlook suggestions only after a successful
