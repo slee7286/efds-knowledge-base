@@ -4,7 +4,7 @@ The website's **Send reminder emails** button is available on each ticket detail
 
 New tickets created in the EFDS website get one automatic reminder. If the ticket has assignees at creation, it is eligible two minutes after creation. If it is first assigned later, the two-minute timer begins with that assignment. The worker skips a ticket edited, reassigned, completed, cancelled, superseded or deleted before its timer expires. Tickets that existed before migration `c07748e4a2fe` have no automatic job; their manual button still works. A manual reminder suppresses a pending automatic copy.
 
-The private `ticket_reminder_jobs` and `ticket_reminder_emails` tables are protected by RLS and have no client access. Database functions enforce committee access for manual requests and service-role-only access for queue processing. The `efds-ticket-reminders` pg_cron job invokes `send-ticket-reminders` once per minute using a token read from Supabase Vault. The Edge worker uses the existing Resend primary/Brevo fallback policy. Provider acceptance is not proof of inbox delivery, and uncertain attempts are not replayed automatically.
+The private `ticket_reminder_jobs` and `ticket_reminder_emails` tables are protected by RLS and have no client access. Database functions enforce committee access for manual requests and service-role-only access for queue processing. A manual request wakes the Edge worker after the database commit; the `efds-ticket-reminders` pg_cron job also invokes it once per minute as a backup. Both use a token read from Supabase Vault. The Edge worker uses the existing Resend primary/Brevo fallback policy. Provider acceptance is not proof of inbox delivery, and uncertain attempts are not replayed automatically.
 
 ## Operations
 

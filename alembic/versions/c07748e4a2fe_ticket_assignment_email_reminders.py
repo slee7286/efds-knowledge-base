@@ -147,6 +147,18 @@ BEGIN
      reviewer_profile_id,changes)
   VALUES (p_ticket_id,'committee_reminder',v_ticket.review_status,v_ticket.review_status,
           v_actor.id,jsonb_build_object('recipient_count',v_count));
+  -- pg_net sends after commit; the minute job remains a recovery path.
+  PERFORM net.http_post(
+    url := 'https://immldithmugfrpojetmm.supabase.co/functions/v1/send-ticket-reminders',
+    headers := jsonb_build_object(
+      'Content-Type','application/json',
+      'X-EFDS-Worker-Token',
+      (SELECT decrypted_secret FROM vault.decrypted_secrets
+       WHERE name='efds_ticket_reminder_worker')
+    ),
+    body := '{}'::jsonb,
+    timeout_milliseconds := 10000
+  );
   RETURN v_count;
 END;
 $$;
