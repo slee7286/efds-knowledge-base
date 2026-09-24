@@ -699,6 +699,46 @@ class SlackMessage(Base):
     parent: Mapped["SlackMessage | None"] = relationship(remote_side="SlackMessage.id")
 
 
+class OutlookMessage(Base):
+    """Sender-allowlisted, read-only evidence from one delegated mailbox."""
+
+    __tablename__ = "outlook_messages"
+    __table_args__ = (
+        UniqueConstraint("mailbox_graph_id", "graph_message_id", name="uq_outlook_message_mailbox_graph_id"),
+        Index("ix_outlook_messages_mailbox_received", "mailbox_graph_id", "received_at"),
+        Index("ix_outlook_messages_sender_received", "sender_address", "received_at"),
+        CheckConstraint("sender_address = lower(sender_address)", name="ck_outlook_messages_sender_lowercase"),
+        CheckConstraint("missing_observations >= 0", name="ck_outlook_messages_missing_observations"),
+    )
+
+    id: Mapped[uuid.UUID] = uuid_column()
+    mailbox_graph_id: Mapped[str] = mapped_column(Text, nullable=False)
+    graph_message_id: Mapped[str] = mapped_column(Text, nullable=False)
+    internet_message_id: Mapped[str | None] = mapped_column(Text)
+    sender_address: Mapped[str] = mapped_column(Text, nullable=False)
+    subject: Mapped[str] = mapped_column(Text, nullable=False)
+    body_text: Mapped[str] = mapped_column(Text, nullable=False)
+    body_truncated: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    source_modified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    web_link: Mapped[str | None] = mapped_column(Text)
+    content_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("false"))
+    missing_observations: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text("0"))
+    last_missing_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text("now()"))
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text("now()"))
+
+
+class OutlookSyncCheckpoint(Base):
+    __tablename__ = "outlook_sync_checkpoints"
+
+    mailbox_graph_id: Mapped[str] = mapped_column(Text, primary_key=True)
+    sender_address: Mapped[str] = mapped_column(Text, primary_key=True)
+    last_received_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_successful_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
 class SlackChannelSyncSetting(Base):
     __tablename__ = "slack_channel_sync_settings"
 

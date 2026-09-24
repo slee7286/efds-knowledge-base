@@ -16,7 +16,7 @@ from efds.db.models import (
     Document, DocumentVersion, KnowledgeArticle, KnowledgeContact, KnowledgeProcess,
     KnowledgeProcessStep, KnowledgeRequirement, KnowledgeResource, KnowledgeTimingRule,
     Meeting, MeetingArtifact, MeetingTranscriptSegment, RetrievalUnit, SlackChannel,
-    SlackChannelSyncSetting, SlackMessage, SlackUser, OperationalRecord,
+    SlackChannelSyncSetting, SlackMessage, SlackUser, OperationalRecord, OutlookMessage,
 )
 
 from .chunking import chunk_text
@@ -24,7 +24,7 @@ from .chunking import chunk_text
 RETRIEVAL_SOURCE_TYPES = (
     "icu_article", "knowledge_requirement", "knowledge_timing_rule", "knowledge_process",
     "knowledge_process_step", "knowledge_resource", "knowledge_contact", "document", "slack_message",
-    "meeting_transcript", "meeting_summary", "meeting_notes", "operational_decision",
+    "meeting_transcript", "meeting_summary", "meeting_notes", "outlook_message", "operational_decision",
     "operational_action", "operational_commitment", "operational_question", "operational_status",
 )
 
@@ -166,6 +166,20 @@ def build_retrieval_units(session: Session, source: str | None = None) -> list[R
                 author=(user.display_name or user.real_name) if user else None, visibility="internal",
                 authority="committee_record", occurred_at=message.source_posted_at,
                 source_updated_at=message.source_edited_at, permalink=message.permalink,
+            ))
+
+    if "outlook_message" in wanted:
+        for message in session.scalars(select(OutlookMessage).where(OutlookMessage.is_deleted.is_(False))):
+            units.extend(_make_units(
+                source_type="outlook_message", record_id=message.id,
+                version_id=message.content_hash, title=message.subject,
+                content=f"{message.subject}\n\n{message.body_text}",
+                metadata={"body_truncated": message.body_truncated},
+                author=message.sender_address, visibility="internal",
+                review_status="source_generated", authority="outlook_mail",
+                occurred_at=message.received_at,
+                source_updated_at=message.source_modified_at or message.received_at,
+                source_url=message.web_link,
             ))
 
     if wanted.intersection({"meeting_transcript", "meeting_summary", "meeting_notes"}):
