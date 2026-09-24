@@ -21,9 +21,22 @@ const sample = (action = "magiclink") => ({
   user: { email: "member@example.org" },
   email_data: {
     email_action_type: action,
+    token: "123456",
     token_hash: "a".repeat(64),
     redirect_to: "https://www.imperial-efds.com/auth/callback",
   },
+});
+Deno.test("signup and recovery mail include a code fallback without exposing a code in the URL", () => {
+  for (const [action, flow] of [["signup", "setup"], ["recovery", "reset"], ["magiclink", "magic"]]) {
+    const mail = buildMails(sample(action), project, "event")[0];
+    assert(mail.text.includes("one-time code 123456"));
+    assert(mail.text.includes(`/auth/verify-code?flow=${flow}`));
+    assert(mail.html.includes("<strong>123456</strong>"));
+    assert(!mail.text.includes("token=123456"));
+  }
+  const withoutCode = sample("signup");
+  withoutCode.email_data.token = "";
+  assert(!buildMails(withoutCode, project, "event")[0].text.includes("one-time code"));
 });
 function memoryLedger(): Ledger {
   const records = new Map<string, string>();
@@ -67,6 +80,7 @@ Deno.test("email links wait for the human confirmation POST", () => {
       "\n",
     )[0],
   );
+  assert(buildMails(setup, project, "event")[0].text.includes("/auth/verify-code?flow=setup"));
   assert(
     setupLink.searchParams.get("next") ===
       "https://www.imperial-efds.com/auth/recovery?flow=setup",

@@ -148,15 +148,21 @@ export function buildMails(
     const secondAddress = action === "email_change"
       ? "\n\nIf EFDS also emailed your other address, confirm that link too."
       : "";
+    const code = action !== "email_change" && typeof token === "string" && /^\d{6,10}$/.test(token) ? token : null;
+    const codeRedirect = new URL(redirectFor(action, data.redirect_to));
+    const codeFlow = action === "recovery" ? "reset" : action === "signup" || action === "invite" || (codeRedirect.pathname === "/auth/recovery" && codeRedirect.searchParams.get("flow") === "setup") ? "setup" : "magic";
+    const codePage = `${SITE}/auth/verify-code?flow=${codeFlow}`;
+    const codeText = code ? `\n\nIf the link does not work, enter the one-time code ${code} at ${codePage}.` : "";
+    const codeHtml = code ? `<p>If the link does not work, enter the one-time code <strong>${code}</strong> at <a href="${codePage}">the EFDS code page</a>.</p>` : "";
     const text = `${
       titles[action]
-    }\n\nContinue: ${link}\n\nUse the browser where you started.${secondAddress} If you did not request this, ignore this email.\n\nEFDS is a student society at Imperial College London.`;
+    }\n\nContinue: ${link}${codeText}\n\nUse the browser where you started.${secondAddress} If you did not request this, ignore this email.\n\nEFDS is a student society at Imperial College London.`;
     const html =
       `<html><body style="font-family:Arial,sans-serif;color:#17233b;line-height:1.6"><h1 style="font-size:24px">${
         titles[action]
       }</h1><p><a href="${
         escape(link.toString())
-      }">Continue securely</a></p><p>Use the browser where you started.${
+      }">Continue securely</a></p>${codeHtml}<p>Use the browser where you started.${
         action === "email_change"
           ? " If EFDS also emailed your other address, confirm that link too."
           : ""
