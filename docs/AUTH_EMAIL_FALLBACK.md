@@ -2,7 +2,7 @@
 
 ## Deployment state
 
-`send-auth-email` version 4 is deployed in project `immldithmugfrpojetmm`, and its Auth Hook is active. A controlled password-reset email reached the account owner on 24 September 2026; its fresh link opened the correct **Set your password** page. Resend shows **Delivered** for two other signup recipients who report that they have not received the confirmation email. Their Auth accounts are still unconfirmed. Brevo fallback and provider delivery callbacks still need live verification. The preserved Resend SMTP configuration is the rollback path if the hook fails.
+`send-auth-email` version 4 is deployed in project `immldithmugfrpojetmm`, and its Auth Hook is active. A controlled password-reset email reached the account owner on 24 September 2026; its fresh link opened the correct **Set your password** page. Resend showed **Delivered** for two other signup recipients who reported no inbox arrival. One fresh setup email was requested for each on 24 September at 06:46 UTC; Supabase recorded new confirmation send times and the hook recorded two Resend acceptances. Their inbox outcomes and completed confirmations remain unverified. Brevo fallback and provider delivery callbacks still need live verification. The preserved Resend SMTP configuration is the rollback path if the hook fails.
 
 Sender: `EFDS <no-reply@imperial-efds.com>`. This address/domain must be authorized in both providers. Disable provider click/link tracking for authentication email.
 
@@ -31,6 +31,8 @@ The service-only `auth_email_deliveries` table claims a hash of recipient/action
 ## Missing confirmation email after Resend reports Delivered
 
 On 24 September, the Resend sending dashboard showed **Delivered** for two confirmation-email recipients, but both recipients reported no email. This does not establish inbox placement: [Microsoft says a delivered message may be in Junk or quarantine](https://learn.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/message-trace-faq). The sender is `no-reply@imperial-efds.com` and the subject is `Confirm your EFDS account`.
+
+Do not use an email-open pixel as a substitute for confirmation. [Resend open tracking uses a remote image](https://resend.com/blog/open-and-click-tracking), which [Apple Mail may load before a person reads the message](https://www.apple.com/legal/privacy/data/en/mail-privacy-protection/). [Supabase recommends disabling email tracking for authentication templates](https://supabase.com/docs/guides/auth/auth-email-templates) because link rewriting can break verification. Use provider delivery events for transport state and Supabase confirmation/sign-in timestamps for completed user action. Provider event webhooks still need configuring.
 
 1. Each recipient should search **all Outlook folders** for the sender or subject, including Junk and Deleted Items, then check their [Microsoft quarantine page](https://security.microsoft.com/quarantine). A recipient may need to request release under Imperial's policy.
 2. If absent, ask Imperial ICT or an Exchange administrator to run [message trace](https://learn.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/trace-an-email-message) for the exact recipient and sending time. The Resend dashboard record can supply its provider message ID and SMTP delivery details. Keep recipient addresses and message IDs out of public issue trackers.
