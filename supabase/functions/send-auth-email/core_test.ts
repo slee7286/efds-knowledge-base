@@ -101,12 +101,24 @@ Deno.test("secure email change sends the documented hash to each address", () =>
   };
   const mails = buildMails(payload, project, "event");
   assert(mails.length === 2);
-  assert(
-    mails[0].to === "old@example.org" && mails[0].text.includes("b".repeat(64)),
-  );
-  assert(
-    mails[1].to === "new@example.org" && mails[1].text.includes("a".repeat(64)),
-  );
+  for (const [index, address, hash] of [
+    [0, "old@example.org", "b".repeat(64)],
+    [1, "new@example.org", "a".repeat(64)],
+  ] as const) {
+    const mail = mails[index];
+    const link = new URL(mail.text.split("Continue: ")[1].split("\n")[0]);
+    assert(mail.to === address);
+    assert(link.origin === "https://www.imperial-efds.com");
+    assert(link.pathname === "/auth/confirm");
+    assert(link.searchParams.get("type") === "email_change");
+    assert(link.searchParams.get("token_hash") === hash);
+    assert(!link.pathname.includes("/verify"));
+  }
+  const oneAddress = buildMails({
+    user: payload.user,
+    email_data: { ...payload.email_data, token_hash_new: undefined },
+  }, project, "event");
+  assert(oneAddress.length === 1 && oneAddress[0].to === "new@example.org");
 });
 Deno.test("reauthentication and security notification do not create broken links", () => {
   const p = {

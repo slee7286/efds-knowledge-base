@@ -75,7 +75,7 @@ function redirectFor(action: string, raw?: string) {
 }
 export function buildMails(
   payload: Payload,
-  supabaseUrl: string,
+  _supabaseUrl: string,
   eventId: string,
 ): Mail[] {
   const { user, email_data: data } = payload;
@@ -129,18 +129,14 @@ export function buildMails(
     }
     // The site's confirmation page requires a human POST before consuming the
     // one-time token. Mail scanners that open a link cannot use it up.
-    const link = action === "email_change"
-      ? new URL("/auth/v1/verify", supabaseUrl)
-      : new URL("/auth/confirm", SITE);
+    const link = new URL("/auth/confirm", SITE);
+    link.searchParams.set("token_hash", hash);
     if (action === "email_change") {
-      link.searchParams.set("token", hash);
       link.searchParams.set("type", action);
-      link.searchParams.set(
-        "redirect_to",
-        redirectFor(action, data.redirect_to),
-      );
+      // Validate the Auth-supplied destination, but do not send the user or
+      // their one-time token through a GET that could be opened by a scanner.
+      redirectFor(action, data.redirect_to);
     } else {
-      link.searchParams.set("token_hash", hash);
       link.searchParams.set(
         "type",
         action === "recovery" ? "recovery" : "email",
@@ -149,15 +145,22 @@ export function buildMails(
         link.searchParams.set("next", redirectFor(action, data.redirect_to));
       }
     }
+    const secondAddress = action === "email_change"
+      ? "\n\nIf EFDS also emailed your other address, confirm that link too."
+      : "";
     const text = `${
       titles[action]
-    }\n\nContinue: ${link}\n\nUse the browser where you started. If you did not request this, ignore this email.\n\nEFDS is a student society at Imperial College London.`;
+    }\n\nContinue: ${link}\n\nUse the browser where you started.${secondAddress} If you did not request this, ignore this email.\n\nEFDS is a student society at Imperial College London.`;
     const html =
       `<html><body style="font-family:Arial,sans-serif;color:#17233b;line-height:1.6"><h1 style="font-size:24px">${
         titles[action]
       }</h1><p><a href="${
         escape(link.toString())
-      }">Continue securely</a></p><p>Use the browser where you started. If you did not request this, ignore this email.</p><p>EFDS is a student society at Imperial College London.</p></body></html>`;
+      }">Continue securely</a></p><p>Use the browser where you started.${
+        action === "email_change"
+          ? " If EFDS also emailed your other address, confirm that link too."
+          : ""
+      } If you did not request this, ignore this email.</p><p>EFDS is a student society at Imperial College London.</p></body></html>`;
     return {
       to: address(to),
       subject: titles[action],
