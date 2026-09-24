@@ -3,7 +3,7 @@
 Every substantive update to `profiles.access_role`, `efds_verification_status`,
 `officer_id` or `active` writes one row to the private
 `account_status_notices` outbox in the same transaction. This includes EFDS
-membership verification or decline, committee/admin promotion and demotion,
+EFDS student verification or a non-EFDS-student decision, committee/admin promotion and demotion,
 officer roster links, and account activation changes. Ordinary profile edits
 do not send an access email. The trigger also covers trusted maintenance writes
 outside the admin review RPC; such writes get a new `access_version` if needed.

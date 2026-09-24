@@ -20,11 +20,11 @@ const base: AccountNotice = {
 
 Deno.test("account decision emails describe verification, standard membership, promotion, demotion, roster and deactivation", () => {
   const cases: Array<[Partial<AccountNotice>, string, string]> = [
-    [{}, "membership has been verified", "EFDS membership is verified"],
-    [{ new_role: "member", new_verification_status: "declined" }, "standard member access is confirmed", "access events and public resources"],
+    [{}, "student access has been verified", "enrolment on Imperial"],
+    [{ new_role: "member", new_verification_status: "declined" }, "member access is confirmed", "student-only resources are unavailable"],
     [{ previous_role: "efds_member", new_role: "committee" }, "committee access", "committee access"],
     [{ previous_role: "committee", new_role: "admin" }, "administrator access", "administrator access"],
-    [{ previous_role: "committee", new_role: "efds_member", previous_verification_status: "approved" }, "account access has changed", "verified EFDS member"],
+    [{ previous_role: "committee", new_role: "efds_member", previous_verification_status: "approved" }, "account access has changed", "verified EFDS student"],
     [{ previous_role: "committee", new_role: "committee", previous_verification_status: "approved", new_officer_id: "00000000-0000-4000-8000-000000000002" }, "committee identity", "roster identity"],
     [{ new_active: false }, "deactivated", "deactivated"],
   ];

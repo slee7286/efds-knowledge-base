@@ -22,8 +22,8 @@ export type AccountNotice = {
 const SITE = "https://www.imperial-efds.com";
 const roleName: Record<string, string> = {
   viewer: "viewer",
-  member: "member",
-  efds_member: "verified EFDS member",
+  member: "EFDS member",
+  efds_member: "verified EFDS student",
   committee: "committee member",
   admin: "administrator",
 };
@@ -40,7 +40,7 @@ export function buildAccountNotice(row: AccountNotice): Mail {
     throw new Error("invalid_notice");
   }
   let subject = "Your EFDS account access has changed";
-  let detail = `Your EFDS account is now a ${roleName[row.new_role]}.`;
+  let detail = `Your EFDS account now has ${roleName[row.new_role]} access.`;
   if (!row.new_active) {
     subject = "Your EFDS account has been deactivated";
     detail = "Your EFDS account has been deactivated. Please contact the EFDS team if this seems incorrect.";
@@ -59,14 +59,14 @@ export function buildAccountNotice(row: AccountNotice): Mail {
     row.new_verification_status === "approved" &&
     row.previous_verification_status !== "approved"
   ) {
-    subject = "Your EFDS membership has been verified";
-    detail = "Your EFDS membership is verified. You now have access to EFDS member resources as they become available.";
+    subject = "Your EFDS student access has been verified";
+    detail = "Your enrolment on Imperial’s BSc Economics, Finance and Data Science has been verified. You now have access to EFDS student resources as they become available.";
   } else if (
     row.new_verification_status === "declined" &&
     row.previous_verification_status !== "declined"
   ) {
-    subject = "Your EFDS standard member access is confirmed";
-    detail = "Your account is confirmed as a standard member. EFDS society membership has not been verified, so EFDS member resources are not available to this account. You can still sign in and access events and public resources. If you believe you are an EFDS member, update your membership details in your profile and contact the EFDS team for another review.";
+    subject = "Your EFDS member access is confirmed";
+    detail = "Your account remains an EFDS member account. This review confirmed that you are not currently verified as an EFDS student, so student-only resources are unavailable. EFDS Union society membership alone does not grant student access. You can still sign in and access events and public resources. If your degree status has changed or this decision is mistaken, update your details in your profile and contact the EFDS team for another review.";
   } else if (row.new_role !== row.previous_role) {
     detail = `Your EFDS account access is now ${roleName[row.new_role]}.`;
   } else if (row.new_officer_id !== row.previous_officer_id) {
