@@ -2,7 +2,7 @@
 
 ## Deployment state
 
-`send-auth-email` version 4 is deployed in project `immldithmugfrpojetmm`. The user reported activating its Auth Hook and receiving a real email. The service-only ledger recorded two Resend provider acceptances. A fresh production link, the Brevo fallback and provider delivery callbacks still need live verification. The preserved Resend SMTP configuration is the rollback path if the hook fails.
+`send-auth-email` version 4 is deployed in project `immldithmugfrpojetmm`, and its Auth Hook is active. A controlled password-reset email reached the account owner on 24 September 2026; its fresh link opened the correct **Set your password** page. Resend shows **Delivered** for two other signup recipients who report that they have not received the confirmation email. Their Auth accounts are still unconfirmed. Brevo fallback and provider delivery callbacks still need live verification. The preserved Resend SMTP configuration is the rollback path if the hook fails.
 
 Sender: `EFDS <no-reply@imperial-efds.com>`. This address/domain must be authorized in both providers. Disable provider click/link tracking for authentication email.
 
@@ -12,7 +12,7 @@ Sender: `EFDS <no-reply@imperial-efds.com>`. This address/domain must be authori
 2. Generate a webhook signing secret locally in Bash using `openssl rand -base64 32`. Prefix the result with `v1,whsec_`. Store the full value as `SEND_EMAIL_HOOK_SECRET` in Edge Function secrets. This value is independent of either email-provider API key.
 3. Verify `https://immldithmugfrpojetmm.supabase.co/functions/v1/send-auth-email` returns `configured: true` and an empty `missing` list. This checks presence, **not credential validity or delivery**.
 4. Prepare Authentication → Hooks → Send Email as an HTTP hook with URL `https://immldithmugfrpojetmm.supabase.co/functions/v1/send-auth-email` and the same signing secret. Keep Email authentication enabled. Enable the hook only when ready to test immediately. The hook replaces SMTP sending; Supabase does not independently retry SMTP after hook failures.
-5. Use a controlled real account to test signup/setup, magic link, and password reset from the EFDS site, opening links in the initiating browser. Confirm inbox delivery, correct destination, sender, and provider acceptance in logs. Also test secure email change if enabled. Existing browser sessions are unaffected by switching email transport.
+5. Use a controlled real account to test signup/setup, magic link, and password reset from the EFDS site, opening links in the initiating browser. Confirm inbox delivery, correct destination, sender, and provider acceptance in logs. The controlled password-reset page passed on 24 September; signup and magic-link completion still need real-user checks. Also test secure email change if enabled. Existing browser sessions are unaffected by switching email transport.
 6. Validate Brevo with a controlled fallback test before declaring it operational. Local tests simulate Resend quota exhaustion; this has not yet verified Brevo's live sender authorization or inbox delivery. Do not exhaust production quotas or invalidate the production key to test.
 7. If any live flow fails, disable the Send Email hook immediately. Supabase will resume the preserved Resend SMTP configuration. Keep credentials in place for diagnosis.
 
@@ -27,6 +27,16 @@ All normal action emails (signup, invitation, magic link, recovery, email change
 Resend is primary. An explicit HTTP rejection (including quota/rate-limit rejection) invokes Brevo. Timeouts, 5xx, ambiguous responses, and idempotency conflicts **do not** switch providers, because the primary may already have accepted the email. No retry loop sleeps inside the hook: Supabase HTTP hooks have a five-second execution budget. Each provider attempt is bounded to 1.3 seconds and the work has a 4.2-second budget. Conservative timeouts can return an error even when a provider later delivers; inspect provider records before requesting another link.
 
 The service-only `auth_email_deliveries` table claims a hash of recipient/action/token identity before sending. It contains no email addresses, bodies, links or raw tokens. Concurrent/repeated calls cannot resend an accepted message. An uncertain, failed or interrupted attempt blocks replay of that identity; the user must request a fresh link after checking delivery. A crash between provider acceptance and ledger completion is deliberately treated as uncertain. Provider acceptance does not prove inbox delivery.
+
+## Missing confirmation email after Resend reports Delivered
+
+On 24 September, the Resend sending dashboard showed **Delivered** for two confirmation-email recipients, but both recipients reported no email. This does not establish inbox placement: [Microsoft says a delivered message may be in Junk or quarantine](https://learn.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/message-trace-faq). The sender is `no-reply@imperial-efds.com` and the subject is `Confirm your EFDS account`.
+
+1. Each recipient should search **all Outlook folders** for the sender or subject, including Junk and Deleted Items, then check their [Microsoft quarantine page](https://security.microsoft.com/quarantine). A recipient may need to request release under Imperial's policy.
+2. If absent, ask Imperial ICT or an Exchange administrator to run [message trace](https://learn.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/trace-an-email-message) for the exact recipient and sending time. The Resend dashboard record can supply its provider message ID and SMTP delivery details. Keep recipient addresses and message IDs out of public issue trackers.
+3. Once found or released, use the **newest** confirmation email. Request another confirmation only after the trace is resolved, because a newer link may supersede an older one. If the link then fails, capture only the on-screen error, never the link or password.
+
+The EFDS site does not require admin approval for basic membership. After successful email confirmation, account provisioning grants `member` and dashboard access automatically. Admin review is only for promotion to `efds_member`, `committee` or `admin`.
 
 Structured logs contain provider and outcome only. Query delivery counts in the SQL Editor:
 
