@@ -51,6 +51,9 @@ Trace the two missing signup emails through recipients' Junk/quarantine folders 
 
 ## Operating record
 
+- On 24 September at 10:29 UTC, the new transactional account-status email outbox and one-minute Supabase Cron worker were live. Seven consecutive scheduled calls returned HTTP 200 by 10:35 UTC, with no notices pending. A rollback-only status change verified exactly one queued email and left the member account unchanged. Site admin review now reports queue/acceptance/attention states and offers a fresh setup form after an expired setup link. The new sender's live provider acceptance and inbox arrival remain unverified until the next legitimate account decision; see [ACCOUNT_STATUS_EMAILS.md](ACCOUNT_STATUS_EMAILS.md).
+- The screenshots of Shashwat's first-time flow establish that the confirmation page opened but Continue led to an expired/used-link message. The user says he opened the newest email. A 10:08 UTC setup email was accepted by Resend, yet the account was still unconfirmed at the read-only check. A purported second request around 11:10 BST did not produce a second recorded Shashwat confirmation; the 10:10 UTC timestamp belongs to `srs25@ic.ac.uk`. The site now preserves setup mode and logs a safe Auth error code for diagnosis after one fresh attempt. The separate `srs25@ic.ac.uk` account also remained unconfirmed at the read-only check.
+
 - The user authorized publishing validated EFDS work to `main` and `origin`.
 - There is no active Goal token budget.
 - Do not mark any milestone live verified solely from a configured secret or mocked test.

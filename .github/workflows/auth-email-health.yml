@@ -19,7 +19,7 @@ jobs:
           python-version: '3.12'
       - name: Install database driver
         run: python -m pip install 'psycopg[binary]>=3.2,<4'
-      - name: Check handoffs, quota signals, delivery events and retention
+      - name: Check authentication and account-change emails, delivery events and retention
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python scripts/check_auth_email_health.py
