@@ -1,0 +1,4 @@
+{
+  "compilerOptions": { "strict": true },
+  "tasks": { "test": "deno test", "check": "deno check index.ts" }
+}
