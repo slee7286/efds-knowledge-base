@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 
@@ -29,7 +30,11 @@ def test_duplicate_document_behavior_is_opt_in(tmp_path: Path) -> None:
     from efds.db.session import session_scope
     from efds.ingestion.documents import ingest_folder
 
-    (tmp_path / "duplicate.txt").write_text("same bytes", encoding="utf-8")
+    # Dedupe is keyed on a content hash checked against a persistent database,
+    # so the payload must be unique per run. A fixed literal makes the *first*
+    # ingest of every later run dedupe against the previous run's row, and the
+    # assertion below fails on a database this test has already touched.
+    (tmp_path / "duplicate.txt").write_text(f"duplicate probe {uuid4()}", encoding="utf-8")
     with session_scope() as session:
         first = ingest_folder(session, tmp_path)
     with session_scope() as session:
