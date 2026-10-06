@@ -161,46 +161,45 @@ class SlackClient:
         value = payload.get("permalink")
         return str(value) if value else None
 
-    def post_message(self, channel_id: str, text: str) -> str:
-        """Post one ticket as this bot. An ambiguous network failure is never retried."""
+    def post_message(self, channel_id: str, text: str, *, thread_ts: str | None = None) -> str:
+        """Post once; never retry an ambiguous POST without reading its marker."""
+        payload = self._write("chat.postMessage", channel=channel_id, text=text,
+                              thread_ts=thread_ts, parse="none", link_names=False,
+                              unfurl_links=False, unfurl_media=False)
+        timestamp = str(payload.get("ts") or "")
+        if not timestamp:
+            raise SlackApiError("Slack post response omitted its timestamp; check channel before retrying", method="chat.postMessage")
+        return timestamp
 
+    def update_message(self, channel_id: str, ts: str, text: str) -> None:
+        """Idempotently update the root preview; no automatic write retries."""
+        self._write("chat.update", channel=channel_id, ts=ts, text=text,
+                    parse="none", link_names=False)
+
+    def _write(self, method: str, **params: Any) -> dict[str, Any]:
         request = Request(
-            self._base_url + "chat.postMessage",
-            data=json.dumps({
-                "channel": channel_id,
-                "text": text,
-                "parse": "none",
-                "link_names": False,
-                "unfurl_links": False,
-                "unfurl_media": False,
-            }).encode("utf-8"),
-            headers={
-                "Authorization": f"Bearer {self._token}",
-                "Accept": "application/json",
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            method="POST",
+            self._base_url + method,
+            data=json.dumps({key: value for key, value in params.items() if value is not None}).encode("utf-8"),
+            headers={"Authorization": f"Bearer {self._token}", "Accept": "application/json",
+                     "Content-Type": "application/json; charset=utf-8"}, method="POST",
         )
         try:
             with urlopen(request, timeout=self._timeout) as response:
                 payload = json.loads(response.read().decode("utf-8"))
         except HTTPError as error:
-            raise SlackApiError(f"Slack post failed (HTTP {error.code})", method="chat.postMessage") from None
+            raise SlackApiError(f"Slack write failed (HTTP {error.code})", method=method) from None
         except (URLError, TimeoutError, OSError):
-            raise SlackApiError("Slack post outcome is uncertain; check channel before retrying", method="chat.postMessage") from None
+            raise SlackApiError("Slack write outcome is uncertain; reconcile before retrying", method=method) from None
         except (ValueError, UnicodeError):
-            raise SlackApiError("Slack post returned malformed JSON", method="chat.postMessage") from None
+            raise SlackApiError("Slack write returned malformed JSON", method=method) from None
         if not isinstance(payload, dict):
-            raise SlackApiError("Slack post returned an invalid response", method="chat.postMessage")
+            raise SlackApiError("Slack write returned an invalid response", method=method)
         if not payload.get("ok"):
             code = str(payload.get("error") or "unknown_error")
             if code == "missing_scope" and payload.get("needed"):
                 code += f" (needed: {payload['needed']})"
-            raise SlackApiError(f"Slack rejected chat.postMessage: {code}", method="chat.postMessage", error_code=code)
-        timestamp = str(payload.get("ts") or "")
-        if not timestamp:
-            raise SlackApiError("Slack post response omitted its timestamp; check channel before retrying", method="chat.postMessage")
-        return timestamp
+            raise SlackApiError(f"Slack rejected {method}: {code}", method=method, error_code=code)
+        return payload
 
     def _paginate(self, method: str, result_key: str, **params: Any) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []
