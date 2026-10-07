@@ -115,16 +115,19 @@ def test_outbox_trigger_and_rls_on_disposable_postgres():
             def replies(self, channel, root):
                 return list(self.messages)
 
-            def post_message(self, channel, text, *, thread_ts=None):
+            def post_message(self, channel, text, *, thread_ts=None, blocks=None):
                 ts = f"123.{len(self.messages)+1:06}"
                 self.posts.append((channel, thread_ts))
-                self.messages.append({'ts': ts, 'text': text})
+                self.messages.append({'ts': ts, 'text': text, 'blocks': blocks})
                 if self.fail_after_post:
                     raise TimeoutError('response lost after acceptance')
                 return ts
 
-            def update_message(self, channel, ts, text):
+            def update_message(self, channel, ts, text, *, blocks=None):
                 self.updates.append((channel, ts, text))
+                for message in self.messages:
+                    if message['ts'] == ts:
+                        message.update({'text': text, 'blocks': blocks})
 
         slack = FakeSlack()
         publisher = Publisher(OutboxStore(db), slack, "https://www.imperial-efds.com")
@@ -139,7 +142,7 @@ def test_outbox_trigger_and_rls_on_disposable_postgres():
             assert cur.fetchone()[0] == '123.000001'
         db.commit()
         # The external post happened but its HTTP acknowledgement was lost. The
-        # persisted uncertain claim must reconcile the marker, not send again.
+        # persisted uncertain claim must reconcile the hidden block ID, not send again.
         with db.cursor() as cur:
             cur.execute("INSERT INTO public.operational_review_events(id,operational_record_id,action) VALUES (%s,%s,'committee_update')",
                         (uuid4(), new_ticket))

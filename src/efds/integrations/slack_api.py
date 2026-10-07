@@ -161,20 +161,22 @@ class SlackClient:
         value = payload.get("permalink")
         return str(value) if value else None
 
-    def post_message(self, channel_id: str, text: str, *, thread_ts: str | None = None) -> str:
-        """Post once; never retry an ambiguous POST without reading its marker."""
+    def post_message(self, channel_id: str, text: str, *, thread_ts: str | None = None,
+                     blocks: list[dict[str, Any]] | None = None) -> str:
+        """Post once; reconcile uncertain outcomes using Block Kit IDs."""
         payload = self._write("chat.postMessage", channel=channel_id, text=text,
-                              thread_ts=thread_ts, parse="none", link_names=False,
+                              thread_ts=thread_ts, blocks=blocks, parse="none", link_names=False,
                               unfurl_links=False, unfurl_media=False)
         timestamp = str(payload.get("ts") or "")
         if not timestamp:
             raise SlackApiError("Slack post response omitted its timestamp; check channel before retrying", method="chat.postMessage")
         return timestamp
 
-    def update_message(self, channel_id: str, ts: str, text: str) -> None:
+    def update_message(self, channel_id: str, ts: str, text: str, *,
+                       blocks: list[dict[str, Any]] | None = None) -> None:
         """Idempotently update the root preview; no automatic write retries."""
         self._write("chat.update", channel=channel_id, ts=ts, text=text,
-                    parse="none", link_names=False)
+                    blocks=blocks, parse="none", link_names=False)
 
     def _write(self, method: str, **params: Any) -> dict[str, Any]:
         request = Request(

@@ -1,8 +1,8 @@
-"""At-most-once ticket notification delivery with marker-based reconciliation.
+"""At-most-once ticket notification delivery with hidden block-ID reconciliation.
 
 The outbox store commits a `sending` claim *before* any Slack POST. If a process
 vanishes between claim and acknowledgement, the store quarantines it as uncertain;
-operators may reconcile the marker, but an absent marker never licenses a blind retry.
+operators may reconcile the Slack block ID, but an absent ID never licenses a blind retry.
 """
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from html import escape
 import re
 from typing import Any
 from urllib.parse import urlparse
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from efds.integrations.slack_api import SlackApiError
 
@@ -27,8 +27,47 @@ def _safe(value: Any) -> str:
     return re.sub(r"@(?=(?:here|channel|everyone)\b)", "@\u200b", text, flags=re.IGNORECASE)
 
 
-def _marker(event: dict[str, Any]) -> str:
+def _split_sections(text: str, limit: int = 2800) -> list[str]:
+    sections: list[str] = []
+    current = ""
+    for line in text.splitlines(keepends=True):
+        while line:
+            remaining = limit - len(current)
+            if len(line) <= remaining:
+                current += line
+                line = ""
+            elif current:
+                sections.append(current)
+                current = ""
+            else:
+                sections.append(line[:limit])
+                line = line[limit:]
+    if current:
+        sections.append(current)
+    return sections or [text]
+
+
+def _message_blocks(text: str, event_id: str, *, preview: bool = False) -> list[dict[str, Any]]:
+    prefix = (f"efds-ticket-preview:{event_id}:{uuid4().hex}"
+              if preview else f"efds-ticket-event:{event_id}")
+    return [{
+        "type": "section",
+        "block_id": f"{prefix}:{index}",
+        "text": {"type": "mrkdwn", "text": section},
+    } for index, section in enumerate(_split_sections(text))]
+
+
+def _legacy_marker(event: dict[str, Any]) -> str:
     return f"[EFDS ticket:{event['ticket_id']} event:{event['event_id']}]"
+
+
+def _has_event_block(message: dict[str, Any], event: dict[str, Any]) -> bool:
+    prefix = f"efds-ticket-event:{event['event_id']}:"
+    blocks = message.get("blocks")
+    return isinstance(blocks, list) and any(
+        isinstance(block, dict) and str(block.get("block_id") or "").startswith(prefix)
+        for block in blocks
+    )
 
 
 def format_root(event: dict[str, Any], website_url: str) -> str:
@@ -41,10 +80,11 @@ def format_root(event: dict[str, Any], website_url: str) -> str:
     assignees = ", ".join(_safe(name) for name in snapshot.get("assignees", [])) or "Unassigned"
     due = str(snapshot.get("due_at") or "")
     due = due[:10] if due else "Not set"
+    description = _safe(snapshot.get("description") or "Not provided")
     return (f"{_safe(snapshot['title'])}\n"
             f"Status: {_safe(LABELS.get(snapshot.get('execution_status'), snapshot.get('execution_status') or 'Open'))}\n"
-            f"Assignees: {assignees}\nDue: {_safe(due)}\n"
-            f"<{base}/dashboard/tickets/{ticket_id}|Open on website>\n{_marker(event)}")
+            f"Assignees: {assignees}\nDue: {_safe(due)}\nDescription: {description}\n"
+            f"<{base}/dashboard/tickets/{ticket_id}|Open on website>")
 
 
 def format_event(event: dict[str, Any]) -> str:
@@ -53,7 +93,7 @@ def format_event(event: dict[str, Any]) -> str:
     status = LABELS.get(snapshot.get("execution_status"), snapshot.get("execution_status") or "Open")
     assignees = ", ".join(_safe(name) for name in snapshot.get("assignees", [])) or "Unassigned"
     return (f"{label}: {_safe(snapshot['title'])}\nStatus: {_safe(status)}"
-            f" | Assignees: {assignees}\n{_marker(event)}")
+            f" | Assignees: {assignees}")
 
 
 class Publisher:
@@ -73,9 +113,9 @@ class Publisher:
         except Exception:
             self.store.retry_later(event)
             return "retry"
-        marker = _marker(event)
+        legacy_marker = _legacy_marker(event)
         for message in messages:
-            if marker in str(message.get("text") or "") and message.get("ts"):
+            if (_has_event_block(message, event) or legacy_marker in str(message.get("text") or "")) and message.get("ts"):
                 ts = str(message["ts"])
                 self.store.delivered(event, ts, root_ts or ts)
                 return "reconciled"
@@ -83,17 +123,23 @@ class Publisher:
             self.store.uncertain_delivery(event)
             return "uncertain"
         if root_ts:
-            # chat.update is idempotent; preserve the create marker on the root so a
-            # crash between update and thread POST cannot falsely reconcile the thread.
-            root_event = {**event, "event_id": event["root_event_id"]}
+            # Use a distinct preview ID so a root update cannot masquerade as the
+            # event's thread reply during uncertain-delivery reconciliation.
+            root_text = format_root(event, self.website_url)
             try:
-                self.slack.update_message(channel, root_ts, format_root(root_event, self.website_url))
+                self.slack.update_message(
+                    channel, root_ts, root_text,
+                    blocks=_message_blocks(root_text, str(event["event_id"]), preview=True),
+                )
             except Exception:
                 self.store.retry_later(event)
                 return "retry"
         text = format_event(event) if root_ts else format_root(event, self.website_url)
         try:
-            ts = self.slack.post_message(channel, text, thread_ts=root_ts)
+            ts = self.slack.post_message(
+                channel, text, thread_ts=root_ts,
+                blocks=_message_blocks(text, str(event["event_id"])),
+            )
         except SlackApiError as error:
             if error.error_code:  # definitive Slack rejection: safe to retry later
                 self.store.retry_later(event)

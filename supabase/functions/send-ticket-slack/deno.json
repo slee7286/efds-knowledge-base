@@ -1,0 +1,4 @@
+{
+  "compilerOptions": { "strict": true },
+  "tasks": { "test": "deno test --allow-env", "check": "deno check index.ts core_test.ts" }
+}
